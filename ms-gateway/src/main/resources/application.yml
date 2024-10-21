@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: ms-users
+          uri: lb://ms-users
+          predicates:
+            - Path=/api/users/**
+          filters:
+            - StripPrefix=2
