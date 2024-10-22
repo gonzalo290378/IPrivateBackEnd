@@ -1,6 +1,8 @@
 package com.ms_users.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ms_users.models.FreeAreaUser;
+import com.ms_users.models.PrivateAreaUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,11 +21,11 @@ public class UserDTO implements Serializable {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("freeAreaUserDTO")
-    private FreeAreaUserDTO freeAreaUserDTO;
+    @JsonProperty("freeAreaUser")
+    private FreeAreaUser freeAreaUser;
 
-    @JsonProperty("privateAreaUserDTO")
-    private PrivateAreaUserDTO privateAreaUserDTO;
+    @JsonProperty("privateAreaUser")
+    private PrivateAreaUser privateAreaUser;
 
     @JsonProperty("username")
     private String username;
