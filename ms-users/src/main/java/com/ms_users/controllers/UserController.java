@@ -35,7 +35,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findById(id));
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<?> findByEmail(@PathVariable String email) {
         log.info("Calling findByEmail with {email}");
         Optional<UserDTO> userOptional = userService.findByEmail(email);
@@ -45,7 +45,7 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/username/{username}")
     public ResponseEntity<?> findByUsername(@PathVariable String username) {
         log.info("Calling findByUsername with {username}");
         Optional<UserDTO> userOptional = userService.findByUsername(username);

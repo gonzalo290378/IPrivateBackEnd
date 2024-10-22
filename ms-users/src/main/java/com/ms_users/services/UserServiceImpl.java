@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
 
     //TODO FALTA INSERTAR LAS FOTOS (O CONTENIDO)
     public Boolean hasInvalidFields(User user, UserDTO usuarioDb) {
-        return !user.getFreeArea().getId().equals(usuarioDb.getFreeAreaUserDTO().getId()) ||
+        return !user.getFreeArea().getId().equals(usuarioDb.getFreeAreaUser().getId()) ||
                 //!user.getIdContent().equals(usuarioDb.getIdContent()) ||
                 isEmpty(user.getUsername()) ||
                 isEmpty(user.getEmail()) ||

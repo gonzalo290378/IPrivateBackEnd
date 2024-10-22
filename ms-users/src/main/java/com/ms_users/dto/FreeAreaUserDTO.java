@@ -6,12 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FreeAreaUserDTO {
+public class FreeAreaUserDTO implements Serializable {
 
     @JsonProperty("id")
     private Long id;
+
+    @JsonProperty("isEnabled")
+    private Boolean isEnabled;
+
 }

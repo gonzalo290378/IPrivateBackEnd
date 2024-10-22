@@ -21,4 +21,7 @@ public class FreeAreaUser {
     @Column(name = "id_user", unique = true)
     private Long idUser;
 
+    @Column(name = "is_enabled")
+    private Boolean isEnabled;
+
 }
