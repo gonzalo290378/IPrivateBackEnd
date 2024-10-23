@@ -1,11 +1,12 @@
 package com.ms_users.services;
 
 import com.ms_users.clients.FreeAreaClientRest;
+import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
 import com.ms_users.exceptions.EmailNotFoundException;
 import com.ms_users.exceptions.IdNotFoundException;
 import com.ms_users.exceptions.UserDisabledNotFoundException;
-import com.ms_users.exceptions.UsernameNotFoundException;
+import com.ms_users.mapper.FilterMapper;
 import com.ms_users.mapper.UserMapper;
 import com.ms_users.models.entity.FreeArea;
 import com.ms_users.models.entity.User;
@@ -17,7 +18,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.logging.Filter;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,11 +32,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
+    private final FilterMapper filterMapper;
+
     private final FreeAreaClientRest freeAreaClientRest;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, FreeAreaClientRest client) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, FilterMapper filterMapper, FreeAreaClientRest client) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.filterMapper = filterMapper;
         this.freeAreaClientRest = client;
     }
 
@@ -53,6 +61,7 @@ public class UserServiceImpl implements UserService {
         return Optional.of(userMapper.toDTO(user));
     }
 
+    @Transactional(readOnly = true)
     public Optional<UserDTO> findByEmail(String email) {
         User user = userRepository.findAll()
                 .stream()
@@ -63,21 +72,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<UserDTO> findByUsername(String username) {
-        User user = userRepository.findAll()
-                .stream()
-                .filter(e -> Objects.equals(e.getUsername(), username))
-                .findFirst().orElseThrow(() ->
-                        new UsernameNotFoundException("username" + username + " does not exists"));
-        return Optional.of(userMapper.toDTO(user));
-
-    }
-
-    @Transactional(readOnly = true)
-    public Page<UserDTO> filter(UserDTO userDTO, Integer page, Integer size) {
-        Page<User> userDTOList = userRepository.filter(userDTO, PageRequest.of(page, size));
-        return userDTOList.map(it -> userMapper.toDTO(it));
-
+    public Page<FilterDTO> filter(FilterDTO filterDTO, Integer page, Integer size) {
+        if (filterDTO.getIsEnabled()) {
+            Page<User> filterUserList = userRepository.filter(filterDTO, PageRequest.of(page, size));
+            return filterUserList.map(filterMapper::toDTO);
+        }
+        throw new UserDisabledNotFoundException("user: " + filterDTO.getUsername() + " is disabled");
     }
 
     @Transactional
@@ -88,10 +88,10 @@ public class UserServiceImpl implements UserService {
             throw new UserDisabledNotFoundException("User is disable, please follow this instructions");
         }
 
-        if (findByUsername(user.getUsername()).isPresent()
-                || findByUsername((user.getEmail())).isPresent()) {
-            throw new UsernameNotFoundException("Username/Email was registered");
-        }
+//        if (findByUsername(user.getUsername()).isPresent()
+//                || findByUsername((user.getEmail())).isPresent()) {
+//            throw new UsernameNotFoundException("Username/Email was registered");
+//        }
 
         var newFreeArea = freeAreaClientRest.save(new FreeArea());
 
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
                 //!user.getIdContent().equals(usuarioDb.getIdContent()) ||
                 isEmpty(user.getUsername()) ||
                 isEmpty(user.getEmail()) ||
-                isEmpty(user.getBirthdate()) ||
+                //isEmpty(user.getBirthdate()) ||
                 isEmpty(user.getCity()) ||
                 isEmpty(user.getCountry()) ||
                 isEmpty(user.getPassword());

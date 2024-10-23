@@ -10,13 +10,12 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO implements Serializable {
+public class FilterDTO implements Serializable {
 
     @JsonProperty("id")
     private Long id;
@@ -27,6 +26,9 @@ public class UserDTO implements Serializable {
     @JsonProperty("privateAreaUser")
     private PrivateAreaUser privateAreaUser;
 
+    @JsonProperty("username")
+    private String username;
+
     @JsonProperty("age")
     private Long age;
 
@@ -35,9 +37,6 @@ public class UserDTO implements Serializable {
 
     @JsonProperty("ageTo")
     private Long ageTo;
-
-    @JsonProperty("username")
-    private String username;
 
     @JsonProperty("sex")
     private String sex;
@@ -62,17 +61,5 @@ public class UserDTO implements Serializable {
 
     @JsonProperty("isEnabled")
     private Boolean isEnabled;
-
-    @JsonProperty("password")
-    private String password;
-
-    public Long getAge() {
-        LocalDate today = LocalDate.now();
-
-        if (birthdate.getDayOfMonth() == today.getDayOfMonth() && birthdate.getMonth() == today.getMonth()) {
-            return this.age + 1;
-        }
-        return age;
-    }
 
 }
