@@ -18,9 +18,6 @@ public class FreeAreaUser {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id_user", unique = true)
-    private Long idUser;
-
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 

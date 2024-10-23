@@ -12,6 +12,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -38,10 +42,23 @@ public class User {
     @Transient
     private PrivateArea privateArea;
 
+    @Column(name = "age")
+    private Long age;
+
+    @Column(name = "age_from")
+    private Long ageFrom;
+
+    @Column(name = "age_to")
+    private Long ageTo;
 
     @Size(min = 5, message = "Username should have at least 5 characters")
     @Column(name = "username")
     private String username;
+
+    @Size(min = 10, message = "Sex should have at least 5 characters")
+    @NotEmpty(message = "Sex cannot be empty")
+    @Column(name = "sex")
+    private String sex;
 
     @Email(message = "Please provide a valid email address")
     @NotEmpty(message = "Email cannot be empty")
@@ -50,7 +67,7 @@ public class User {
 
     @Size(min = 5, message = "Birtdate should have not be empty")
     @Column(unique = true, name = "birthdate")
-    private String birthdate;
+    private LocalDate birthdate;
 
     @Size(message = "City should have not be empty")
     @Column(name = "city")
@@ -62,7 +79,7 @@ public class User {
 
     @NotBlank
     @Size(message = "Register Date should have not be empty")
-    private String registerDate;
+    private LocalDate registerDate;
 
     @NotBlank
     @Size(message = "Description should have not be empty")

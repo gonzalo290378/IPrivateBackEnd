@@ -1,5 +1,6 @@
 package com.ms_users.controllers;
 
+import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
 import com.ms_users.models.entity.User;
 import com.ms_users.services.UserService;
@@ -45,36 +46,28 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/username/{username}")
-    public ResponseEntity<?> findByUsername(@PathVariable String username) {
-        log.info("Calling findByUsername with {username}");
-        Optional<UserDTO> userOptional = userService.findByUsername(username);
-        if (userOptional.isPresent()) {
-            return ResponseEntity.ok(userOptional.get());
-        }
-        return ResponseEntity.notFound().build();
-    }
-
+    //TODO HACER LOGICA PARA QUE HAGAN MATCH LAS EDADES
     @GetMapping("/filter")
-    public ResponseEntity<Page<UserDTO>> filter(
+    public ResponseEntity<Page<FilterDTO>> filter(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
-            @RequestParam(name = "username", required = false) String username,
-            //TODO AGREGAR FILTRO POR RANGO DE EDAD
-            @RequestParam(name = "birthdate", required = false) String birthdate,
+            @RequestParam(name = "ageFrom", required = true) Long ageFrom,
+            @RequestParam(name = "ageTo", required = true) Long ageTo,
+            @RequestParam(name = "sex", required = false) String sex,
             @RequestParam(name = "city", required = false) String city,
             @RequestParam(name = "country", required = false) String country,
             @RequestParam(name = "isEnabled", required = false) Boolean isEnabled) {
 
-        UserDTO userDTO = UserDTO.builder()
-                .username(username)
-                .birthdate(birthdate)
+        FilterDTO filterDTO = FilterDTO.builder()
+                .ageFrom(ageFrom)
+                .ageTo(ageTo)
+                .sex(sex)
                 .city(city)
                 .country(country)
                 .isEnabled(isEnabled)
                 .build();
-        log.info("Calling filter with {}", userDTO);
-        return ResponseEntity.ok(userService.filter(userDTO, page, size));
+        log.info("Calling filter with {}", filterDTO);
+        return ResponseEntity.ok(userService.filter(filterDTO, page, size));
     }
 
 

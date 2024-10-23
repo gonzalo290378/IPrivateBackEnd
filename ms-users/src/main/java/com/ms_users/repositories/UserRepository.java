@@ -1,24 +1,30 @@
 package com.ms_users.repositories;
 
+import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
 import com.ms_users.models.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
+@Repository("userRepository")
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT user  " +
             "FROM User user " +
-            "WHERE (:#{#userDTO.username} is null or user.username = :#{#userDTO.username}) " +
-            "AND (:#{#userDTO.birthdate} is null or user.birthdate = :#{#userDTO.birthdate}) " +
-            "AND (:#{#userDTO.city} is null or user.city = :#{#userDTO.city}) " +
-            "AND (:#{#userDTO.country} is null or user.country = :#{#userDTO.country}) " +
-            "AND (:#{#userDTO.isEnabled} is null or user.isEnabled = :#{#userDTO.isEnabled})")
+            "WHERE (:#{#filterDTO.sex} is null or user.sex = :#{#filterDTO.sex}) " +
+            "AND (:#{#filterDTO.ageFrom} is null or user.age >= :#{#filterDTO.ageFrom}) " +
+            "AND (:#{#filterDTO.ageTo} is null or user.age <= :#{#filterDTO.ageTo}) " +
+            "AND (:#{#filterDTO.city} is null or user.city = :#{#filterDTO.city}) " +
+            "AND (:#{#filterDTO.country} is null or user.country = :#{#filterDTO.country}) " +
+            "AND (:#{#filterDTO.country} is null or user.country = :#{#filterDTO.country}) " +
+            "AND (:#{#filterDTO.isEnabled} is null or user.isEnabled = :#{#filterDTO.isEnabled})")
 
-    public Page<User> filter(@Param("userDTO") UserDTO userDTO, Pageable pageable);
+    Page<User> filter(@Param("filterDTO") FilterDTO filterDTO, Pageable pageable);
 
     @Modifying
     @Query("UPDATE User u " +
