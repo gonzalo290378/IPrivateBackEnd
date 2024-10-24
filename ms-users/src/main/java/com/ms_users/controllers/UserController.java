@@ -1,5 +1,6 @@
 package com.ms_users.controllers;
 
+import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
 import com.ms_users.models.entity.User;
 import com.ms_users.services.UserService;
@@ -47,7 +48,7 @@ public class UserController {
 
     //TODO HACER LOGICA PARA QUE HAGAN MATCH LAS EDADES ENTRE USUARIOS
     @GetMapping("/filter")
-    public ResponseEntity<Page<UserDTO>> filter(
+    public ResponseEntity<Page<FilterDTO>> filter(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
             @RequestParam(name = "ageFrom", required = true) Long ageFrom,
@@ -57,7 +58,7 @@ public class UserController {
             @RequestParam(name = "country", required = false) String country,
             @RequestParam(name = "isEnabled", required = false) Boolean isEnabled) {
 
-        UserDTO userListDTO = UserDTO.builder()
+        FilterDTO filterDTO = FilterDTO.builder()
                 .ageFrom(ageFrom)
                 .ageTo(ageTo)
                 .sex(sex)
@@ -65,8 +66,8 @@ public class UserController {
                 .country(country)
                 .isEnabled(isEnabled)
                 .build();
-        log.info("Calling filter with {}", userListDTO);
-        return ResponseEntity.ok(userService.filter(userListDTO, page, size));
+        log.info("Calling filter with {}", filterDTO);
+        return ResponseEntity.ok(userService.filter(filterDTO, page, size));
     }
 
 

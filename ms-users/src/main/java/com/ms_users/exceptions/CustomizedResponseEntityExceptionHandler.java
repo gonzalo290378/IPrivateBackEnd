@@ -38,7 +38,13 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     }
 
     @ExceptionHandler(UserDisabledNotFoundException.class)
-    public final ResponseEntity<ErrorDetails> UserDisabledNotFoundException(Exception e, WebRequest webRequest) throws Exception {
+    public final ResponseEntity<ErrorDetails> handleUserDisabledNotFoundException(Exception e, WebRequest webRequest) throws Exception {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDate.now(), e.getMessage(), webRequest.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UserAgeSelectedException.class)
+    public final ResponseEntity<ErrorDetails> handleUserAgeSelectedException(Exception e, WebRequest webRequest) throws Exception {
         ErrorDetails errorDetails = new ErrorDetails(LocalDate.now(), e.getMessage(), webRequest.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }

@@ -3,10 +3,7 @@ package com.ms_users.models.entity;
 import com.ms_users.models.FreeAreaUser;
 import com.ms_users.models.PrivateAreaUser;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,12 +40,15 @@ public class User {
     private PrivateArea privateArea;
 
     @Column(name = "age")
+    @Min(18)
     private Long age;
 
     @Column(name = "age_from")
+    @Min(18)
     private Long ageFrom;
 
     @Column(name = "age_to")
+    @Max(90)
     private Long ageTo;
 
     @Size(min = 5, message = "Username should have at least 5 characters")
@@ -83,6 +83,7 @@ public class User {
 
     @NotBlank
     @Size(message = "Description should have not be empty")
+    @Size(max = 140, message = "The text must not exceed 140 characters")
     private String description;
 
     @NotBlank

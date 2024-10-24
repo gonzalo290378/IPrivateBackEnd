@@ -1,14 +1,18 @@
 package com.ms_users.services;
 
 import com.ms_users.clients.FreeAreaClientRest;
+import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
+import com.ms_users.enums.AgeConfiguration;
 import com.ms_users.exceptions.EmailNotFoundException;
 import com.ms_users.exceptions.IdNotFoundException;
 import com.ms_users.exceptions.UserDisabledNotFoundException;
+import com.ms_users.mapper.FilterMapper;
 import com.ms_users.mapper.UserMapper;
 import com.ms_users.models.entity.FreeArea;
 import com.ms_users.models.entity.User;
 import com.ms_users.repositories.UserRepository;
+import org.apache.tomcat.util.descriptor.web.FilterMap;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +29,14 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
+    private final FilterMapper filterMapper;
+
     private final FreeAreaClientRest freeAreaClientRest;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, FreeAreaClientRest client) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, FilterMapper filterMapper, FreeAreaClientRest client) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.filterMapper = filterMapper;
         this.freeAreaClientRest = client;
     }
 
@@ -52,16 +59,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    public Page<UserDTO> filter(UserDTO userListDTO, Integer page, Integer size) {
-        validateUserIsEnabled(userListDTO);
-        return getFilteredUsers(userListDTO, page, size);
+    public Page<FilterDTO> filter(FilterDTO filterDTO, Integer page, Integer size) {
+        validateUserAgeSelected(filterDTO);
+        return getFilteredUsers(filterDTO, page, size);
     }
+
+
 
     //TODO VER QUE TIPO DE REQUIRIMIENTOS DEBE CUMPLIR EL USUARIO PARA VOLVER A HABILITARLO
     @Transactional
     public User save(User user) {
 
-        validateUserIsEnabled(userMapper.toDTO(user));
         FreeArea newFreeArea = freeAreaClientRest.save(new FreeArea());
 
         User newUser = new User().builder().freeArea(newFreeArea).username(user.getUsername()).email(user.getEmail()).birthdate(user.getBirthdate()).city(user.getCity()).country(user.getCountry()).registerDate(user.getRegisterDate()).description(user.getDescription()).isEnabled(true).build();
@@ -98,14 +106,23 @@ public class UserServiceImpl implements UserService {
         return field == null || field.isEmpty();
     }
 
-    private Page<UserDTO> getFilteredUsers(UserDTO userListDTO, Integer page, Integer size) {
-        Page<User> filterUserList = userRepository.filter(userListDTO, PageRequest.of(page, size));
-        return filterUserList.map(userMapper::toDTO);
+    private Page<FilterDTO> getFilteredUsers(FilterDTO filterDTO, Integer page, Integer size) {
+        Page<User> filterUserList = userRepository.filter(filterDTO, PageRequest.of(page, size));
+        return filterUserList.map(filterMapper::toDTO);
     }
 
-    private void validateUserIsEnabled(UserDTO userDTO) {
-        if (!userDTO.getIsEnabled()) {
-            throw new UserDisabledNotFoundException("user: " + userDTO.getUsername() + " is disabled");
+
+    private void validateUserAgeSelected(FilterDTO filterDTO) {
+        Long ageFrom = filterDTO.getAgeFrom();
+        Long ageTo = filterDTO.getAgeTo();
+
+        Boolean isAgeFromTooLow = ageFrom < AgeConfiguration.ADULT.getValue();
+        Boolean isAgeRangeInvalid = ageFrom > ageTo;
+        Boolean isAgeToTooHigh = ageTo > AgeConfiguration.SENIOR.getValue();
+
+        if (isAgeFromTooLow || isAgeRangeInvalid || isAgeToTooHigh) {
+            throw new UserDisabledNotFoundException("User: " + filterDTO.getUsername()
+                    + " has selected an invalid age range: ageFrom = " + ageFrom + ", ageTo = " + ageTo);
         }
     }
 

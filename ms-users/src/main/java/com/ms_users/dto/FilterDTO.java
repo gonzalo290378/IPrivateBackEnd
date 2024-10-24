@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO implements Serializable {
+public class FilterDTO implements Serializable {
 
     @JsonProperty("id")
     private Long id;
@@ -62,16 +62,5 @@ public class UserDTO implements Serializable {
     @JsonProperty("isEnabled")
     private Boolean isEnabled;
 
-    @JsonProperty("password")
-    private String password;
-
-    public Long getAge() {
-        LocalDate today = LocalDate.now();
-
-        if (birthdate.getDayOfMonth() == today.getDayOfMonth() && birthdate.getMonth() == today.getMonth()) {
-            return this.age + 1;
-        }
-        return age;
-    }
 
 }
