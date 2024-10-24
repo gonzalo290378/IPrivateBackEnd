@@ -1,12 +1,10 @@
 package com.ms_users.services;
 
 import com.ms_users.clients.FreeAreaClientRest;
-import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
 import com.ms_users.exceptions.EmailNotFoundException;
 import com.ms_users.exceptions.IdNotFoundException;
 import com.ms_users.exceptions.UserDisabledNotFoundException;
-import com.ms_users.mapper.FilterMapper;
 import com.ms_users.mapper.UserMapper;
 import com.ms_users.models.entity.FreeArea;
 import com.ms_users.models.entity.User;
@@ -17,12 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
-
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.logging.Filter;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,80 +25,46 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
-    private final FilterMapper filterMapper;
-
     private final FreeAreaClientRest freeAreaClientRest;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, FilterMapper filterMapper, FreeAreaClientRest client) {
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, FreeAreaClientRest client) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
-        this.filterMapper = filterMapper;
         this.freeAreaClientRest = client;
     }
 
     @Transactional(readOnly = true)
     public List<UserDTO> findAll() {
         List<User> userList = userRepository.findAll();
-        return userList.stream()
-                .map(userMapper::toDTO)
-                .collect(Collectors.toList());
+        return userList.stream().map(userMapper::toDTO).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     public Optional<UserDTO> findById(Long id) {
-        User user = userRepository.findAll()
-                .stream()
-                .filter(e -> Objects.equals(e.getId(), id))
-                .findFirst().orElseThrow(() ->
-                        new IdNotFoundException("id: " + id + " does not exist"));
+        User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getId(), id)).findFirst().orElseThrow(() -> new IdNotFoundException("id: " + id + " does not exist"));
         return Optional.of(userMapper.toDTO(user));
     }
 
     @Transactional(readOnly = true)
     public Optional<UserDTO> findByEmail(String email) {
-        User user = userRepository.findAll()
-                .stream()
-                .filter(e -> Objects.equals(e.getEmail(), email))
-                .findFirst().orElseThrow(() ->
-                        new EmailNotFoundException("email: " + email + " does not exist"));
+        User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getEmail(), email)).findFirst().orElseThrow(() -> new EmailNotFoundException("email: " + email + " does not exist"));
         return Optional.of(userMapper.toDTO(user));
     }
 
     @Transactional(readOnly = true)
-    public Page<FilterDTO> filter(FilterDTO filterDTO, Integer page, Integer size) {
-        if (filterDTO.getIsEnabled()) {
-            Page<User> filterUserList = userRepository.filter(filterDTO, PageRequest.of(page, size));
-            return filterUserList.map(filterMapper::toDTO);
-        }
-        throw new UserDisabledNotFoundException("user: " + filterDTO.getUsername() + " is disabled");
+    public Page<UserDTO> filter(UserDTO userListDTO, Integer page, Integer size) {
+        validateUserIsEnabled(userListDTO);
+        return getFilteredUsers(userListDTO, page, size);
     }
 
+    //TODO VER QUE TIPO DE REQUIRIMIENTOS DEBE CUMPLIR EL USUARIO PARA VOLVER A HABILITARLO
     @Transactional
     public User save(User user) {
 
-        //TODO VER QUE TIPO DE REQUIRIMIENTOS DEBE CUMPLIR EL USUARIO PARA VOLVER A HABILITARLO
-        if (!user.getIsEnabled()) {
-            throw new UserDisabledNotFoundException("User is disable, please follow this instructions");
-        }
+        validateUserIsEnabled(userMapper.toDTO(user));
+        FreeArea newFreeArea = freeAreaClientRest.save(new FreeArea());
 
-//        if (findByUsername(user.getUsername()).isPresent()
-//                || findByUsername((user.getEmail())).isPresent()) {
-//            throw new UsernameNotFoundException("Username/Email was registered");
-//        }
-
-        var newFreeArea = freeAreaClientRest.save(new FreeArea());
-
-        User newUser = new User().builder()
-                .freeArea(newFreeArea)
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .birthdate(user.getBirthdate())
-                .city(user.getCity())
-                .country(user.getCountry())
-                .registerDate(user.getRegisterDate())
-                .description(user.getDescription())
-                .isEnabled(true)
-                .build();
+        User newUser = new User().builder().freeArea(newFreeArea).username(user.getUsername()).email(user.getEmail()).birthdate(user.getBirthdate()).city(user.getCity()).country(user.getCountry()).registerDate(user.getRegisterDate()).description(user.getDescription()).isEnabled(true).build();
         return userRepository.save(newUser);
     }
 
@@ -130,16 +89,24 @@ public class UserServiceImpl implements UserService {
     public Boolean hasInvalidFields(User user, UserDTO usuarioDb) {
         return !user.getFreeArea().getId().equals(usuarioDb.getFreeAreaUser().getId()) ||
                 //!user.getIdContent().equals(usuarioDb.getIdContent()) ||
-                isEmpty(user.getUsername()) ||
-                isEmpty(user.getEmail()) ||
+                isEmpty(user.getUsername()) || isEmpty(user.getEmail()) ||
                 //isEmpty(user.getBirthdate()) ||
-                isEmpty(user.getCity()) ||
-                isEmpty(user.getCountry()) ||
-                isEmpty(user.getPassword());
+                isEmpty(user.getCity()) || isEmpty(user.getCountry()) || isEmpty(user.getPassword());
     }
 
     private Boolean isEmpty(String field) {
         return field == null || field.isEmpty();
+    }
+
+    private Page<UserDTO> getFilteredUsers(UserDTO userListDTO, Integer page, Integer size) {
+        Page<User> filterUserList = userRepository.filter(userListDTO, PageRequest.of(page, size));
+        return filterUserList.map(userMapper::toDTO);
+    }
+
+    private void validateUserIsEnabled(UserDTO userDTO) {
+        if (!userDTO.getIsEnabled()) {
+            throw new UserDisabledNotFoundException("user: " + userDTO.getUsername() + " is disabled");
+        }
     }
 
 }

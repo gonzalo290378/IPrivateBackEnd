@@ -27,6 +27,9 @@ public class UserDTO implements Serializable {
     @JsonProperty("privateAreaUser")
     private PrivateAreaUser privateAreaUser;
 
+    @JsonProperty("username")
+    private String username;
+
     @JsonProperty("age")
     private Long age;
 
@@ -35,9 +38,6 @@ public class UserDTO implements Serializable {
 
     @JsonProperty("ageTo")
     private Long ageTo;
-
-    @JsonProperty("username")
-    private String username;
 
     @JsonProperty("sex")
     private String sex;

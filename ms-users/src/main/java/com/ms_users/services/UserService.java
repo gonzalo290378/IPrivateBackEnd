@@ -1,6 +1,5 @@
 package com.ms_users.services;
 
-import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
 import com.ms_users.models.entity.User;
 import org.springframework.data.domain.Page;
@@ -18,7 +17,7 @@ public interface UserService {
 
     Optional<UserDTO> findByEmail(String email);
 
-    Page<FilterDTO> filter(FilterDTO filterDTO, Integer page, Integer size);
+    Page<UserDTO> filter(UserDTO filterDTO, Integer page, Integer size);
 
     User save(User user);
 
