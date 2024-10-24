@@ -46,7 +46,7 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    //TODO HACER LOGICA PARA QUE HAGAN MATCH LAS EDADES
+    //TODO HACER LOGICA PARA QUE HAGAN MATCH LAS EDADES ENTRE USUARIOS
     @GetMapping("/filter")
     public ResponseEntity<Page<FilterDTO>> filter(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
