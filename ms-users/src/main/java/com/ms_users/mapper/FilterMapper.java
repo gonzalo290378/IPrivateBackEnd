@@ -4,10 +4,13 @@ import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
 import com.ms_users.models.entity.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {PreferenceMapper.class, CountryMapper.class, CityMapper.class})
 public interface FilterMapper {
+    @Mapping(target = "preferenceDTO", source = "preference")
+    @Mapping(target = "cityDTO", source = "city")
+    @Mapping(target = "countryDTO", source = "country")
     public FilterDTO toDTO(User user);
-
     public User toModel(FilterDTO filterDTO);
 }

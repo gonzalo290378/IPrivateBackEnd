@@ -1,12 +1,7 @@
 package com.ms_users.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ms_users.models.FreeAreaUser;
-import com.ms_users.models.PrivateAreaUser;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -21,22 +16,25 @@ public class UserDTO implements Serializable {
     private Long id;
 
     @JsonProperty("freeAreaUser")
-    private FreeAreaUser freeAreaUser;
+    private FreeAreaUserDTO freeAreaUser;
 
     @JsonProperty("privateAreaUser")
-    private PrivateAreaUser privateAreaUser;
+    private PrivateAreaUserDTO privateAreaUser;
+
+    @JsonProperty("preferenceDTO")
+    private PreferenceDTO preferenceDTO;
+
+    @JsonProperty("countryDTO")
+    private CountryDTO countryDTO;
+
+    @JsonProperty("cityDTO")
+    private CityDTO cityDTO;
 
     @JsonProperty("username")
     private String username;
 
     @JsonProperty("age")
     private Long age;
-
-    @JsonProperty("ageFrom")
-    private Long ageFrom;
-
-    @JsonProperty("ageTo")
-    private Long ageTo;
 
     @JsonProperty("sex")
     private String sex;
@@ -46,12 +44,6 @@ public class UserDTO implements Serializable {
 
     @JsonProperty("birthdate")
     private LocalDate birthdate;
-
-    @JsonProperty("city")
-    private String city;
-
-    @JsonProperty("country")
-    private String country;
 
     @JsonProperty("registerDate")
     private LocalDate registerDate;

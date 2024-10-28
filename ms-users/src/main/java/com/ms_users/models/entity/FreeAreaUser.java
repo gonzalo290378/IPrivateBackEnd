@@ -1,4 +1,4 @@
-package com.ms_users.models;
+package com.ms_users.models.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

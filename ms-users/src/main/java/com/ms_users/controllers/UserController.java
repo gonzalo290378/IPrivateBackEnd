@@ -1,7 +1,6 @@
 package com.ms_users.controllers;
 
-import com.ms_users.dto.FilterDTO;
-import com.ms_users.dto.UserDTO;
+import com.ms_users.dto.*;
 import com.ms_users.models.entity.User;
 import com.ms_users.services.UserService;
 import jakarta.validation.Valid;
@@ -12,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -46,24 +46,35 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    //TODO HACER LOGICA PARA QUE HAGAN MATCH LAS EDADES ENTRE USUARIOS
     @GetMapping("/filter")
     public ResponseEntity<Page<FilterDTO>> filter(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
             @RequestParam(name = "ageFrom", required = true) Long ageFrom,
             @RequestParam(name = "ageTo", required = true) Long ageTo,
-            @RequestParam(name = "sex", required = false) String sex,
-            @RequestParam(name = "city", required = false) String city,
-            @RequestParam(name = "country", required = false) String country,
-            @RequestParam(name = "isEnabled", required = false) Boolean isEnabled) {
+            @RequestParam(name = "sexPreference", required = true) String sexPreference,
+            @RequestParam(name = "city", required = true) String city,
+            @RequestParam(name = "country", required = true) String country,
+            @RequestParam(name = "isEnabled", required = true) Boolean isEnabled) {
 
-        FilterDTO filterDTO = FilterDTO.builder()
+        PreferenceDTO preferenceDTO = PreferenceDTO.builder()
                 .ageFrom(ageFrom)
                 .ageTo(ageTo)
-                .sex(sex)
-                .city(city)
+                .sexPreference(sexPreference)
+                .build();
+
+        CountryDTO countryDTO = CountryDTO.builder()
                 .country(country)
+                .build();
+
+        CityDTO cityDTO = CityDTO.builder()
+                .city(city)
+                .build();
+
+        FilterDTO filterDTO = FilterDTO.builder()
+                .preferenceDTO(preferenceDTO)
+                .countryDTO(countryDTO)
+                .cityDTO(cityDTO)
                 .isEnabled(isEnabled)
                 .build();
         log.info("Calling filter with {}", filterDTO);

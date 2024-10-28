@@ -14,12 +14,11 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT user  " +
             "FROM User user " +
-            "WHERE (:#{#filterDTO.sex} is null or user.sex = :#{#filterDTO.sex}) " +
-            "AND (:#{#filterDTO.ageFrom} is null or user.age >= :#{#filterDTO.ageFrom}) " +
-            "AND (:#{#filterDTO.ageTo} is null or user.age <= :#{#filterDTO.ageTo}) " +
-            "AND (:#{#filterDTO.city} is null or user.city = :#{#filterDTO.city}) " +
-            "AND (:#{#filterDTO.country} is null or user.country = :#{#filterDTO.country}) " +
-            "AND (:#{#filterDTO.country} is null or user.country = :#{#filterDTO.country}) " +
+            "WHERE (:#{#filterDTO.preferenceDTO.sexPreference} is null or user.sex = :#{#filterDTO.preferenceDTO.sexPreference}) " +
+            "AND (:#{#filterDTO.preferenceDTO.ageFrom} is null or user.age >= :#{#filterDTO.preferenceDTO.ageFrom}) " +
+            "AND (:#{#filterDTO.preferenceDTO.ageTo} is null or user.age <= :#{#filterDTO.preferenceDTO.ageTo}) " +
+            "AND (:#{#filterDTO.cityDTO.city} is null or user.city.city = :#{#filterDTO.cityDTO.city}) " +
+            "AND (:#{#filterDTO.countryDTO.country} is null or user.country.country = :#{#filterDTO.countryDTO.country}) " +
             "AND (:#{#filterDTO.isEnabled} is null or user.isEnabled = :#{#filterDTO.isEnabled})")
     Page<User> filter(@Param("filterDTO") FilterDTO filterDTO, Pageable pageable);
 

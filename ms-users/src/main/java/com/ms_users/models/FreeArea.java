@@ -1,16 +1,15 @@
-package com.ms_users.models.entity;
+package com.ms_users.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrivateArea {
+public class FreeArea {
 
     private Long id;
 

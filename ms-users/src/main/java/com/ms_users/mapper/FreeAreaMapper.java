@@ -2,7 +2,7 @@ package com.ms_users.mapper;
 
 import com.ms_users.dto.FreeAreaUserDTO;
 import com.ms_users.dto.UserDTO;
-import com.ms_users.models.FreeAreaUser;
+import com.ms_users.models.entity.FreeAreaUser;
 import com.ms_users.models.entity.User;
 import org.mapstruct.Mapper;
 

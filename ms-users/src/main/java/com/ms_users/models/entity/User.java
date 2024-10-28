@@ -1,17 +1,15 @@
 package com.ms_users.models.entity;
 
-import com.ms_users.models.FreeAreaUser;
-import com.ms_users.models.PrivateAreaUser;
+import com.ms_users.models.FreeArea;
+import com.ms_users.models.PrivateArea;
+import com.ms_users.models.Subscription;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "users")
@@ -33,27 +31,32 @@ public class User {
     @JoinColumn(name = "id_private_area")
     private PrivateAreaUser privateAreaUser;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_preference")
+    private Preference preference;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_country")
+    private Country country;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_city")
+    private City city;
+
     @Transient
     private FreeArea freeArea;
 
     @Transient
     private PrivateArea privateArea;
 
+    @Size(min = 5, message = "Username should have at least 5 characters")
+    @NotEmpty(message = "Username cannot be empty")
+    @Column(name = "username")
+    private String username;
+
     @Column(name = "age")
     @Min(18)
     private Long age;
-
-    @Column(name = "age_from")
-    @Min(18)
-    private Long ageFrom;
-
-    @Column(name = "age_to")
-    @Max(90)
-    private Long ageTo;
-
-    @Size(min = 5, message = "Username should have at least 5 characters")
-    @Column(name = "username")
-    private String username;
 
     @Size(min = 10, message = "Sex should have at least 5 characters")
     @NotEmpty(message = "Sex cannot be empty")
@@ -69,14 +72,6 @@ public class User {
     @Column(unique = true, name = "birthdate")
     private LocalDate birthdate;
 
-    @Size(message = "City should have not be empty")
-    @Column(name = "city")
-    private String city;
-
-    @Size(message = "Country should have not be empty")
-    @Column(name = "country")
-    private String country;
-
     @NotBlank
     @Size(message = "Register Date should have not be empty")
     private LocalDate registerDate;
@@ -86,7 +81,7 @@ public class User {
     @Size(max = 140, message = "The text must not exceed 140 characters")
     private String description;
 
-    @NotBlank
+    @NotNull
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
