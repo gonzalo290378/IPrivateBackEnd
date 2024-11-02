@@ -26,19 +26,19 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserDTO>> findAll() {
-        log.info("Calling findAll");
+        log.info("ms-users Calling findAll");
         return ResponseEntity.ok(userService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
-        log.info("Calling findById with {}", id);
+        log.info("ms-users Calling findById with {}", id);
         return ResponseEntity.ok(userService.findById(id));
     }
 
     @GetMapping("/email/{email}")
     public ResponseEntity<?> findByEmail(@PathVariable String email) {
-        log.info("Calling findByEmail with {email}");
+        log.info("ms-users Calling findByEmail with {email}");
         Optional<UserDTO> userOptional = userService.findByEmail(email);
         if (userOptional.isPresent()) {
             return ResponseEntity.ok(userOptional.get());
@@ -77,40 +77,41 @@ public class UserController {
                 .cityDTO(cityDTO)
                 .isEnabled(isEnabled)
                 .build();
-        log.info("Calling filter with {}", filterDTO);
+        log.info("ms-users Calling filter with {}", filterDTO);
         return ResponseEntity.ok(userService.filter(filterDTO, page, size));
     }
 
 
-    @PostMapping
-    public ResponseEntity<?> save(@Valid @RequestBody User user) {
-        log.info("Calling save with {}", user);
-        return ResponseEntity.ok(userService.save(user));
+    @PostMapping()
+    public ResponseEntity<?> save(@RequestBody @Valid UserFormDTO userFormDTO) {
+        log.info("ms-users Calling save with {userFormDTO}");
+        return ResponseEntity.ok(userService.save(userFormDTO));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> edit(@Valid @RequestBody User user, BindingResult result, @PathVariable Long id) {
-        log.info("Calling edit with {user}");
-
-        if (result.hasErrors()) {
-            return userService.validate(result);
-        }
-
-        Optional<UserDTO> o = userService.findById(id);
-        if (o.isPresent()) {
-            UserDTO usuarioDb = o.get();
-
-            if (userService.hasInvalidFields(user, usuarioDb)) {
-                return ResponseEntity.badRequest()
-                        .body(Collections.singletonMap("Message Application", "Some data cannot be empty"));
-            }
-            return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
-        }
-        return ResponseEntity.notFound().build();
-    }
+//    @PutMapping("/{id}")
+//    public ResponseEntity<?> edit(@Valid @RequestBody User user, BindingResult result, @PathVariable Long id) {
+//        log.info("ms-users Calling edit with {user}");
+//
+//        if (result.hasErrors()) {
+//            return userService.validate(result);
+//        }
+//
+//        Optional<UserDTO> o = userService.findById(id);
+//        if (o.isPresent()) {
+//            UserDTO usuarioDb = o.get();
+//
+//            if (userService.hasInvalidFields(user, usuarioDb)) {
+//                return ResponseEntity.badRequest()
+//                        .body(Collections.singletonMap("Message Application", "Some data cannot be empty"));
+//            }
+//            return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
+//        }
+//        return ResponseEntity.notFound().build();
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
+        log.info("ms-users Calling delete with {id}");
         Optional<UserDTO> o = userService.findById(id);
         if (o.isPresent()) {
             userService.delete(id);
