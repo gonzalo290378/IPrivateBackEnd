@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -15,4 +17,7 @@ public class FreeArea {
 
     private Boolean isEnabled;
 
+    private List<PrincipalPhoto> principalPhoto;
+
+    private List<PublicContent> publicContent;
 }

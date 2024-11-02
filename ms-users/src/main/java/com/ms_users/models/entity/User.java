@@ -1,14 +1,12 @@
 package com.ms_users.models.entity;
 
-import com.ms_users.models.FreeArea;
-import com.ms_users.models.PrivateArea;
-import com.ms_users.models.Subscription;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 
 @Entity
@@ -23,13 +21,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_free_area")
-    private FreeAreaUser freeAreaUser;
+    @Column(name = "id_free_area")
+    private Long idFreeArea;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_private_area")
-    private PrivateAreaUser privateAreaUser;
+    @Column(name = "id_private_area")
+    private Long idPrivateArea;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_preference")
@@ -43,12 +39,6 @@ public class User {
     @JoinColumn(name = "id_city")
     private City city;
 
-    @Transient
-    private FreeArea freeArea;
-
-    @Transient
-    private PrivateArea privateArea;
-
     @Size(min = 5, message = "Username should have at least 5 characters")
     @NotEmpty(message = "Username cannot be empty")
     @Column(name = "username")
@@ -58,7 +48,6 @@ public class User {
     @Min(18)
     private Long age;
 
-    @Size(min = 10, message = "Sex should have at least 5 characters")
     @NotEmpty(message = "Sex cannot be empty")
     @Column(name = "sex")
     private String sex;
@@ -68,17 +57,19 @@ public class User {
     @Column(name = "email", unique = true)
     private String email;
 
-    @Size(min = 5, message = "Birtdate should have not be empty")
+    @Past
+    @Temporal(TemporalType.DATE)
+    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(unique = true, name = "birthdate")
     private LocalDate birthdate;
 
-    @NotBlank
-    @Size(message = "Register Date should have not be empty")
+    @Column(name = "register_date", unique = true)
+    @Temporal(TemporalType.DATE)
     private LocalDate registerDate;
 
     @NotBlank
-    @Size(message = "Description should have not be empty")
     @Size(max = 140, message = "The text must not exceed 140 characters")
+    @Column(name = "description", unique = true)
     private String description;
 
     @NotNull

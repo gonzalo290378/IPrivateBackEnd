@@ -1,14 +1,17 @@
 package com.ms_users.mapper;
 
-import com.ms_users.dto.FreeAreaUserDTO;
-import com.ms_users.dto.UserDTO;
-import com.ms_users.models.entity.FreeAreaUser;
-import com.ms_users.models.entity.User;
+import com.ms_users.models.FreeArea;
+import com.ms_users.models.FreeAreaDTO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {PrincipalPhotoMapper.class, PublicContentMapper.class})
+//@Mapper(componentModel = "spring")
 public interface FreeAreaMapper {
-    public FreeAreaUserDTO toDTO(FreeAreaUser freeAreaUser);
 
-    public User toModel(UserDTO userResponseDTO);
+    @Mapping(target = "principalPhotoDTO", source = "principalPhoto")
+    @Mapping(target = "publicContentDTO", source = "publicContent")
+    FreeAreaDTO toDTO(FreeArea freeArea);
+
+    FreeArea toModel(FreeAreaDTO freeAreaDTO);
 }

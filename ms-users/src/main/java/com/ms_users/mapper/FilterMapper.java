@@ -1,7 +1,6 @@
 package com.ms_users.mapper;
 
 import com.ms_users.dto.FilterDTO;
-import com.ms_users.dto.UserDTO;
 import com.ms_users.models.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -12,5 +11,6 @@ public interface FilterMapper {
     @Mapping(target = "cityDTO", source = "city")
     @Mapping(target = "countryDTO", source = "country")
     public FilterDTO toDTO(User user);
+
     public User toModel(FilterDTO filterDTO);
 }

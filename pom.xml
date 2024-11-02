@@ -20,6 +20,7 @@
 		<module>ms-users</module>
 		<module>ms-gateway</module>
 		<module>ms-free-area</module>
+		<module>ms-private-area</module>
 	</modules>
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
