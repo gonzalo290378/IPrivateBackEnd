@@ -16,8 +16,6 @@ public class PrivateContent {
 
     private Long id;
 
-    private Long idPrivateArea;
-
     private LocalDate date;
 
     private String description;

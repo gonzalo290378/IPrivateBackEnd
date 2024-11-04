@@ -1,7 +1,6 @@
 package com.ms_users.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ms_users.models.PrivateContent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +25,7 @@ public class PrivateAreaDTO implements Serializable {
     @JsonProperty("monthCostPrivateArea")
     private BigDecimal monthCostPrivateArea;
 
-    @JsonProperty("privateContent")
+    @JsonProperty("privateContentDTO")
     private List<PrivateContentDTO> privateContentDTO;
 
 

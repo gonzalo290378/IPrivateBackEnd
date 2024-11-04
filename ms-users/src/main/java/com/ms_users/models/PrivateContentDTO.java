@@ -18,9 +18,6 @@ public class PrivateContentDTO implements Serializable {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("idPrivateArea")
-    private Long idPrivateArea;
-
     @JsonProperty("date")
     private LocalDate date;
 

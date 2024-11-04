@@ -29,10 +29,12 @@ public class PrivateAreaServiceImpl implements PrivateAreaService {
 
     @Override
     public List<PrivateAreaDTO> findAll() {
-        List<PrivateArea> freeArea = privateAreaRepository.findAll();
-        return freeArea.stream()
+        List<PrivateArea> privateArea = privateAreaRepository.findAll();
+        return privateArea.stream()
                 .map(privateAreaMapper::toDTO)
                 .collect(Collectors.toList());
+
+
     }
 
     public Optional<PrivateAreaDTO> findById(Long id) {
