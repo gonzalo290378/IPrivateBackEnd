@@ -1,4 +1,4 @@
-package com.iprivado.free_area.clients;
+package com.iprivado.private_area.clients;
 
 import org.springframework.cloud.openfeign.FeignClient;
 

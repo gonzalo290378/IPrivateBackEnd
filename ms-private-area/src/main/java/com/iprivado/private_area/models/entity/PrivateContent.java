@@ -1,4 +1,4 @@
-package com.iprivado.free_area.models.entity;
+package com.iprivado.private_area.models.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -11,21 +11,21 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "public_content")
+@Table(name = "private_content")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PublicContent {
+public class PrivateContent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_free_area")
+    @JoinColumn(name = "id_private_area")
     //@JsonBackReference
-    private FreeArea freeArea;
+    private PrivateArea privateArea;
 
     @Temporal(TemporalType.DATE)
     //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

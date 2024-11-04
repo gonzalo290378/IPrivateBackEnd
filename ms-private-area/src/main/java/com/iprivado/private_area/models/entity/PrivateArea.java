@@ -1,4 +1,4 @@
-package com.iprivado.free_area.models.entity;
+package com.iprivado.private_area.models.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -6,15 +6,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.util.List;
 
 @Entity
-@Table(name = "free_area")
+@Table(name = "private_area")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FreeArea {
+public class PrivateArea {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,11 +25,8 @@ public class FreeArea {
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
-    @OneToMany(mappedBy = "freeArea", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "privateArea", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     //@JsonManagedReference
-    private List<PrincipalPhoto> principalPhoto;
+    private List<PrivateContent> privateContent;
 
-    @OneToMany(mappedBy = "freeArea", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    //@JsonManagedReference
-    private List<PublicContent> publicContent;
 }

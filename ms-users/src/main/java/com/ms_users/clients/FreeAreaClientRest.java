@@ -10,7 +10,6 @@ import java.util.List;
 //COMUNICACION CON ENTRE MSVC-USUARIOS (POD) -> MSVC-CURSOS (POD) HACIENDO USO DE @FeignClient(name="msvc-cursos", url = "msvc-cursos:8002")
 //@FeignClient(name = "ms-free-area", url = "${ms.free-area.url}") //COMUNICACION MEDIANTE VARIABLES DE AMBIENTE
 @FeignClient(name = "ms-free-area", url = "localhost:8002") //COMUNICACION MEDIANTE VARIABLES DE AMBIENTE
-
 public interface FreeAreaClientRest {
 
     @GetMapping("api/v1/free-area")

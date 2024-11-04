@@ -6,7 +6,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring", uses = {PrincipalPhotoMapper.class, PublicContentMapper.class})
-//@Mapper(componentModel = "spring")
 public interface FreeAreaMapper {
 
     @Mapping(target = "principalPhotoDTO", source = "principalPhoto")

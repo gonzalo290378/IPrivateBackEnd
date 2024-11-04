@@ -1,6 +1,6 @@
 package com.ms_users.clients;
 
-import com.ms_users.models.PrivateArea;
+import com.ms_users.models.PrivateAreaDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,11 +12,14 @@ import java.util.List;
 public interface PrivateAreaClientRest {
 
     @GetMapping("api/v1/private-area")
-    List<PrivateArea> findAll();
+    List<PrivateAreaDTO> findAll();
+
+    @GetMapping("api/v1/private-area/{id}")
+    PrivateAreaDTO findById(@PathVariable Long id);
 
     @PostMapping("/api/v1/private-area")
-    PrivateArea save(@RequestBody Boolean isEnabled);
+    PrivateAreaDTO save(@RequestBody Boolean isEnabled);
 
-    @DeleteMapping("/delete-free-area/{id}")
+    @DeleteMapping("/delete-private-area/{id}")
     void delete(@PathVariable Long id);
 }

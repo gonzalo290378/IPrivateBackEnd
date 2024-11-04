@@ -15,7 +15,7 @@ import com.ms_users.exceptions.UserDisabledNotFoundException;
 import com.ms_users.mapper.FilterMapper;
 import com.ms_users.mapper.UserMapper;
 import com.ms_users.models.FreeAreaDTO;
-import com.ms_users.models.PrivateArea;
+import com.ms_users.models.PrivateAreaDTO;
 import com.ms_users.models.entity.City;
 import com.ms_users.models.entity.Country;
 import com.ms_users.models.entity.Preference;
@@ -124,7 +124,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User save(UserFormDTO userFormDTO) {
         FreeAreaDTO newFreeAreaDTO = createFreeArea();
-        PrivateArea newPrivateArea = createPrivateArea();
+        PrivateAreaDTO newPrivateArea = createPrivateArea();
         Preference preference = buildPreference(userFormDTO);
         Country country = buildCountry(userFormDTO);
         City city = buildCity(userFormDTO);
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService {
         return freeAreaClientRest.save(AreaConfiguration.ENABLED.getValue());
     }
 
-    private PrivateArea createPrivateArea() {
+    private PrivateAreaDTO createPrivateArea() {
         return privateAreaClientRest.save(AreaConfiguration.DISABLED.getValue());
     }
 
@@ -161,11 +161,11 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    private User buildUser(UserFormDTO userFormDTO, FreeAreaDTO freeAreaDTO, PrivateArea privateArea,
+    private User buildUser(UserFormDTO userFormDTO, FreeAreaDTO freeAreaDTO, PrivateAreaDTO privateAreaDTO,
                            Preference preference, Country country, City city) {
         return User.builder()
                 .idFreeArea(freeAreaDTO.getId())
-                .idPrivateArea(privateArea.getId())
+                .idPrivateArea(privateAreaDTO.getId())
                 .preference(preference)
                 .country(country)
                 .city(city)
