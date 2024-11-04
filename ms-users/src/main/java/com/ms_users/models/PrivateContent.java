@@ -5,22 +5,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.util.List;
+import java.time.LocalDate;
 
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PrivateArea {
+public class PrivateContent {
 
     private Long id;
 
-    private Boolean isEnabled;
+    private Long idPrivateArea;
 
-    private BigDecimal monthCostPrivateArea;
+    private LocalDate date;
 
-    private List<PrivateContent> privateContent;
+    private String description;
+
+    private String contentUrl;
+
+    private Long like;
 
 }
