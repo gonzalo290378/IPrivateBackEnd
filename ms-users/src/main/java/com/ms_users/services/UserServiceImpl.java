@@ -51,15 +51,22 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> findAll() {
         List<User> userList = userRepository.findAll();
         List<FreeAreaDTO> freeAreaList = freeAreaClientRest.findAll();
+        List<PrivateAreaDTO> privateAreaList = privateAreaClientRest.findAll();
         List<UserDTO> userDTOList = userList.stream().map(userMapper::toDTO).toList();
-        return matchUserToFreeArea(userDTOList, freeAreaList);
+        return matchUserWithFreeAreaAndPrivateArea(userDTOList, freeAreaList, privateAreaList);
     }
 
-    private List<UserDTO> matchUserToFreeArea(List<UserDTO> userDTOList, List<FreeAreaDTO> freeAreaDTOList) {
+    private List<UserDTO> matchUserWithFreeAreaAndPrivateArea(List<UserDTO> userDTOList, List<FreeAreaDTO> freeAreaDTOList, List<PrivateAreaDTO> privateAreaDTOList
+    ) {
         for (UserDTO user : userDTOList) {
             freeAreaDTOList.stream()
                     .filter(freeArea -> Objects.equals(freeArea.getId(), user.getIdFreeArea()))
                     .peek(user::setFreeAreaDTO)
+                    .collect(Collectors.toList());
+
+            privateAreaDTOList.stream()
+                    .filter(privateArea -> Objects.equals(privateArea.getId(), user.getIdFreeArea()))
+                    .peek(user::setPrivateAreaDTO)
                     .collect(Collectors.toList());
         }
         return userDTOList;
@@ -71,19 +78,22 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getId(), id))
                 .findFirst()
                 .orElseThrow(() -> new IdNotFoundException("id: " + id + " does not exist"));
-        FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
-        UserDTO userDTO = userMapper.toDTO(user);
-        userDTO.setFreeAreaDTO(freeAreaDTO);
-        return Optional.of(userDTO);
+        return getUserDTO(user);
     }
 
     public Optional<UserDTO> findByEmail(String email) {
         User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getEmail(), email))
                 .findFirst()
                 .orElseThrow(() -> new EmailNotFoundException("email: " + email + " does not exist"));
+        return getUserDTO(user);
+    }
+
+    private Optional<UserDTO> getUserDTO(User user) {
         FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
+        PrivateAreaDTO privateAreaDTO = privateAreaClientRest.findById(user.getIdPrivateArea());
         UserDTO userDTO = userMapper.toDTO(user);
         userDTO.setFreeAreaDTO(freeAreaDTO);
+        userDTO.setPrivateAreaDTO(privateAreaDTO);
         return Optional.of(userDTO);
     }
 
@@ -99,9 +109,10 @@ public class UserServiceImpl implements UserService {
         return filterUserList.map(user -> {
             FilterDTO filterListDTO = filterMapper.toDTO(user);
             FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
+            PrivateAreaDTO privateAreaDTO = privateAreaClientRest.findById(user.getIdPrivateArea());
             filterListDTO.setFreeAreaDTO(freeAreaDTO);
+            filterListDTO.setPrivateAreaDTO(privateAreaDTO);
             filterListDTO.setIdFreeArea(freeAreaDTO.getId());
-            //filterListDTO.setIdPrivateArea(privateArea.getId());
             return filterListDTO;
         });
     }

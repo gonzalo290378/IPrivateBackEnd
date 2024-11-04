@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -20,8 +21,10 @@ public class PrivateAreaDTO {
     @JsonProperty("isEnabled")
     private Boolean isEnabled;
 
+    @JsonProperty("monthCostPrivateArea")
+    private BigDecimal monthCostPrivateArea;
+
     @JsonProperty("privateContentDTO")
     private List<PrivateContentDTO> privateContentDTO;
-
 
 }

@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -24,6 +25,9 @@ public class PrivateArea {
     @NotNull
     @Column(name = "is_enabled")
     private Boolean isEnabled;
+
+    @Column(name = "month_cost_private_area")
+    private BigDecimal monthCostPrivateArea;
 
     @OneToMany(mappedBy = "privateArea", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     //@JsonManagedReference
