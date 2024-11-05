@@ -9,9 +9,7 @@ import com.ms_users.enums.AgeConfiguration;
 import com.ms_users.enums.AreaConfiguration;
 import com.ms_users.enums.DateConfiguration;
 import com.ms_users.enums.UserEnabledConfiguration;
-import com.ms_users.exceptions.EmailNotFoundException;
-import com.ms_users.exceptions.IdNotFoundException;
-import com.ms_users.exceptions.UserDisabledNotFoundException;
+import com.ms_users.exceptions.*;
 import com.ms_users.mapper.FilterMapper;
 import com.ms_users.mapper.UserMapper;
 import com.ms_users.models.FreeAreaDTO;
@@ -28,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
                     .collect(Collectors.toList());
 
             privateAreaDTOList.stream()
-                    .filter(privateArea -> Objects.equals(privateArea.getId(), user.getIdFreeArea()))
+                    .filter(privateArea -> Objects.equals(privateArea.getId(), user.getIdPrivateArea()))
                     .peek(user::setPrivateAreaDTO)
                     .collect(Collectors.toList());
         }
@@ -131,17 +131,40 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
-    @Transactional
     public User save(UserFormDTO userFormDTO) {
+        validateUserForm(userFormDTO);
+        User newUser = buildUser(userFormDTO);
+        return userRepository.save(newUser);
+    }
+
+    private void validateUserForm(UserFormDTO userFormDTO) {
+        validateAgeFromAndAgeTo(userFormDTO.getAgeFrom(), userFormDTO.getAgeTo());
+        validateBirthdate(userFormDTO.getBirthdate());
+    }
+
+    private void validateAgeFromAndAgeTo(Long ageFrom, Long ageTo) {
+        if (ageFrom != null && ageTo != null && ageFrom > ageTo) {
+            throw new InvalidAgeRangeException("Age from cannot be greater than age to");
+        }
+    }
+
+    private void validateBirthdate(LocalDate birthdate) {
+        if (!isAdult(birthdate)) {
+            throw new InvalidBirthdateException("Age must be at least 18 years old.");
+        }
+    }
+
+    private User buildUser(UserFormDTO userFormDTO) {
         FreeAreaDTO newFreeAreaDTO = createFreeArea();
         PrivateAreaDTO newPrivateArea = createPrivateArea();
         Preference preference = buildPreference(userFormDTO);
         Country country = buildCountry(userFormDTO);
         City city = buildCity(userFormDTO);
+        return buildUser(userFormDTO, newFreeAreaDTO, newPrivateArea, preference, country, city);
+    }
 
-        User newUser = buildUser(userFormDTO, newFreeAreaDTO, newPrivateArea, preference, country, city);
-        return userRepository.save(newUser);
+    private boolean isAdult(LocalDate birthdate) {
+        return birthdate != null && ChronoUnit.YEARS.between(birthdate, LocalDate.now()) >= 18;
     }
 
     private FreeAreaDTO createFreeArea() {

@@ -9,6 +9,7 @@ import com.iprivado.private_area.repositories.PrivateAreaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -51,6 +52,7 @@ public class PrivateAreaServiceImpl implements PrivateAreaService {
     public PrivateArea save(Boolean isEnabled) {
         PrivateArea privateArea = PrivateArea.builder()
                 .isEnabled(isEnabled)
+                .monthCostPrivateArea(BigDecimal.ZERO)
                 .privateContent(new ArrayList<>())
                 .build();
         privateAreaRepository.save(privateArea);
