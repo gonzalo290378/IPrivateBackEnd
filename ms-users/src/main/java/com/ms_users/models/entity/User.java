@@ -1,11 +1,13 @@
 package com.ms_users.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -40,15 +42,19 @@ public class User {
     private City city;
 
     @Size(min = 5, message = "Username should have at least 5 characters")
-    @NotEmpty(message = "Username cannot be empty")
+    @Size(max = 10, message = "Username should not have more than 10 characters")
+    @NotEmpty(message = "Username can not be empty")
     @Column(name = "username")
     private String username;
 
+    @Min(value = 18, message = "Age from must be more than 18")
+    @Max(value = 90, message = "Age to must be less than 90")
+    @NotNull(message = "Age must not be empty")
     @Column(name = "age")
-    @Min(18)
     private Long age;
 
-    @NotEmpty(message = "Sex cannot be empty")
+    @Pattern(regexp = "^[FM]$", message = "Sex preference must be 'F' or 'M'")
+    @NotEmpty(message = "Sex preference must be 'F' or 'M'")
     @Column(name = "sex")
     private String sex;
 
@@ -59,7 +65,8 @@ public class User {
 
     @Past
     @Temporal(TemporalType.DATE)
-    //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(unique = true, name = "birthdate")
     private LocalDate birthdate;
 
@@ -67,8 +74,9 @@ public class User {
     @Temporal(TemporalType.DATE)
     private LocalDate registerDate;
 
-    @NotBlank
-    @Size(max = 140, message = "The text must not exceed 140 characters")
+    @Size(min = 10)
+    @Size(max = 140)
+    @NotEmpty(message = "Description can not be empty")
     @Column(name = "description", unique = true)
     private String description;
 
@@ -76,7 +84,9 @@ public class User {
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
-    @Size(min = 5, message = "Password should have at least 5 characters")
+    @Size(max = 10)
+    @Size(min = 6)
+    @NotEmpty(message = "Password can not be empty")
     @Column(name = "password")
     private String password;
 

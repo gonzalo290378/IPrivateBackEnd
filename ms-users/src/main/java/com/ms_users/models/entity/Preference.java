@@ -1,10 +1,7 @@
 package com.ms_users.models.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,16 +19,20 @@ public class Preference {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Min(value = 18, message = "Age from must be more than 18")
+    @Max(value = 90, message = "Age to must be less than 90")
+    @NotNull(message = "Age from must not be empty")
     @Column(name = "age_from")
-    @Min(18)
     private Long ageFrom;
 
+    @Min(value = 18, message = "Age from must be more than 18")
+    @Max(value = 90, message = "Age to must be less than 90")
+    @NotNull(message = "Age to must not be empty")
     @Column(name = "age_to")
-    @Max(90)
     private Long ageTo;
 
-    @Size(min = 10, message = "Sex Preference should have at least 5 characters")
-    @NotEmpty(message = "Sex preference cannot be empty")
+    @Pattern(regexp = "^[FM]$", message = "Sex preference must be 'F' or 'M'")
+    @NotEmpty(message = "Sex preference must be 'F' or 'M'")
     @Column(name = "sex_preference")
     private String sexPreference;
 

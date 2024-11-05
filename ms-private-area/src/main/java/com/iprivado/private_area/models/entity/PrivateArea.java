@@ -1,6 +1,7 @@
 package com.iprivado.private_area.models.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,11 +27,12 @@ public class PrivateArea {
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
+    @NotNull(message = "Month cost private area can not be null")
+    @DecimalMin(value = "0.00", message = "Month cost private can not be less than 0")
     @Column(name = "month_cost_private_area")
     private BigDecimal monthCostPrivateArea;
 
     @OneToMany(mappedBy = "privateArea", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    //@JsonManagedReference
     private List<PrivateContent> privateContent;
 
 }

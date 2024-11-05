@@ -26,10 +26,8 @@ public class FreeArea {
     private Boolean isEnabled;
 
     @OneToMany(mappedBy = "freeArea", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    //@JsonManagedReference
     private List<PrincipalPhoto> principalPhoto;
 
     @OneToMany(mappedBy = "freeArea", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    //@JsonManagedReference
     private List<PublicContent> publicContent;
 }
