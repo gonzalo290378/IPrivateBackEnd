@@ -36,5 +36,11 @@ public class PrivateAreaController {
         return ResponseEntity.ok(privateAreaService.save(isEnabled));
     }
 
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        log.info("ms-private-area Calling delete with {id}");
+        privateAreaService.delete(id);
+    }
+
 
 }

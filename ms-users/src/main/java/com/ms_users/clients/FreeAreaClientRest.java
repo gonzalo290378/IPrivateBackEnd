@@ -1,5 +1,6 @@
 package com.ms_users.clients;
 
+import com.ms_users.models.FreeArea;
 import com.ms_users.models.FreeAreaDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,6 @@ public interface FreeAreaClientRest {
     @PostMapping("/api/v1/free-area")
     FreeAreaDTO save(@RequestBody Boolean isEnabled);
 
-    @DeleteMapping("/delete-free-area/{id}")
+    @DeleteMapping("/api/v1/free-area/{id}")
     void delete(@PathVariable Long id);
 }
