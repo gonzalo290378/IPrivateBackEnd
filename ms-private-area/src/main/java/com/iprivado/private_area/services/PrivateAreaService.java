@@ -14,4 +14,7 @@ public interface PrivateAreaService {
 
     PrivateArea save(Boolean isEnabled);
 
+    void delete(Long id);
+
+
 }

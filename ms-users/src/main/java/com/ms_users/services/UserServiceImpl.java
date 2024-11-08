@@ -12,7 +12,9 @@ import com.ms_users.enums.UserEnabledConfiguration;
 import com.ms_users.exceptions.*;
 import com.ms_users.mapper.FilterMapper;
 import com.ms_users.mapper.UserMapper;
+import com.ms_users.models.FreeArea;
 import com.ms_users.models.FreeAreaDTO;
+import com.ms_users.models.PrivateArea;
 import com.ms_users.models.PrivateAreaDTO;
 import com.ms_users.models.entity.City;
 import com.ms_users.models.entity.Country;
@@ -93,6 +95,7 @@ public class UserServiceImpl implements UserService {
         return getUserDTO(user);
     }
 
+
     private Optional<UserDTO> getUserDTO(User user) {
         FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
         PrivateAreaDTO privateAreaDTO = privateAreaClientRest.findById(user.getIdPrivateArea());
@@ -131,31 +134,29 @@ public class UserServiceImpl implements UserService {
         Boolean isAgeToTooHigh = ageTo > AgeConfiguration.SENIOR.getValue();
 
         if (isAgeFromTooLow || isAgeRangeInvalid || isAgeToTooHigh) {
-            throw new UserDisabledNotFoundException("User: " + filterDTO.getUsername()
+            throw new UserAgeSelectedException("User: " + filterDTO.getUsername()
                     + " has selected an invalid age range: ageFrom = " + ageFrom + ", ageTo = " + ageTo);
         }
     }
 
     public User save(UserFormDTO userFormDTO) {
-        validateUserForm(userFormDTO);
-        User newUser = buildUser(userFormDTO);
-        return userRepository.save(newUser);
+        Boolean userExists = findByEmailWithoutException(userFormDTO.getEmail());
+        if (!userExists) {
+            validateUserForm(userFormDTO);
+            User newUser = buildUser(userFormDTO);
+            return userRepository.save(newUser);
+        }
+        throw new UsernameNotFoundException("User: " + userFormDTO.getUsername()
+                + " is registered");
+
     }
 
-
-    public User update(UserFormDTO userFormDTO, User user) {
-        validateUserForm(userFormDTO);
-        user.getPreference().setAgeFrom(userFormDTO.getAgeFrom());
-        user.getPreference().setAgeTo(userFormDTO.getAgeTo());
-        user.getPreference().setSexPreference(userFormDTO.getSexPreference());
-        user.getCountry().setCountry(userFormDTO.getCountry());
-        user.getCity().setCity(userFormDTO.getCity());
-        user.setUsername(userFormDTO.getUsername());
-        user.setAge(userFormDTO.getAge());
-        user.setBirthdate(userFormDTO.getBirthdate());
-        user.setDescription(userFormDTO.getDescription());
-        user.setPassword(userFormDTO.getPassword());
-        return userRepository.save(user);
+    public Boolean findByEmailWithoutException(String email) {
+        Optional<User> user = userRepository.findAll()
+                .stream()
+                .filter(e -> Objects.equals(e.getEmail(), email))
+                .findFirst();
+        return user.isPresent();
     }
 
 
@@ -184,7 +185,6 @@ public class UserServiceImpl implements UserService {
         City city = buildCity(userFormDTO);
         return buildUser(userFormDTO, newFreeAreaDTO, newPrivateArea, preference, country, city);
     }
-
 
 
     private boolean isAdult(LocalDate birthdate) {
@@ -239,14 +239,44 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    public User update(UserFormDTO userFormDTO, User user) {
+        validateUserForm(userFormDTO);
+        updateUserPreferences(user, userFormDTO);
+        updateUserLocation(user, userFormDTO);
+        updateUserBasicInfo(user, userFormDTO);
+        return userRepository.save(user);
+    }
+
+    private void updateUserPreferences(User user, UserFormDTO userFormDTO) {
+        user.getPreference().setAgeFrom(userFormDTO.getAgeFrom());
+        user.getPreference().setAgeTo(userFormDTO.getAgeTo());
+        user.getPreference().setSexPreference(userFormDTO.getSexPreference());
+    }
+
+    private void updateUserLocation(User user, UserFormDTO userFormDTO) {
+        user.getCountry().setCountry(userFormDTO.getCountry());
+        user.getCity().setCity(userFormDTO.getCity());
+    }
+
+    private void updateUserBasicInfo(User user, UserFormDTO userFormDTO) {
+        user.setUsername(userFormDTO.getUsername());
+        user.setAge(userFormDTO.getAge());
+        user.setBirthdate(userFormDTO.getBirthdate());
+        user.setDescription(userFormDTO.getDescription());
+        user.setPassword(userFormDTO.getPassword());
+    }
+
 
     @Transactional
-    public void delete(Long id) {
+    public User delete(Long id) {
         Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            userRepository.delete(id);
-            freeAreaClientRest.delete(id);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("User: is not registered");
         }
+        userRepository.delete(id);
+        freeAreaClientRest.delete(user.get().getIdFreeArea());
+        privateAreaClientRest.delete(user.get().getIdPrivateArea());
+        return user.get();
     }
 
 }

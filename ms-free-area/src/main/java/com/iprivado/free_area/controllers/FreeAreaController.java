@@ -36,5 +36,10 @@ public class FreeAreaController {
         return ResponseEntity.ok(freeAreaService.save(isEnabled));
     }
 
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        log.info("ms-free-area Calling delete with {id}");
+        freeAreaService.delete(id);
+    }
 
 }

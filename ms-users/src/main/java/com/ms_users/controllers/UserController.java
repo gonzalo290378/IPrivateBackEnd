@@ -95,12 +95,8 @@ public class UserController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         log.info("ms-users Calling delete with {id}");
-        Optional<UserDTO> o = userService.findById(id);
-        if (o.isPresent()) {
-            userService.delete(id);
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        User user = userService.findEntityById(id).get();
+        return ResponseEntity.ok(userService.delete(user.getId()));
     }
 
 }

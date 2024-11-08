@@ -1,5 +1,7 @@
 package com.ms_users.clients;
 
+import com.ms_users.models.FreeArea;
+import com.ms_users.models.PrivateArea;
 import com.ms_users.models.PrivateAreaDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +22,6 @@ public interface PrivateAreaClientRest {
     @PostMapping("/api/v1/private-area")
     PrivateAreaDTO save(@RequestBody Boolean isEnabled);
 
-    @DeleteMapping("/delete-private-area/{id}")
+    @DeleteMapping("/api/v1/private-area/{id}")
     void delete(@PathVariable Long id);
 }

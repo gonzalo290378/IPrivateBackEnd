@@ -22,7 +22,7 @@ public interface UserService {
 
     User update(UserFormDTO userFormDTO, User user);
 
-    void delete(Long id);
+    User delete(Long id);
 
     Optional<User> findEntityById(Long id);
 

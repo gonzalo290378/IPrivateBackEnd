@@ -59,5 +59,14 @@ public class FreeAreaServiceImpl implements FreeAreaService {
         return freeArea;
     }
 
+    @Transactional
+    public void delete(Long id) {
+        Optional<FreeArea> freeArea = freeAreaRepository.findById(id);
+        if (freeArea.isEmpty()) {
+            throw new FreeAreaNotFoundException("Free Area was not found");
+        }
+        freeAreaRepository.logicDelete(id);
+    }
+
 
 }

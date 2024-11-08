@@ -59,5 +59,13 @@ public class PrivateAreaServiceImpl implements PrivateAreaService {
         return privateArea;
     }
 
+    @Transactional
+    public void delete(Long id) {
+        Optional<PrivateArea> privateArea = privateAreaRepository.findById(id);
+        if (privateArea.isEmpty()) {
+            throw new PrivateAreaNotFoundException("Private Area was not found");
+        }
+        privateAreaRepository.logicDelete(id);
+    }
 
 }
