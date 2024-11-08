@@ -21,35 +21,6 @@ public class UserFormDTO implements Serializable {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("idFreeArea")
-    private Long idFreeArea;
-
-    @JsonProperty("idPrivateArea")
-    private Long idPrivateArea;
-
-    @Min(value = 18, message = "Age from must be more than 18")
-    @Max(value = 90, message = "Age to must be less than 90")
-    @NotNull(message = "Age from must not be empty")
-    @JsonProperty("ageFrom")
-    private Long ageFrom;
-
-    @Min(value = 18, message = "Age from must be more than 18")
-    @Max(value = 90, message = "Age to must be less than 90")
-    @NotNull(message = "Age to must not be empty")
-    @JsonProperty("ageTo")
-    private Long ageTo;
-
-    @Pattern(regexp = "^[FM]$", message = "Sex preference must be 'F' or 'M'")
-    @NotEmpty(message = "Sex preference must be 'F' or 'M'")
-    @JsonProperty("sexPreference")
-    private String sexPreference;
-
-    @JsonProperty("country")
-    private String country;
-
-    @JsonProperty("city")
-    private String city;
-
     @Size(min = 5, message = "Username should have at least 5 characters")
     @Size(max = 10, message = "Username should not have more than 10 characters")
     @NotEmpty(message = "Username can not be empty")
@@ -94,6 +65,35 @@ public class UserFormDTO implements Serializable {
     @NotEmpty(message = "Password can not be empty")
     @JsonProperty("password")
     private String password;
+
+    @JsonProperty("idFreeArea")
+    private Long idFreeArea;
+
+    @JsonProperty("idPrivateArea")
+    private Long idPrivateArea;
+
+    @Min(value = 18, message = "Age from must be more than 18")
+    @Max(value = 90, message = "Age to must be less than 90")
+    @NotNull(message = "Age from must not be empty")
+    @JsonProperty("ageFrom")
+    private Long ageFrom;
+
+    @Min(value = 18, message = "Age from must be more than 18")
+    @Max(value = 90, message = "Age to must be less than 90")
+    @NotNull(message = "Age to must not be empty")
+    @JsonProperty("ageTo")
+    private Long ageTo;
+
+    @Pattern(regexp = "^[FM]$", message = "Sex preference must be 'F' or 'M'")
+    @NotEmpty(message = "Sex preference must be 'F' or 'M'")
+    @JsonProperty("sexPreference")
+    private String sexPreference;
+
+    @JsonProperty("country")
+    private String country;
+
+    @JsonProperty("city")
+    private String city;
 
     public Long getAge() {
         LocalDate today = LocalDate.now();

@@ -23,24 +23,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "id_free_area")
-    private Long idFreeArea;
-
-    @Column(name = "id_private_area")
-    private Long idPrivateArea;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_preference")
-    private Preference preference;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_country")
-    private Country country;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_city")
-    private City city;
-
     @Size(min = 5, message = "Username should have at least 5 characters")
     @Size(max = 10, message = "Username should not have more than 10 characters")
     @NotEmpty(message = "Username can not be empty")
@@ -88,5 +70,25 @@ public class User {
     @NotEmpty(message = "Password can not be empty")
     @Column(name = "password")
     private String password;
+
+    @Column(name = "id_free_area")
+    private Long idFreeArea;
+
+    @Column(name = "id_private_area")
+    private Long idPrivateArea;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_preference")
+    private Preference preference;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_country")
+    private Country country;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_city")
+    private City city;
+
+
 
 }
