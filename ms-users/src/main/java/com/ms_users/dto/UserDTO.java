@@ -25,27 +25,6 @@ public class UserDTO implements Serializable {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("idFreeArea")
-    private Long idFreeArea;
-
-    @JsonProperty("idPrivateArea")
-    private Long idPrivateArea;
-
-    @JsonProperty("freeAreaDTO")
-    private FreeAreaDTO freeAreaDTO;
-
-    @JsonProperty("privateAreaDTO")
-    private PrivateAreaDTO privateAreaDTO;
-
-    @JsonProperty("preferenceDTO")
-    private PreferenceDTO preferenceDTO;
-
-    @JsonProperty("countryDTO")
-    private CountryDTO countryDTO;
-
-    @JsonProperty("cityDTO")
-    private CityDTO cityDTO;
-
     @Size(min = 5, message = "Username should have at least 5 characters")
     @Size(max = 10, message = "Username should not have more than 10 characters")
     @NotEmpty(message = "Username can not be empty")
@@ -90,6 +69,27 @@ public class UserDTO implements Serializable {
     @NotEmpty(message = "Password can not be empty")
     @JsonProperty("password")
     private String password;
+
+    @JsonProperty("idFreeArea")
+    private Long idFreeArea;
+
+    @JsonProperty("idPrivateArea")
+    private Long idPrivateArea;
+
+    @JsonProperty("freeAreaDTO")
+    private FreeAreaDTO freeAreaDTO;
+
+    @JsonProperty("privateAreaDTO")
+    private PrivateAreaDTO privateAreaDTO;
+
+    @JsonProperty("preferenceDTO")
+    private PreferenceDTO preferenceDTO;
+
+    @JsonProperty("countryDTO")
+    private CountryDTO countryDTO;
+
+    @JsonProperty("cityDTO")
+    private CityDTO cityDTO;
 
     public Long getAge() {
         LocalDate today = LocalDate.now();
