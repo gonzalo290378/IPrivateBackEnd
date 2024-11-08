@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-
+import java.time.Period;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -58,7 +58,6 @@ public class UserFormDTO implements Serializable {
 
     @Min(value = 18, message = "Age from must be more than 18")
     @Max(value = 90, message = "Age to must be less than 90")
-    @NotNull(message = "ageFrom must not be empty")
     @JsonProperty("age")
     private Long age;
 
@@ -95,5 +94,16 @@ public class UserFormDTO implements Serializable {
     @NotEmpty(message = "Password can not be empty")
     @JsonProperty("password")
     private String password;
+
+    public Long getAge() {
+        LocalDate today = LocalDate.now();
+        long age = Period.between(birthdate, today).getYears();
+
+        if (birthdate.getDayOfMonth() == today.getDayOfMonth() && birthdate.getMonth() == today.getMonth()) {
+            return age + 1;
+        }
+
+        return age;
+    }
 
 }

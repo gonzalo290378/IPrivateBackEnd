@@ -5,11 +5,8 @@ import com.ms_users.dto.UserDTO;
 import com.ms_users.dto.UserFormDTO;
 import com.ms_users.models.entity.User;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public interface UserService {
@@ -23,10 +20,10 @@ public interface UserService {
 
     User save(UserFormDTO userFormDTO);
 
+    User update(UserFormDTO userFormDTO, User user);
+
     void delete(Long id);
 
-    Boolean hasInvalidFields(User user, UserDTO userDTO);
-
-    ResponseEntity<Map<String, String>> validate(BindingResult result);
+    Optional<User> findEntityById(Long id);
 
 }
