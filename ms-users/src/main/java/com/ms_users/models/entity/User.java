@@ -49,7 +49,6 @@ public class User {
 
     @Min(value = 18, message = "Age from must be more than 18")
     @Max(value = 90, message = "Age to must be less than 90")
-    @NotNull(message = "Age must not be empty")
     @Column(name = "age")
     private Long age;
 

@@ -14,6 +14,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.Period;
 
 @Data
 @Builder
@@ -53,7 +54,6 @@ public class UserDTO implements Serializable {
 
     @Min(value = 18, message = "Age from must be more than 18")
     @Max(value = 90, message = "Age to must be less than 90")
-    @NotNull(message = "ageFrom must not be empty")
     @JsonProperty("age")
     private Long age;
 
@@ -93,10 +93,12 @@ public class UserDTO implements Serializable {
 
     public Long getAge() {
         LocalDate today = LocalDate.now();
+        long age = Period.between(birthdate, today).getYears();
 
         if (birthdate.getDayOfMonth() == today.getDayOfMonth() && birthdate.getMonth() == today.getMonth()) {
-            return this.age + 1;
+            return age + 1;
         }
+
         return age;
     }
 

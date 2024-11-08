@@ -1,6 +1,7 @@
 package com.ms_users.controllers;
 
 import com.ms_users.dto.*;
+import com.ms_users.models.entity.User;
 import com.ms_users.services.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -84,26 +85,12 @@ public class UserController {
         return ResponseEntity.ok(userService.save(userFormDTO));
     }
 
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> edit(@Valid @RequestBody User user, BindingResult result, @PathVariable Long id) {
-//        log.info("ms-users Calling edit with {user}");
-//
-//        if (result.hasErrors()) {
-//            return userService.validate(result);
-//        }
-//
-//        Optional<UserDTO> o = userService.findById(id);
-//        if (o.isPresent()) {
-//            UserDTO usuarioDb = o.get();
-//
-//            if (userService.hasInvalidFields(user, usuarioDb)) {
-//                return ResponseEntity.badRequest()
-//                        .body(Collections.singletonMap("Message Application", "Some data cannot be empty"));
-//            }
-//            return ResponseEntity.status(HttpStatus.CREATED).body(userService.save(user));
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
+    @PutMapping("/{id}")
+    public ResponseEntity<?> edit(@Valid @RequestBody UserFormDTO userFormDTO, @PathVariable Long id) {
+        log.info("ms-users Calling edit with {user}");
+        User user = userService.findEntityById(id).get();
+        return ResponseEntity.ok(userService.update(userFormDTO, user));
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {

@@ -21,14 +21,14 @@ import com.ms_users.models.entity.User;
 import com.ms_users.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -79,6 +79,11 @@ public class UserServiceImpl implements UserService {
                 .findFirst()
                 .orElseThrow(() -> new IdNotFoundException("id: " + id + " does not exist"));
         return getUserDTO(user);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<User> findEntityById(Long id) {
+        return Optional.ofNullable(userRepository.findById(id).orElseThrow(() -> new IdNotFoundException("id: " + id + " does not exist")));
     }
 
     public Optional<UserDTO> findByEmail(String email) {
@@ -137,6 +142,23 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(newUser);
     }
 
+
+    public User update(UserFormDTO userFormDTO, User user) {
+        validateUserForm(userFormDTO);
+        user.getPreference().setAgeFrom(userFormDTO.getAgeFrom());
+        user.getPreference().setAgeTo(userFormDTO.getAgeTo());
+        user.getPreference().setSexPreference(userFormDTO.getSexPreference());
+        user.getCountry().setCountry(userFormDTO.getCountry());
+        user.getCity().setCity(userFormDTO.getCity());
+        user.setUsername(userFormDTO.getUsername());
+        user.setAge(userFormDTO.getAge());
+        user.setBirthdate(userFormDTO.getBirthdate());
+        user.setDescription(userFormDTO.getDescription());
+        user.setPassword(userFormDTO.getPassword());
+        return userRepository.save(user);
+    }
+
+
     private void validateUserForm(UserFormDTO userFormDTO) {
         validateAgeFromAndAgeTo(userFormDTO.getAgeFrom(), userFormDTO.getAgeTo());
         validateBirthdate(userFormDTO.getBirthdate());
@@ -162,6 +184,8 @@ public class UserServiceImpl implements UserService {
         City city = buildCity(userFormDTO);
         return buildUser(userFormDTO, newFreeAreaDTO, newPrivateArea, preference, country, city);
     }
+
+
 
     private boolean isAdult(LocalDate birthdate) {
         return birthdate != null && ChronoUnit.YEARS.between(birthdate, LocalDate.now()) >= 18;
@@ -223,27 +247,6 @@ public class UserServiceImpl implements UserService {
             userRepository.delete(id);
             freeAreaClientRest.delete(id);
         }
-    }
-
-    public ResponseEntity<Map<String, String>> validate(BindingResult result) {
-        Map<String, String> errores = new HashMap<>();
-        result.getFieldErrors().forEach(err -> {
-            errores.put(err.getField(), "The field " + err.getField() + " " + err.getDefaultMessage());
-        });
-        return ResponseEntity.badRequest().body(errores);
-    }
-
-    //TODO FALTA INSERTAR LAS FOTOS (O CONTENIDO)
-    public Boolean hasInvalidFields(User user, UserDTO usuarioDb) {
-        return !user.getIdFreeArea().equals(usuarioDb.getFreeAreaDTO().getId()) ||
-                //!user.getIdContent().equals(usuarioDb.getIdContent()) ||
-                isEmpty(user.getUsername()) || isEmpty(user.getEmail()) ||
-                //isEmpty(user.getBirthdate()) ||
-                isEmpty(user.getCity().getCity()) || isEmpty(user.getCountry().getCountry()) || isEmpty(user.getPassword());
-    }
-
-    private Boolean isEmpty(String field) {
-        return field == null || field.isEmpty();
     }
 
 }
