@@ -21,6 +21,9 @@
 		<module>ms-gateway</module>
 		<module>ms-free-area</module>
 		<module>ms-private-area</module>
+		<module>ms-producer</module>
+		<module>ms-consumer</module>
+
 	</modules>
 	<properties>
 		<maven.compiler.source>17</maven.compiler.source>
