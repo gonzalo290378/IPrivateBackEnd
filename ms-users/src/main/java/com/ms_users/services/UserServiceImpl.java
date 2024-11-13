@@ -12,9 +12,7 @@ import com.ms_users.enums.UserEnabledConfiguration;
 import com.ms_users.exceptions.*;
 import com.ms_users.mapper.FilterMapper;
 import com.ms_users.mapper.UserMapper;
-import com.ms_users.models.FreeArea;
 import com.ms_users.models.FreeAreaDTO;
-import com.ms_users.models.PrivateArea;
 import com.ms_users.models.PrivateAreaDTO;
 import com.ms_users.models.entity.City;
 import com.ms_users.models.entity.Country;
@@ -25,7 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
