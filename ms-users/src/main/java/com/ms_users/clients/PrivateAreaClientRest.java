@@ -1,7 +1,5 @@
 package com.ms_users.clients;
 
-import com.ms_users.models.FreeArea;
-import com.ms_users.models.PrivateArea;
 import com.ms_users.models.PrivateAreaDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
