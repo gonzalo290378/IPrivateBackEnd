@@ -26,4 +26,5 @@ public interface UserService {
 
     Optional<User> findEntityById(Long id);
 
+    Optional<UserDTO> findByUsername(String username);
 }

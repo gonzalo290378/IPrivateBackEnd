@@ -93,6 +93,15 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    public Optional<UserDTO> findByUsername(String username){
+        User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getUsername(), username))
+                .findFirst()
+                .orElseThrow(() -> new EmailNotFoundException("username: " + username + " does not exist"));
+        return getUserDTO(user);
+    }
+
+
+
     private Optional<UserDTO> getUserDTO(User user) {
         FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
         PrivateAreaDTO privateAreaDTO = privateAreaClientRest.findById(user.getIdPrivateArea());
@@ -137,8 +146,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public User save(UserFormDTO userFormDTO) {
-        Boolean userExists = findByEmailWithoutException(userFormDTO.getEmail());
-        if (!userExists) {
+        Boolean userEmailExists = findByEmailWithoutException(userFormDTO.getEmail());
+        Boolean usernameExists = findByUsernameWithoutException(userFormDTO.getUsername());
+        if (!userEmailExists && !usernameExists) {
             validateUserForm(userFormDTO);
             User newUser = buildUser(userFormDTO);
             return userRepository.save(newUser);
@@ -152,6 +162,15 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findAll()
                 .stream()
                 .filter(e -> Objects.equals(e.getEmail(), email))
+                .findFirst();
+        return user.isPresent();
+    }
+
+
+    public Boolean findByUsernameWithoutException(String username) {
+        Optional<User> user = userRepository.findAll()
+                .stream()
+                .filter(e -> Objects.equals(e.getUsername(), username))
                 .findFirst();
         return user.isPresent();
     }

@@ -15,7 +15,6 @@ import java.util.Optional;
 
 @RestController
 @Slf4j
-@RequestMapping("api/v1/users")
 public class UserController {
 
     @Autowired
@@ -27,7 +26,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findAll());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<?> findById(@PathVariable Long id) {
         log.info("ms-users Calling findById with {}", id);
         return ResponseEntity.ok(userService.findById(id));
@@ -37,6 +36,17 @@ public class UserController {
     public ResponseEntity<?> findByEmail(@PathVariable String email) {
         log.info("ms-users Calling findByEmail with {email}");
         Optional<UserDTO> userOptional = userService.findByEmail(email);
+        if (userOptional.isPresent()) {
+            return ResponseEntity.ok(userOptional.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+
+    @GetMapping("/{username}")
+    public ResponseEntity<?> findByUsername(@PathVariable String username) {
+        log.info("ms-users Calling findByUsername with {username}");
+        Optional<UserDTO> userOptional = userService.findByUsername(username);
         if (userOptional.isPresent()) {
             return ResponseEntity.ok(userOptional.get());
         }
