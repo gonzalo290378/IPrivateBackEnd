@@ -20,27 +20,6 @@ public class FilterDTO implements Serializable {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("idFreeArea")
-    private Long idFreeArea;
-
-    @JsonProperty("idPrivateArea")
-    private Long idPrivateArea;
-
-    @JsonProperty("freeAreaDTO")
-    private FreeAreaDTO freeAreaDTO;
-
-    @JsonProperty("privateAreaDTO")
-    private PrivateAreaDTO privateAreaDTO;
-
-    @JsonProperty("preferenceDTO")
-    private PreferenceDTO preferenceDTO;
-
-    @JsonProperty("countryDTO")
-    private CountryDTO countryDTO;
-
-    @JsonProperty("cityDTO")
-    private CityDTO cityDTO;
-
     @JsonProperty("username")
     private String username;
 
@@ -64,5 +43,26 @@ public class FilterDTO implements Serializable {
 
     @JsonProperty("isEnabled")
     private Boolean isEnabled;
+
+    @JsonProperty("idFreeArea")
+    private Long idFreeArea;
+
+    @JsonProperty("idPrivateArea")
+    private Long idPrivateArea;
+
+    @JsonProperty("freeAreaDTO")
+    private FreeAreaDTO freeAreaDTO;
+
+    @JsonProperty("privateAreaDTO")
+    private PrivateAreaDTO privateAreaDTO;
+
+    @JsonProperty("preferenceDTO")
+    private PreferenceDTO preferenceDTO;
+
+    @JsonProperty("countryDTO")
+    private CountryDTO countryDTO;
+
+    @JsonProperty("cityDTO")
+    private CityDTO cityDTO;
 
 }
