@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     public List<UserDTO> findAll() {
-        List<User> userList = userRepository.findAll();
+        List<User> userList = userRepository.findByIsEnabledTrueOrderByIdDesc();
         List<FreeAreaDTO> freeAreaList = freeAreaClientRest.findAll();
         List<PrivateAreaDTO> privateAreaList = privateAreaClientRest.findAll();
         List<UserDTO> userDTOList = userList.stream().map(userMapper::toDTO).toList();
@@ -59,12 +59,14 @@ public class UserServiceImpl implements UserService {
     ) {
         for (UserDTO user : userDTOList) {
             freeAreaDTOList.stream()
-                    .filter(freeArea -> Objects.equals(freeArea.getId(), user.getIdFreeArea()))
-                    .peek(user::setFreeAreaDTO)
-                    .collect(Collectors.toList());
+                    .filter(freeArea -> Objects.equals(freeArea.getId(), user.getIdFreeArea()) && user.getIsEnabled())
+                    .map(freeArea -> {
+                        user.setFreeAreaDTO(freeArea);
+                        return freeArea;
+                    });
 
             privateAreaDTOList.stream()
-                    .filter(privateArea -> Objects.equals(privateArea.getId(), user.getIdPrivateArea()))
+                    .filter(privateArea -> Objects.equals(privateArea.getId(), user.getIdPrivateArea())&& user.getIsEnabled())
                     .peek(user::setPrivateAreaDTO)
                     .collect(Collectors.toList());
         }
@@ -94,7 +96,7 @@ public class UserServiceImpl implements UserService {
 
 
     public Optional<UserDTO> findByUsername(String username){
-        User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getUsername(), username))
+        User user = userRepository.findByIsEnabledTrueOrderByIdDesc().stream().filter(e -> Objects.equals(e.getUsername(), username))
                 .findFirst()
                 .orElseThrow(() -> new EmailNotFoundException("username: " + username + " does not exist"));
         return getUserDTO(user);
