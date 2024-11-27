@@ -59,20 +59,17 @@ public class UserServiceImpl implements UserService {
     ) {
         for (UserDTO user : userDTOList) {
             freeAreaDTOList.stream()
-                    .filter(freeArea -> Objects.equals(freeArea.getId(), user.getIdFreeArea()) && user.getIsEnabled())
-                    .map(freeArea -> {
-                        user.setFreeAreaDTO(freeArea);
-                        return freeArea;
-                    });
+                    .filter(freeArea -> Objects.equals(freeArea.getId(), user.getIdFreeArea()))
+                    .peek(user::setFreeAreaDTO)
+                    .collect(Collectors.toList());
 
             privateAreaDTOList.stream()
-                    .filter(privateArea -> Objects.equals(privateArea.getId(), user.getIdPrivateArea())&& user.getIsEnabled())
+                    .filter(privateArea -> Objects.equals(privateArea.getId(), user.getIdPrivateArea()) && user.getIsEnabled())
                     .peek(user::setPrivateAreaDTO)
                     .collect(Collectors.toList());
         }
         return userDTOList;
     }
-
 
     @Transactional(readOnly = true)
     public Optional<UserDTO> findById(Long id) {
@@ -86,7 +83,6 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findEntityById(Long id) {
         return Optional.ofNullable(userRepository.findById(id).orElseThrow(() -> new IdNotFoundException("id: " + id + " does not exist")));
     }
-
     public Optional<UserDTO> findByEmail(String email) {
         User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getEmail(), email))
                 .findFirst()
@@ -94,15 +90,12 @@ public class UserServiceImpl implements UserService {
         return getUserDTO(user);
     }
 
-
     public Optional<UserDTO> findByUsername(String username){
         User user = userRepository.findByIsEnabledTrueOrderByIdDesc().stream().filter(e -> Objects.equals(e.getUsername(), username))
                 .findFirst()
                 .orElseThrow(() -> new EmailNotFoundException("username: " + username + " does not exist"));
         return getUserDTO(user);
     }
-
-
 
     private Optional<UserDTO> getUserDTO(User user) {
         FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
