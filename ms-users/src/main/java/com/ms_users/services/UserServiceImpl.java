@@ -47,28 +47,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<UserDTO> findAll() {
-        List<User> userList = userRepository.findByIsEnabledTrueOrderByIdDesc();
-        List<FreeAreaDTO> freeAreaList = freeAreaClientRest.findAll();
-        List<PrivateAreaDTO> privateAreaList = privateAreaClientRest.findAll();
-        List<UserDTO> userDTOList = userList.stream().map(userMapper::toDTO).toList();
-        return matchUserWithFreeAreaAndPrivateArea(userDTOList, freeAreaList, privateAreaList);
+    public Page<UserDTO> findAll(Integer page, Integer size) {
+        Page<User> userPage = userRepository.findByIsEnabledTrueOrderByIdDesc(PageRequest.of(page, size));
+        return matchUserWithFreeAreaAndPrivateArea(userPage);
     }
 
-    private List<UserDTO> matchUserWithFreeAreaAndPrivateArea(List<UserDTO> userDTOList, List<FreeAreaDTO> freeAreaDTOList, List<PrivateAreaDTO> privateAreaDTOList
+    private Page<UserDTO> matchUserWithFreeAreaAndPrivateArea(Page<User> userPage
     ) {
-        for (UserDTO user : userDTOList) {
-            freeAreaDTOList.stream()
-                    .filter(freeArea -> Objects.equals(freeArea.getId(), user.getIdFreeArea()))
-                    .peek(user::setFreeAreaDTO)
-                    .collect(Collectors.toList());
-
-            privateAreaDTOList.stream()
-                    .filter(privateArea -> Objects.equals(privateArea.getId(), user.getIdPrivateArea()) && user.getIsEnabled())
-                    .peek(user::setPrivateAreaDTO)
-                    .collect(Collectors.toList());
-        }
-        return userDTOList;
+        return userPage.map(user -> {
+            UserDTO userDTO = userMapper.toDTO(user);
+            FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
+            PrivateAreaDTO privateAreaDTO = privateAreaClientRest.findById(user.getIdPrivateArea());
+            userDTO.setFreeAreaDTO(freeAreaDTO);
+            userDTO.setPrivateAreaDTO(privateAreaDTO);
+            userDTO.setIdFreeArea(freeAreaDTO.getId());
+            return userDTO;
+        });
     }
 
     @Transactional(readOnly = true)
