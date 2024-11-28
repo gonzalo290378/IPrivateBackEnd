@@ -22,9 +22,9 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> findAll() {
+    public ResponseEntity<Page<?>>  findAll(Integer page, Integer size) {
         log.info("ms-users Calling findAll");
-        return ResponseEntity.ok(userService.findAll());
+        return ResponseEntity.ok(userService.findAll(page, size));
     }
 
     @GetMapping("/id/{id}")
