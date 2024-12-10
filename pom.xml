@@ -23,6 +23,7 @@
 		<module>ms-private-area</module>
 		<module>ms-producer</module>
 		<module>ms-consumer</module>
+		<module>ms-api-ext</module>
 
 	</modules>
 	<properties>

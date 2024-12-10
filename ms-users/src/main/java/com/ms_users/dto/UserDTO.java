@@ -3,7 +3,6 @@ package com.ms_users.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ms_users.models.FreeAreaDTO;
-import com.ms_users.models.PrivateArea;
 import com.ms_users.models.PrivateAreaDTO;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -20,7 +19,8 @@ import java.time.Period;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDTO implements Serializable {
+public class
+UserDTO implements Serializable {
 
     @JsonProperty("id")
     private Long id;
