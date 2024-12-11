@@ -1,5 +1,6 @@
 package com.iprivado.apiext.controller;
 
+import com.iprivado.apiext.dto.StateSearchRequest;
 import com.iprivado.apiext.model.entity.Country;
 import com.iprivado.apiext.model.entity.State;
 import com.iprivado.apiext.services.CityService;
@@ -7,6 +8,7 @@ import com.iprivado.apiext.services.CountryService;
 import com.iprivado.apiext.services.StateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,17 +20,14 @@ import java.util.List;
 public class StateController {
 
     @Autowired
-    private CountryService countryService;
-
-    @Autowired
     private StateService stateService;
 
-    @Autowired
-    private CityService cityService;
-
-    @GetMapping()
-    public List<State> searchStates(@RequestParam String name) {
-        return stateService.getStatesByCountry(name);
+    @PostMapping("/search")
+    public ResponseEntity<List<State>> searchStates(@RequestBody StateSearchRequest request) {
+        String name = request.getName();
+        List<State> states = request.getStates();
+        List<State> result = stateService.searchStates(name, states);
+        return ResponseEntity.ok(result);
     }
 
 }

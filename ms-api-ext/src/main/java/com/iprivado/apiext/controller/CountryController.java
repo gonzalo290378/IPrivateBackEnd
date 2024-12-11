@@ -8,6 +8,7 @@ import com.iprivado.apiext.services.CountryService;
 import com.iprivado.apiext.services.StateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,15 +30,18 @@ public class CountryController {
     private CityService cityService;
 
     @GetMapping()
-    public List<Country> searchCountries(@RequestParam String name) {
-        return countryService.searchCountriesByName(name);
+    public ResponseEntity<List<Country>> searchCountries(@RequestParam String name) {
+        List<Country> countryList = countryService.searchCountriesByName(name);
+        return ResponseEntity.ok(countryList);
+
     }
 
 
     @GetMapping("/statesByCountry")
-    public List<State> getStates(@RequestParam String name) {
+    public ResponseEntity<List<State>> getStates(@RequestParam String name) {
         Country country = countryService.getIdByCountryname(name);
-        return stateService.getStatesByCountry(country.getId());
+        List<State> stateList = stateService.getStatesByCountry(country.getId());
+        return ResponseEntity.ok(stateList);
     }
 }
 
