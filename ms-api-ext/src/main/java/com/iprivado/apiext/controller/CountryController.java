@@ -33,9 +33,7 @@ public class CountryController {
     public ResponseEntity<List<Country>> searchCountries(@RequestParam String name) {
         List<Country> countryList = countryService.searchCountriesByName(name);
         return ResponseEntity.ok(countryList);
-
     }
-
 
     @GetMapping("/statesByCountry")
     public ResponseEntity<List<State>> getStates(@RequestParam String name) {

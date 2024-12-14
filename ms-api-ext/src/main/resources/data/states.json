@@ -2072,7 +2072,7 @@
 	{
 		"id" : 418,
 		"id_country" : 64,
-		"name" : "Ardèche"
+		"name" : "Ardeche"
 	},
 	{
 		"id" : 419,
@@ -2082,7 +2082,7 @@
 	{
 		"id" : 420,
 		"id_country" : 64,
-		"name" : "Ariège"
+		"name" : "Ariege"
 	},
 	{
 		"id" : 421,
@@ -2132,7 +2132,7 @@
 	{
 		"id" : 430,
 		"id_country" : 64,
-		"name" : "Corrèze"
+		"name" : "Correze"
 	},
 	{
 		"id" : 431,
@@ -2187,7 +2187,7 @@
 	{
 		"id" : 441,
 		"id_country" : 64,
-		"name" : "Finistère"
+		"name" : "Finistere"
 	},
 	{
 		"id" : 442,
@@ -2232,7 +2232,7 @@
 	{
 		"id" : 450,
 		"id_country" : 64,
-		"name" : "Isère"
+		"name" : "Isere"
 	},
 	{
 		"id" : 451,
@@ -2287,7 +2287,7 @@
 	{
 		"id" : 461,
 		"id_country" : 64,
-		"name" : "Lozère"
+		"name" : "Lozere"
 	},
 	{
 		"id" : 462,
@@ -2337,7 +2337,7 @@
 	{
 		"id" : 471,
 		"id_country" : 64,
-		"name" : "Nièvre"
+		"name" : "Nievre"
 	},
 	{
 		"id" : 472,
@@ -2427,7 +2427,7 @@
 	{
 		"id" : 489,
 		"id_country" : 64,
-		"name" : "Deux-Sèvres"
+		"name" : "Deux-Sevres"
 	},
 	{
 		"id" : 490,
@@ -3242,7 +3242,7 @@
 	{
 		"id" : 652,
 		"id_country" : 28,
-		"name" : "València"
+		"name" : "Valencia"
 	},
 	{
 		"id" : 653,
@@ -3627,7 +3627,7 @@
 	{
 		"id" : 729,
 		"id_country" : 66,
-		"name" : "Genève"
+		"name" : "Geneve"
 	},
 	{
 		"id" : 730,

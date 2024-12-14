@@ -14,7 +14,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @AllArgsConstructor
 @Document(collection = "states")
 public class State {
-
     @Id
     private String mongoId;
 

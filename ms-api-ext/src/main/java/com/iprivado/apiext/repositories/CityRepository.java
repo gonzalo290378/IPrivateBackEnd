@@ -11,8 +11,6 @@ import java.util.List;
 
 @Repository
 public interface CityRepository extends MongoRepository<City, String> {
-    List<Country> findByNameContainingIgnoreCase(String name);
-
     @Query("{ 'id_state': ?0 }")
-    List<City> findByIdState(int stateId);
+    List<City> findByIdState(int idState);
 }
