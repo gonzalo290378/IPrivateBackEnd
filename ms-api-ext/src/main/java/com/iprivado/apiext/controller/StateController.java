@@ -1,10 +1,7 @@
 package com.iprivado.apiext.controller;
 
 import com.iprivado.apiext.dto.StateSearchRequest;
-import com.iprivado.apiext.model.entity.Country;
 import com.iprivado.apiext.model.entity.State;
-import com.iprivado.apiext.services.CityService;
-import com.iprivado.apiext.services.CountryService;
 import com.iprivado.apiext.services.StateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
