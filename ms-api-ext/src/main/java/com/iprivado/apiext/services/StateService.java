@@ -1,11 +1,10 @@
 package com.iprivado.apiext.services;
 
-import com.iprivado.apiext.model.entity.Country;
 import com.iprivado.apiext.model.entity.State;
 import com.iprivado.apiext.repositories.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Collections;
+
 import java.util.List;
 
 import static java.lang.Integer.parseInt;
