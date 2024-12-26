@@ -124,9 +124,9 @@ public class UserServiceImpl implements UserService {
         Long ageFrom = filterDTO.getPreferenceDTO().getAgeFrom();
         Long ageTo = filterDTO.getPreferenceDTO().getAgeTo();
 
-        Boolean isAgeFromTooLow = ageFrom < AgeConfiguration.ADULT.getValue();
-        Boolean isAgeRangeInvalid = ageFrom > ageTo;
-        Boolean isAgeToTooHigh = ageTo > AgeConfiguration.SENIOR.getValue();
+        boolean isAgeFromTooLow = ageFrom < AgeConfiguration.ADULT.getValue();
+        boolean isAgeRangeInvalid = ageFrom > ageTo;
+        boolean isAgeToTooHigh = ageTo > AgeConfiguration.SENIOR.getValue();
 
         if (isAgeFromTooLow || isAgeRangeInvalid || isAgeToTooHigh) {
             throw new UserAgeSelectedException("User: " + filterDTO.getUsername()
@@ -135,8 +135,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public User save(UserFormDTO userFormDTO) {
-        Boolean userEmailExists = findByEmailWithoutException(userFormDTO.getEmail());
-        Boolean usernameExists = findByUsernameWithoutException(userFormDTO.getUsername());
+        boolean userEmailExists = findByEmailWithoutException(userFormDTO.getEmail());
+        boolean usernameExists = findByUsernameWithoutException(userFormDTO.getUsername());
         if (!userEmailExists && !usernameExists) {
             validateUserForm(userFormDTO);
             User newUser = buildUser(userFormDTO);
@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public Boolean findByEmailWithoutException(String email) {
+    public boolean findByEmailWithoutException(String email) {
         Optional<User> user = userRepository.findAll()
                 .stream()
                 .filter(e -> Objects.equals(e.getEmail(), email))
@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public Boolean findByUsernameWithoutException(String username) {
+    public boolean findByUsernameWithoutException(String username) {
         Optional<User> user = userRepository.findAll()
                 .stream()
                 .filter(e -> Objects.equals(e.getUsername(), username))
