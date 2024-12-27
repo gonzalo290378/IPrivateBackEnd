@@ -94,6 +94,7 @@ UserDTO implements Serializable {
     @JsonProperty("cityDTO")
     private CityDTO cityDTO;
 
+
     public Long getAge() {
         LocalDate today = LocalDate.now();
         long age = Period.between(birthdate, today).getYears();
