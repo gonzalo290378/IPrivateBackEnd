@@ -4,11 +4,7 @@ import com.ms_users.clients.FreeAreaClientRest;
 import com.ms_users.clients.PrivateAreaClientRest;
 import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
-import com.ms_users.dto.UserFormDTO;
-import com.ms_users.exceptions.EmailNotFoundException;
-import com.ms_users.exceptions.IdNotFoundException;
-import com.ms_users.exceptions.UserAgeSelectedException;
-import com.ms_users.exceptions.UsernameNotFoundException;
+import com.ms_users.exceptions.*;
 import com.ms_users.mapper.*;
 import com.ms_users.models.entity.User;
 import com.ms_users.repositories.UserRepository;
@@ -24,7 +20,6 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
@@ -197,17 +192,46 @@ class MsUsersApplicationTests {
     void saveTest(){
         //MOCK / GIVEN
         when(userRepository.save(any(User.class))).thenReturn(USER_1);
-        //when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_1);
-        //when(userMapper.toDTO(any(User.class))).thenReturn(USER_DTO_1);
+        when(userRepository.findAll()).thenReturn(USER_LIST);
+        when(freeAreaClientRest.save(true)).thenReturn(FREE_AREA_DTO_6);
+        when(privateAreaClientRest.save(false)).thenReturn(PRIVATE_AREA_DTO_6);
 
         //TEST LOGICA DE NEGOCIO / WHEN
-        Optional<User> user = Optional.ofNullable(userServiceImpl.save(USER_FORM_DTO));
+        Optional<User> user = Optional.ofNullable(userServiceImpl.save(NEW_USER_FORM_DTO));
 
         //ASSERTIONS / THEN
         assertTrue(user.isPresent());
         assertEquals(Long.valueOf(1L), user.get().getId());
-        //verify(userRepository, times(1)).findAll();
-        //verify(freeAreaClientRest, times(1)).findById(anyLong());
+        verify(userRepository, times(1)).save(any(User.class));
+        verify(userRepository, times(2)).findAll();
+        verify(freeAreaClientRest, times(1)).save(true);
+        verify(privateAreaClientRest, times(1)).save(false);
+    }
+
+    @Test
+    void saveUserRegisteredTest(){
+        //MOCK / GIVEN
+        when(userRepository.save(any(User.class))).thenReturn(USER_1);
+        when(userRepository.findAll()).thenReturn(USER_LIST);
+
+        //ASSERTIONS / THEN
+        assertThrows(UsernameRegisteredException.class, () -> userServiceImpl.save(NEW_USER_FORM_EXISTED_1));
+        assertThrows(InvalidAgeRangeException.class, () -> userServiceImpl.save(NEW_USER_FORM_EXISTED_2));
+        assertThrows(InvalidBirthdateException.class, () -> userServiceImpl.save(NEW_USER_FORM_EXISTED_3));
+    }
+
+    @Test
+    void updateTest(){
+        //MOCK / GIVEN
+        when(userRepository.save(any(User.class))).thenReturn(USER_1);
+
+        //TEST LOGICA DE NEGOCIO / WHEN
+        Optional<User> user = Optional.ofNullable(userServiceImpl.update(NEW_USER_FORM_DTO, USER_1));
+
+        //ASSERTIONS / THEN
+        assertTrue(user.isPresent());
+        assertEquals(Long.valueOf(1L), user.get().getId());
+        verify(userRepository, times(1)).save(any(User.class));
     }
 
 }
