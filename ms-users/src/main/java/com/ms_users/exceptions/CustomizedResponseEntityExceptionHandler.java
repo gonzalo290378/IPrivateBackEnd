@@ -79,5 +79,11 @@ public class CustomizedResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(UsernameRegisteredException.class)
+    public final ResponseEntity<ErrorDetails> handleUsernameRegisteredException(Exception e, WebRequest webRequest) throws Exception {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDate.now(), e.getMessage(), webRequest.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
 
 }

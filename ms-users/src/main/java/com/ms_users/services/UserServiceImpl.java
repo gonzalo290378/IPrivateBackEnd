@@ -143,7 +143,7 @@ public class UserServiceImpl implements UserService {
             User newUser = buildUser(userFormDTO);
             return userRepository.save(newUser);
         }
-        throw new UsernameNotFoundException("User: " + userFormDTO.getUsername()
+        throw new UsernameRegisteredException("User: " + userFormDTO.getUsername()
                 + " is registered");
 
     }
@@ -185,11 +185,11 @@ public class UserServiceImpl implements UserService {
 
     private User buildUser(UserFormDTO userFormDTO) {
         FreeAreaDTO newFreeAreaDTO = createFreeArea();
-        PrivateAreaDTO newPrivateArea = createPrivateArea();
+        PrivateAreaDTO newPrivateAreaDTO = createPrivateArea();
         Preference preference = buildPreference(userFormDTO);
         Country country = buildCountry(userFormDTO);
         City city = buildCity(userFormDTO);
-        return buildUser(userFormDTO, newFreeAreaDTO, newPrivateArea, preference, country, city);
+        return buildUser(userFormDTO, newFreeAreaDTO, newPrivateAreaDTO, preference, country, city);
     }
 
 
