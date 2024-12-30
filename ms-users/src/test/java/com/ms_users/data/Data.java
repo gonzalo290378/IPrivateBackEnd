@@ -289,12 +289,26 @@ public final class Data {
     public final static User USER_1 = new User(1L, "romina", 35L, "F", "romina@gmail.com", LocalDate.of(1989, 11, 1), LocalDate.of(2024, 12, 23),
             "Hola soy Romina", true, "12345", 1L, 1L, PREFERENCE, COUNTRY, CITY);
 
+    public final static User USER_2 = new User(2L, "genaro", 30L, "F", "genaro@gmail.com", LocalDate.of(1993, 5, 15), LocalDate.of(2024, 12, 23),
+            "Hola soy Genaro", true, "12345", 2L, 2L, PREFERENCE, COUNTRY, CITY);
+
+    public final static User USER_3 = new User(3L, "arri", 28L, "M", "arri@gmail.com",  LocalDate.of(1995, 3, 10), LocalDate.of(2024, 12, 23),
+            "Hola soy Arri", true, "12345", 3L, 3L, PREFERENCE, COUNTRY, CITY);
+
+    public final static User USER_4 = new User(4L, "moreno", 32L, "M", "moreno@gmail.com",  LocalDate.of(1991, 7, 20), LocalDate.of(2024, 12, 23),
+            "Hola soy Moreno", true, "12345", 4L, 4L, PREFERENCE, COUNTRY, CITY);
+
     public final static UserDTO USER_DTO_1 = new UserDTO(1L, "romina", 35L, "F", "lucia@gmail.com", LocalDate.of(1989, 11, 1), LocalDate.of(2024, 12, 23),
             "Hola soy Romina", true, "12345", 1L, 1L, new FreeAreaDTO(), new PrivateAreaDTO(), PREFERENCE_DTO_1, COUNTRY_DTO_1, CITY_DTO_1);
 
     public final static UserDTO USER_DTO_2 = new UserDTO(2L, "genaro", 30L, "F", "genaro@gmail.com", LocalDate.of(1993, 5, 15), LocalDate.of(2024, 12, 23),
             "Hola soy Genaro", true, "12345", 2L, 2L, new FreeAreaDTO(), new PrivateAreaDTO(), PREFERENCE_DTO_2, COUNTRY_DTO_2, CITY_DTO_1);
 
+    public final static UserDTO USER_DTO_3 = new UserDTO(3L, "arri", 28L, "M", "arri@gmail.com", LocalDate.of(1995, 3, 10), LocalDate.of(2024, 12, 23),
+            "Hola soy Arri", true, "12345", 3L, 3L, new FreeAreaDTO(), new PrivateAreaDTO(), PREFERENCE_DTO_3, COUNTRY_DTO_3, CITY_DTO_3);
+
+    public final static UserDTO USER_DTO_4 = new UserDTO(4L, "moreno", 32L, "M", "moreno@gmail.com", LocalDate.of(1991, 7, 20), LocalDate.of(2024, 12, 23),
+            "Hola soy Moreno", true, "12345", 4L, 4L, new FreeAreaDTO(), new PrivateAreaDTO(), PREFERENCE_DTO_4, COUNTRY_DTO_4, CITY_DTO_4);
 
     public static Page<User> USERS_PAGINATOR(List<User> users, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);

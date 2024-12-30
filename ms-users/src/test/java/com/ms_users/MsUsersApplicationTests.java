@@ -2,7 +2,11 @@ package com.ms_users;
 
 import com.ms_users.clients.FreeAreaClientRest;
 import com.ms_users.clients.PrivateAreaClientRest;
+import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
+import com.ms_users.exceptions.EmailNotFoundException;
+import com.ms_users.exceptions.IdNotFoundException;
+import com.ms_users.exceptions.UsernameNotFoundException;
 import com.ms_users.mapper.*;
 import com.ms_users.models.entity.User;
 import com.ms_users.repositories.UserRepository;
@@ -18,9 +22,11 @@ import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
+//mvn clean verify
 
 @SpringBootTest(classes = {User.class})
 @ExtendWith(SpringExtension.class)
@@ -45,7 +51,6 @@ class MsUsersApplicationTests {
     void findByIdTest(){
         //MOCK / GIVEN
         when(userRepository.findAll()).thenReturn(USER_LIST);
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(USER_1));
         when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_1);
         when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_1);
         when(userMapper.toDTO(any(User.class))).thenReturn(USER_DTO_1);
@@ -56,8 +61,8 @@ class MsUsersApplicationTests {
         //ASSERTIONS / THEN
         assertTrue(user.isPresent());
         assertEquals(Long.valueOf(1L), user.get().getId());
-        verify(userRepository).findAll();
-
+        verify(userRepository, times(1)).findAll();
+        verify(freeAreaClientRest, times(1)).findById(anyLong());
     }
 
     @Test
@@ -77,6 +82,91 @@ class MsUsersApplicationTests {
         //ASSERTIONS / THEN
         assertFalse(user.isEmpty());
         assertEquals(Long.valueOf(5L), user.getTotalElements());
+    }
+
+    @Test
+    void findByIdExceptionTest(){
+        when(userRepository.findAll()).thenReturn(USER_LIST);
+        assertThrows(IdNotFoundException.class, () -> userServiceImpl.findById(999L));
+    }
+
+    @Test
+    void findEntityByIdTest(){
+        //MOCK / GIVEN
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(USER_2));
+        when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_2);
+        when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_2);
+        when(userMapper.toDTO(any(User.class))).thenReturn(USER_DTO_2);
+
+        //TEST LOGICA DE NEGOCIO / WHEN
+        Optional<User> user = userServiceImpl.findEntityById(2L);
+
+        //ASSERTIONS / THEN
+        assertTrue(user.isPresent());
+        assertEquals(Long.valueOf(2L), user.get().getId());
+        verify(userRepository, times(1)).findById(anyLong());
+
+    }
+
+    @Test
+    void findByEmailTest(){
+        //MOCK / GIVEN
+        when(userRepository.findAll()).thenReturn(USER_LIST);
+        when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_4);
+        when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_4);
+        when(userMapper.toDTO(any(User.class))).thenReturn(USER_DTO_4);
+
+        //TEST LOGICA DE NEGOCIO / WHEN
+        Optional<UserDTO> user = userServiceImpl.findByEmail("moreno@gmail.com");
+
+        //ASSERTIONS / THEN
+        assertTrue(user.isPresent());
+        assertEquals(Long.valueOf(4L), user.get().getId());
+    }
+
+    @Test
+    void findByEmailExceptionTest(){
+        when(userRepository.findAll()).thenReturn(USER_LIST);
+        assertThrows(EmailNotFoundException.class, () -> userServiceImpl.findByEmail("noexiste@gmail.com"));
+    }
+
+    @Test
+    void findByUsernameTest(){
+        //MOCK / GIVEN
+        when(userRepository.findByIsEnabledTrueOrderByIdDesc()).thenReturn(USER_LIST);
+        when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_3);
+        when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_3);
+        when(userMapper.toDTO(any(User.class))).thenReturn(USER_DTO_3);
+
+        //TEST LOGICA DE NEGOCIO / WHEN
+        Optional<UserDTO> user = userServiceImpl.findByUsername("arri");
+
+        //ASSERTIONS / THEN
+        assertTrue(user.isPresent());
+        assertEquals(Long.valueOf(3L), user.get().getId());
+    }
+
+    @Test
+    void findByUsernameExceptionTest(){
+        when(userRepository.findAll()).thenReturn(USER_LIST);
+        assertThrows(UsernameNotFoundException.class, () -> userServiceImpl.findByUsername("noexisteusername"));
+    }
+
+    @Test
+    void filterTest(){
+        //MOCK / GIVEN
+        //when(userRepository.findByIsEnabledTrueOrderByIdDesc()).thenReturn(USER_LIST);
+        when(userRepository.filter(FILTER_DTO, PageRequest.of(PAGE, SIZE))).thenReturn(FILTER_DTO_LIST);
+        when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_3);
+        when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_3);
+        when(userMapper.toDTO(any(User.class))).thenReturn(USER_DTO_3);
+
+        //TEST LOGICA DE NEGOCIO / WHEN
+        Page<FilterDTO> filterDTOList = userServiceImpl.filter(FILTER_DTO, 0, 10);
+
+        //ASSERTIONS / THEN
+        assertFalse(filterDTOList.isEmpty());
+        assertEquals(Long.valueOf(3L), filterDTOList.getTotalElements());
     }
 
 }

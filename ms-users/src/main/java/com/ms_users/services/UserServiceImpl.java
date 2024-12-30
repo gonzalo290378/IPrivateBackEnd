@@ -75,6 +75,8 @@ public class UserServiceImpl implements UserService {
     public Optional<User> findEntityById(Long id) {
         return Optional.ofNullable(userRepository.findById(id).orElseThrow(() -> new IdNotFoundException("id: " + id + " does not exist")));
     }
+
+    @Transactional(readOnly = true)
     public Optional<UserDTO> findByEmail(String email) {
         User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getEmail(), email))
                 .findFirst()
@@ -82,10 +84,11 @@ public class UserServiceImpl implements UserService {
         return getUserDTO(user);
     }
 
+    @Transactional(readOnly = true)
     public Optional<UserDTO> findByUsername(String username){
         User user = userRepository.findByIsEnabledTrueOrderByIdDesc().stream().filter(e -> Objects.equals(e.getUsername(), username))
                 .findFirst()
-                .orElseThrow(() -> new EmailNotFoundException("username: " + username + " does not exist"));
+                .orElseThrow(() -> new UsernameNotFoundException("username: " + username + " does not exist"));
         return getUserDTO(user);
     }
 
