@@ -4,8 +4,10 @@ import com.ms_users.clients.FreeAreaClientRest;
 import com.ms_users.clients.PrivateAreaClientRest;
 import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
+import com.ms_users.dto.UserFormDTO;
 import com.ms_users.exceptions.EmailNotFoundException;
 import com.ms_users.exceptions.IdNotFoundException;
+import com.ms_users.exceptions.UserAgeSelectedException;
 import com.ms_users.exceptions.UsernameNotFoundException;
 import com.ms_users.mapper.*;
 import com.ms_users.models.entity.User;
@@ -40,6 +42,9 @@ class MsUsersApplicationTests {
 
     @Mock
     UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+
+    @Mock
+    FilterMapper filterMapper = Mappers.getMapper(FilterMapper.class);
 
     @Mock
     private FreeAreaClientRest freeAreaClientRest;
@@ -155,18 +160,54 @@ class MsUsersApplicationTests {
     @Test
     void filterTest(){
         //MOCK / GIVEN
-        //when(userRepository.findByIsEnabledTrueOrderByIdDesc()).thenReturn(USER_LIST);
-        when(userRepository.filter(FILTER_DTO, PageRequest.of(PAGE, SIZE))).thenReturn(FILTER_DTO_LIST);
-        when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_3);
-        when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_3);
-        when(userMapper.toDTO(any(User.class))).thenReturn(USER_DTO_3);
+        when(userRepository.filter(FILTER_DTO_1, PageRequest.of(PAGE, SIZE))).thenReturn(USERS_PAGINATOR(USER_LIST, PAGE, SIZE));
+
+        for (int i = 0; i < USER_LIST.size(); i++) {
+            when(filterMapper.toDTO(USER_LIST.get(i))).thenReturn(USER_DTO_FILTER_LIST.get(i));
+            when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_LIST.get(i));
+            when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_LIST.get(i));
+        }
 
         //TEST LOGICA DE NEGOCIO / WHEN
-        Page<FilterDTO> filterDTOList = userServiceImpl.filter(FILTER_DTO, 0, 10);
+        Page<FilterDTO> filterDTOList = userServiceImpl.filter(FILTER_DTO_1, 0, 10);
 
         //ASSERTIONS / THEN
         assertFalse(filterDTOList.isEmpty());
-        assertEquals(Long.valueOf(3L), filterDTOList.getTotalElements());
+        assertEquals(Long.valueOf(5L), filterDTOList.getTotalElements());
+    }
+
+    @Test
+    void filterExceptionTest(){
+        //MOCK / GIVEN
+        when(userRepository.filter(FILTER_DTO_2, PageRequest.of(PAGE, SIZE))).thenReturn(USERS_PAGINATOR(USER_LIST, PAGE, SIZE));
+
+        for (int i = 0; i < USER_LIST.size(); i++) {
+            when(filterMapper.toDTO(USER_LIST.get(i))).thenReturn(USER_DTO_FILTER_LIST.get(i));
+            when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_LIST.get(i));
+            when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_LIST.get(i));
+        }
+
+        //TEST LOGICA DE NEGOCIO / WHEN
+        assertThrows(UserAgeSelectedException.class, () -> userServiceImpl.filter(FILTER_DTO_2, 0, 10));
+        assertThrows(UserAgeSelectedException.class, () -> userServiceImpl.filter(FILTER_DTO_3, 0, 10));
+        assertThrows(UserAgeSelectedException.class, () -> userServiceImpl.filter(FILTER_DTO_4, 0, 10));
+    }
+
+    @Test
+    void saveTest(){
+        //MOCK / GIVEN
+        when(userRepository.save(any(User.class))).thenReturn(USER_1);
+        //when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_1);
+        //when(userMapper.toDTO(any(User.class))).thenReturn(USER_DTO_1);
+
+        //TEST LOGICA DE NEGOCIO / WHEN
+        Optional<User> user = Optional.ofNullable(userServiceImpl.save(USER_FORM_DTO));
+
+        //ASSERTIONS / THEN
+        assertTrue(user.isPresent());
+        assertEquals(Long.valueOf(1L), user.get().getId());
+        //verify(userRepository, times(1)).findAll();
+        //verify(freeAreaClientRest, times(1)).findById(anyLong());
     }
 
 }
