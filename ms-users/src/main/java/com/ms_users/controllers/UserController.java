@@ -1,16 +1,14 @@
 package com.ms_users.controllers;
 
 import com.ms_users.dto.*;
+import com.ms_users.exceptions.UserNotFoundException;
 import com.ms_users.models.entity.User;
 import com.ms_users.services.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -18,11 +16,14 @@ import java.util.Optional;
 @Slf4j
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
-    public ResponseEntity<Page<?>>  findAll(Integer page, Integer size) {
+    public ResponseEntity<Page<?>> findAll(Integer page, Integer size) {
         log.info("ms-users Calling findAll");
         return ResponseEntity.ok(userService.findAll(page, size));
     }
@@ -99,14 +100,14 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> edit(@Valid @RequestBody UserFormDTO userFormDTO, @PathVariable Long id) {
         log.info("ms-users Calling edit with {user}");
-        User user = userService.findEntityById(id).get();
+        User user = userService.findEntityById(id).orElseThrow(()-> new UserNotFoundException("User with id " + id + " not found"));
         return ResponseEntity.ok(userService.update(userFormDTO, user));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         log.info("ms-users Calling delete with {id}");
-        User user = userService.findEntityById(id).get();
+        User user = userService.findEntityById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
         return ResponseEntity.ok(userService.delete(user.getId()));
     }
 

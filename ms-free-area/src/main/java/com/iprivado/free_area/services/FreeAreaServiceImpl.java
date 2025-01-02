@@ -8,7 +8,6 @@ import com.iprivado.free_area.models.entity.FreeArea;
 import com.iprivado.free_area.repositories.FreeAreaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,15 +17,12 @@ import java.util.stream.Collectors;
 @Service
 public class FreeAreaServiceImpl implements FreeAreaService {
 
-    private FreeAreaRepository freeAreaRepository;
+    private final FreeAreaRepository freeAreaRepository;
 
-    private UserClientRest userClientRest;
-
-    private FreeAreaMapper freeAreaMapper;
+    private final FreeAreaMapper freeAreaMapper;
 
     public FreeAreaServiceImpl(FreeAreaRepository freeAreaRepository, UserClientRest userClientRest, FreeAreaMapper freeAreaMapper) {
         this.freeAreaRepository = freeAreaRepository;
-        this.userClientRest = userClientRest;
         this.freeAreaMapper = freeAreaMapper;
     }
 
@@ -44,7 +40,7 @@ public class FreeAreaServiceImpl implements FreeAreaService {
                 .filter(e -> Objects.equals(e.getId(), id))
                 .map(freeAreaMapper::toDTO)
                 .findFirst().orElseThrow(() ->
-                        new FreeAreaNotFoundException("id: " + id + " does not exist")));
+                        new FreeAreaNotFoundException("FreeArea with id " + id + " not found")));
     }
 
 

@@ -2,7 +2,6 @@ package com.ms_users.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,7 +35,7 @@ public class CustomizedResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }
 
-    @ExceptionHandler(IdNotFoundException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     public final ResponseEntity<ErrorDetails> handleIdNotFoundException(Exception e, WebRequest webRequest) throws Exception {
         ErrorDetails errorDetails = new ErrorDetails(LocalDate.now(), e.getMessage(), webRequest.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);

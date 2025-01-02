@@ -1,9 +1,9 @@
 package com.iprivado.free_area.controllers;
 
 import com.iprivado.free_area.dto.FreeAreaDTO;
+import com.iprivado.free_area.exceptions.FreeAreaNotFoundException;
 import com.iprivado.free_area.services.FreeAreaService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("api/v1/free-area")
 public class FreeAreaController {
 
-    @Autowired
-    private FreeAreaService freeAreaService;
+    public FreeAreaController(FreeAreaService freeAreaService){
+        this.freeAreaService = freeAreaService;
+    }
+
+    private final FreeAreaService freeAreaService;
 
     @GetMapping
     public ResponseEntity<List<FreeAreaDTO>> findAll() {
@@ -26,7 +29,7 @@ public class FreeAreaController {
     @GetMapping("/{id}")
     public ResponseEntity<FreeAreaDTO> findById(@PathVariable Long id) {
         log.info("ms-free-area Calling findById");
-        return ResponseEntity.ok(freeAreaService.findById(id).get());
+        return ResponseEntity.ok(freeAreaService.findById(id).orElseThrow(()-> new FreeAreaNotFoundException("FreeArea with id " + id + " not found")));
     }
 
 

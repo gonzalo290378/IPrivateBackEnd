@@ -68,13 +68,13 @@ public class UserServiceImpl implements UserService {
     public Optional<UserDTO> findById(Long id) {
         User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getId(), id))
                 .findFirst()
-                .orElseThrow(() -> new IdNotFoundException("id: " + id + " does not exist"));
+                .orElseThrow(() -> new UserNotFoundException("id: " + id + " does not exist"));
         return getUserDTO(user);
     }
 
     @Transactional(readOnly = true)
     public Optional<User> findEntityById(Long id) {
-        return Optional.ofNullable(userRepository.findById(id).orElseThrow(() -> new IdNotFoundException("id: " + id + " does not exist")));
+        return Optional.ofNullable(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("id: " + id + " does not exist")));
     }
 
     @Transactional(readOnly = true)
@@ -192,6 +192,7 @@ public class UserServiceImpl implements UserService {
         City city = buildCity(userFormDTO);
         return buildUser(userFormDTO, newFreeAreaDTO, newPrivateAreaDTO, preference, country, city);
     }
+
 
 
     private boolean isAdult(LocalDate birthdate) {

@@ -20,14 +20,17 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/countries")
 public class CountryController {
 
-    @Autowired
-    private CountryService countryService;
+    public CountryController(CountryService countryService, StateService stateService, CityService cityService) {
+        this.countryService = countryService;
+        this.stateService = stateService;
+        this.cityService = cityService;
+    }
 
-    @Autowired
-    private StateService stateService;
+    private final CountryService countryService;
 
-    @Autowired
-    private CityService cityService;
+    private final StateService stateService;
+
+    private final CityService cityService;
 
     @GetMapping()
     public ResponseEntity<List<Country>> searchCountries(@RequestParam String name) {

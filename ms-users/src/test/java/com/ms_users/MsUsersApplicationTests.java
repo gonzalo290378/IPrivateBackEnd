@@ -87,7 +87,7 @@ class MsUsersApplicationTests {
     @Test
     void findByIdExceptionTest(){
         when(userRepository.findAll()).thenReturn(USER_LIST);
-        assertThrows(IdNotFoundException.class, () -> userServiceImpl.findById(999L));
+        assertThrows(UserNotFoundException.class, () -> userServiceImpl.findById(999L));
     }
 
     @Test
