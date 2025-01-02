@@ -395,17 +395,17 @@ public final class Data {
             );
 
 
-    public final static UserFormDTO NEW_USER_FORM_EXISTED_1 = new UserFormDTO(1L, "romina", 50L, "F", "romina@gmail.com", LocalDate.of(1945, 05, 1), LocalDate.of(2024, 12, 23),
+    public final static UserFormDTO NEW_USER_FORM_EXISTED_1 = new UserFormDTO(1L, "romina", 50L, "F", "romina@gmail.com", LocalDate.of(1945, 5, 1), LocalDate.of(2024, 12, 23),
             "Hola soy Romina", true, "12345", 1L, 1L, 25L, 39L, "M", "Argentina", "Mar del Plata");
 
 
-    public final static UserFormDTO NEW_USER_FORM_EXISTED_2 = new UserFormDTO(2L, "gabriela", 50L, "F", "gabriela@gmail.com", LocalDate.of(1945, 05, 1), LocalDate.of(2024, 12, 23),
+    public final static UserFormDTO NEW_USER_FORM_EXISTED_2 = new UserFormDTO(2L, "gabriela", 50L, "F", "gabriela@gmail.com", LocalDate.of(1945, 6, 1), LocalDate.of(2024, 12, 23),
             "Hola soy Gabriela", true, "12345", 2L, 2L, 39L, 25L, "M", "Argentina", "Mar del Plata");
 
-    public final static UserFormDTO NEW_USER_FORM_EXISTED_3 = new UserFormDTO(3L, "julio", 16L, "M", "julio@gmail.com", LocalDate.of(2008, 05, 1), LocalDate.of(2024, 12, 23),
+    public final static UserFormDTO NEW_USER_FORM_EXISTED_3 = new UserFormDTO(3L, "julio", 16L, "M", "julio@gmail.com", LocalDate.of(2008, 5, 1), LocalDate.of(2024, 12, 23),
             "Hola soy Julio", true, "12345", 3L, 3L, 18L, 25L, "M", "Argentina", "Mar del Plata");
 
-    public final static UserFormDTO NEW_USER_FORM_DTO = new UserFormDTO(1L, "analia", 50L, "F", "analia@gmail.com", LocalDate.of(1945, 05, 1), LocalDate.of(2024, 12, 23),
+    public final static UserFormDTO NEW_USER_FORM_DTO = new UserFormDTO(1L, "analia", 50L, "F", "analia@gmail.com", LocalDate.of(1945, 3, 1), LocalDate.of(2024, 12, 23),
             "Hola soy Analia", true, "12345", 1L, 1L, 25L, 39L, "M", "Argentina", "Mar del Plata");
 
 }
