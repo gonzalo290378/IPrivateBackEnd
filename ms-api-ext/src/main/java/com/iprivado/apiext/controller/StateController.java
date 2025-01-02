@@ -4,7 +4,6 @@ import com.iprivado.apiext.dto.StateSearchRequest;
 import com.iprivado.apiext.model.entity.State;
 import com.iprivado.apiext.services.StateService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +15,11 @@ import java.util.List;
 @RequestMapping("/api/v1/states")
 public class StateController {
 
-    @Autowired
-    private StateService stateService;
+    public StateController(StateService stateService) {
+        this.stateService = stateService;
+    }
+
+    private final StateService stateService;
 
     @PostMapping("/search")
     public ResponseEntity<List<State>> searchStates(@RequestBody StateSearchRequest request) {

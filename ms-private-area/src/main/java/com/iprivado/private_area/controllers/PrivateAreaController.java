@@ -1,9 +1,9 @@
 package com.iprivado.private_area.controllers;
 
 import com.iprivado.private_area.dto.PrivateAreaDTO;
+import com.iprivado.private_area.exceptions.PrivateAreaNotFoundException;
 import com.iprivado.private_area.services.PrivateAreaService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +14,11 @@ import java.util.List;
 @RequestMapping("api/v1/private-area")
 public class PrivateAreaController {
 
-    @Autowired
-    private PrivateAreaService privateAreaService;
+    public PrivateAreaController(PrivateAreaService privateAreaService){
+        this.privateAreaService = privateAreaService;
+    }
+
+    private final PrivateAreaService privateAreaService;
 
     @GetMapping
     public ResponseEntity<List<PrivateAreaDTO>> findAll() {
@@ -26,7 +29,7 @@ public class PrivateAreaController {
     @GetMapping("/{id}")
     public ResponseEntity<PrivateAreaDTO> findById(@PathVariable Long id) {
         log.info("ms-private-area Calling findById");
-        return ResponseEntity.ok(privateAreaService.findById(id).get());
+        return ResponseEntity.ok(privateAreaService.findById(id).orElseThrow(() -> new PrivateAreaNotFoundException("Private Area with id : " + id + " not found")));
     }
 
 

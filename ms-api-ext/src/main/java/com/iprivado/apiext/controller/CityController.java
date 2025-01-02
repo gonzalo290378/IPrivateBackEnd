@@ -8,12 +8,9 @@ import com.iprivado.apiext.services.CityService;
 import com.iprivado.apiext.services.CountryService;
 import com.iprivado.apiext.services.StateService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-
 import static java.lang.Integer.parseInt;
 
 @RestController
@@ -22,14 +19,17 @@ import static java.lang.Integer.parseInt;
 @RequestMapping("/api/v1/cities")
 public class CityController {
 
-    @Autowired
-    private CountryService countryService;
+    public CityController(CountryService countryService, StateService stateService, CityService cityService) {
+        this.countryService = countryService;
+        this.stateService = stateService;
+        this.cityService = cityService;
+    }
 
-    @Autowired
-    private StateService stateService;
+    private final CountryService countryService;
 
-    @Autowired
-    private CityService cityService;
+    private final StateService stateService;
+
+    private final CityService cityService;
 
     @GetMapping("/citiesByStates")
     public ResponseEntity<List<City>> searchCitiesByStates(@RequestParam String name, @RequestParam String country) {
