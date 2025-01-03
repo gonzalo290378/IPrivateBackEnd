@@ -5,6 +5,42 @@ spring:
         - id: ms-users
           uri: lb://ms-users
           predicates:
-            - Path=/api/users/**
+            - Path=/ms-users/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
+        - id: ms-private-area
+          uri: lb://ms-private-area
+          predicates:
+            - Path=/ms-private-area/**
+          filters:
+            - StripPrefix=1
+        - id: ms-free-area
+          uri: lb://ms-free-area
+          predicates:
+            - Path=/ms-free-area/**
+          filters:
+            - StripPrefix=1
+        - id: auth-server
+          uri: lb://auth-server
+          predicates:
+            - Path=/auth-server/**
+          filters:
+            - StripPrefix=1
+        - id: ms-api-ext
+          uri: lb://ms-api-ext
+          predicates:
+            - Path=/ms-api-ext/**
+          filters:
+            - StripPrefix=1
+        - id: ms-consumer
+          uri: lb://ms-consumer
+          predicates:
+            - Path=/ms-consumer/**
+          filters:
+            - StripPrefix=1
+        - id: ms-producer
+          uri: lb://ms-producer
+          predicates:
+            - Path=/ms-producer/**
+          filters:
+            - StripPrefix=1
