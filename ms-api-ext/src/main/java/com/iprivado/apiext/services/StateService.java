@@ -12,8 +12,11 @@ import static java.lang.Integer.parseInt;
 @Service
 public class StateService {
 
-    @Autowired
-    private StateRepository stateRepository;
+    private final StateRepository stateRepository;
+
+    public StateService(StateRepository stateRepository) {
+        this.stateRepository = stateRepository;
+    }
 
     public List<State> getStatesByCountry(String idCountry) {
         return stateRepository.findByIdCountry(parseInt(idCountry));
