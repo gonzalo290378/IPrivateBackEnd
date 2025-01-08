@@ -6,15 +6,22 @@ import com.ms_users.models.entity.User;
 import com.ms_users.services.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @Slf4j
 public class UserController {
+
+    @Value("${configuration.text}")
+    private String text;
 
     private final UserService userService;
 
@@ -109,6 +116,14 @@ public class UserController {
         log.info("ms-users Calling delete with {id}");
         User user = userService.findEntityById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
         return ResponseEntity.ok(userService.delete(user.getId()));
+    }
+
+    @GetMapping("fetch-config")
+    public ResponseEntity<?> fetchConfig(@Value("${server.port}")  String port){
+       Map<String, String> json = new HashMap<>();
+       json.put("port", port);
+       json.put("text", text);
+       return ResponseEntity.ok(json);
     }
 
 }

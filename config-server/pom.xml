@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.config-server</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
+    <artifactId>config-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>config-server</name>
 
