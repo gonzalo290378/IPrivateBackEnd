@@ -10,9 +10,9 @@
     </parent>
 
     <groupId>com.iprivado.api-ext</groupId>
-    <artifactId>eureka</artifactId>
+    <artifactId>ms-api-ext</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>eureka</name>
+    <name>ms-api-ext</name>
 
     <properties>
         <java.version>17</java.version>
