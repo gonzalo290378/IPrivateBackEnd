@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ms_users.models.FreeAreaDTO;
 import com.ms_users.models.PrivateArea;
 import com.ms_users.models.PrivateAreaDTO;
+import com.ms_users.models.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -19,6 +22,9 @@ public class FilterDTO implements Serializable {
 
     @JsonProperty("id")
     private Long id;
+
+    @JsonProperty("roles")
+    private List<Role> roles = new ArrayList<>();
 
     @JsonProperty("username")
     private String username;

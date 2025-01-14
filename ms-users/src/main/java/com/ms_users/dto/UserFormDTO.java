@@ -2,6 +2,8 @@ package com.ms_users.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ms_users.models.entity.Role;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +13,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.Period;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -20,6 +24,9 @@ public class UserFormDTO implements Serializable {
 
     @JsonProperty("id")
     private Long id;
+
+    @JsonProperty("roles")
+    private List<Role> roles = new ArrayList<>();
 
     @Size(min = 5, message = "Username should have at least 5 characters")
     @Size(max = 10, message = "Username should not have more than 10 characters")
@@ -63,7 +70,7 @@ public class UserFormDTO implements Serializable {
     @Size(max = 10)
     @Size(min = 6)
     @NotEmpty(message = "Password can not be empty")
-    @JsonProperty("password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @JsonProperty("idFreeArea")
@@ -94,6 +101,9 @@ public class UserFormDTO implements Serializable {
 
     @JsonProperty("city")
     private String city;
+
+    @Transient
+    private Boolean admin;
 
     public Long getAge() {
         LocalDate today = LocalDate.now();

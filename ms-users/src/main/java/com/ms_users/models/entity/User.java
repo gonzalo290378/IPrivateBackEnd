@@ -1,6 +1,7 @@
 package com.ms_users.models.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -23,10 +26,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"),
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role_id"})})
+    private List<Role> roles = new ArrayList<>();
+
     @Size(min = 5, message = "Username should have at least 5 characters")
     @Size(max = 10, message = "Username should not have more than 10 characters")
     @NotEmpty(message = "Username can not be empty")
-    @Column(name = "username")
+    @Column(unique = true)
     private String username;
 
     @Min(value = 18, message = "Age from must be more than 18")
@@ -65,10 +76,11 @@ public class User {
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
-    @Size(max = 10)
     @Size(min = 6)
+    @Size(max = 256)
     @NotEmpty(message = "Password can not be empty")
     @Column(name = "password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name = "id_free_area")
@@ -89,6 +101,8 @@ public class User {
     @JoinColumn(name = "id_city")
     private City city;
 
+    @Transient
+    private Boolean admin;
 
 
 }

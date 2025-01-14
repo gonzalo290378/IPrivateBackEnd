@@ -5,24 +5,28 @@ import com.ms_users.clients.PrivateAreaClientRest;
 import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
 import com.ms_users.exceptions.*;
-import com.ms_users.mapper.*;
+import com.ms_users.mapper.FilterMapper;
+import com.ms_users.mapper.UserMapper;
 import com.ms_users.models.entity.User;
+import com.ms_users.repositories.RoleRepository;
 import com.ms_users.repositories.UserRepository;
 import com.ms_users.services.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static com.ms_users.data.Data.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
+
+import static com.ms_users.data.Data.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 //mvn clean verify
 
 @SpringBootTest(classes = {User.class})
@@ -31,6 +35,12 @@ class MsUsersApplicationTests {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    RoleRepository roleRepository;
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @InjectMocks
     UserServiceImpl userServiceImpl;
@@ -48,7 +58,7 @@ class MsUsersApplicationTests {
     private PrivateAreaClientRest privateAreaClientRest;
 
     @Test
-    void findByIdTest(){
+    void findByIdTest() {
         //MOCK / GIVEN
         when(userRepository.findAll()).thenReturn(USER_LIST);
         when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_1);
@@ -66,7 +76,7 @@ class MsUsersApplicationTests {
     }
 
     @Test
-    void findAllTest(){
+    void findAllTest() {
         //MOCK / GIVEN
         when(userRepository.findByIsEnabledTrueOrderByIdDesc(PageRequest.of(PAGE, SIZE))).thenReturn(USERS_PAGINATOR(USER_LIST, PAGE, SIZE));
 
@@ -85,13 +95,13 @@ class MsUsersApplicationTests {
     }
 
     @Test
-    void findByIdExceptionTest(){
+    void findByIdExceptionTest() {
         when(userRepository.findAll()).thenReturn(USER_LIST);
         assertThrows(UserNotFoundException.class, () -> userServiceImpl.findById(999L));
     }
 
     @Test
-    void findEntityByIdTest(){
+    void findEntityByIdTest() {
         //MOCK / GIVEN
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(USER_2));
         when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_2);
@@ -109,7 +119,7 @@ class MsUsersApplicationTests {
     }
 
     @Test
-    void findByEmailTest(){
+    void findByEmailTest() {
         //MOCK / GIVEN
         when(userRepository.findAll()).thenReturn(USER_LIST);
         when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_4);
@@ -125,13 +135,13 @@ class MsUsersApplicationTests {
     }
 
     @Test
-    void findByEmailExceptionTest(){
+    void findByEmailExceptionTest() {
         when(userRepository.findAll()).thenReturn(USER_LIST);
         assertThrows(EmailNotFoundException.class, () -> userServiceImpl.findByEmail("noexiste@gmail.com"));
     }
 
     @Test
-    void findByUsernameTest(){
+    void findByUsernameTest() {
         //MOCK / GIVEN
         when(userRepository.findByIsEnabledTrueOrderByIdDesc()).thenReturn(USER_LIST);
         when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_3);
@@ -147,13 +157,13 @@ class MsUsersApplicationTests {
     }
 
     @Test
-    void findByUsernameExceptionTest(){
+    void findByUsernameExceptionTest() {
         when(userRepository.findAll()).thenReturn(USER_LIST);
         assertThrows(UsernameNotFoundException.class, () -> userServiceImpl.findByUsername("noexisteusername"));
     }
 
     @Test
-    void filterTest(){
+    void filterTest() {
         //MOCK / GIVEN
         when(userRepository.filter(FILTER_DTO_1, PageRequest.of(PAGE, SIZE))).thenReturn(USERS_PAGINATOR(USER_LIST, PAGE, SIZE));
 
@@ -172,7 +182,7 @@ class MsUsersApplicationTests {
     }
 
     @Test
-    void filterExceptionTest(){
+    void filterExceptionTest() {
         //MOCK / GIVEN
         when(userRepository.filter(FILTER_DTO_2, PageRequest.of(PAGE, SIZE))).thenReturn(USERS_PAGINATOR(USER_LIST, PAGE, SIZE));
 
@@ -189,10 +199,11 @@ class MsUsersApplicationTests {
     }
 
     @Test
-    void saveTest(){
+    void saveTest() {
         //MOCK / GIVEN
         when(userRepository.save(any(User.class))).thenReturn(USER_1);
         when(userRepository.findAll()).thenReturn(USER_LIST);
+        when(roleRepository.findByName(anyString())).thenReturn(Optional.ofNullable(ROLE));
         when(freeAreaClientRest.save(true)).thenReturn(FREE_AREA_DTO_6);
         when(privateAreaClientRest.save(false)).thenReturn(PRIVATE_AREA_DTO_6);
 
@@ -209,7 +220,7 @@ class MsUsersApplicationTests {
     }
 
     @Test
-    void saveUserRegisteredTest(){
+    void saveUserRegisteredTest() {
         //MOCK / GIVEN
         when(userRepository.save(any(User.class))).thenReturn(USER_1);
         when(userRepository.findAll()).thenReturn(USER_LIST);
@@ -221,7 +232,7 @@ class MsUsersApplicationTests {
     }
 
     @Test
-    void updateTest(){
+    void updateTest() {
         //MOCK / GIVEN
         when(userRepository.save(any(User.class))).thenReturn(USER_1);
 
