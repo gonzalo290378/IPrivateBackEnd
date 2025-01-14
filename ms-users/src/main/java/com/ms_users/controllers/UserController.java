@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -120,10 +119,11 @@ public class UserController {
 
     @GetMapping("fetch-config")
     public ResponseEntity<?> fetchConfig(@Value("${server.port}")  String port){
-       Map<String, String> json = new HashMap<>();
-       json.put("port", port);
-       json.put("text", text);
-       return ResponseEntity.ok(json);
+        Map<String, String> json = new HashMap<>();
+        json.put("port", port);
+        json.put("text", text);
+        return ResponseEntity.ok(json);
     }
 
 }
+

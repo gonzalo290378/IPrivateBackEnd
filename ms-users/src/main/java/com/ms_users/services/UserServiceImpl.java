@@ -14,17 +14,18 @@ import com.ms_users.mapper.FilterMapper;
 import com.ms_users.mapper.UserMapper;
 import com.ms_users.models.FreeAreaDTO;
 import com.ms_users.models.PrivateAreaDTO;
-import com.ms_users.models.entity.City;
-import com.ms_users.models.entity.Country;
-import com.ms_users.models.entity.Preference;
-import com.ms_users.models.entity.User;
+import com.ms_users.models.entity.*;
+import com.ms_users.repositories.RoleRepository;
 import com.ms_users.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -32,17 +33,21 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final FilterMapper filterMapper;
     private final FreeAreaClientRest freeAreaClientRest;
     private final PrivateAreaClientRest privateAreaClientRest;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, FilterMapper filterMapper, FreeAreaClientRest client, PrivateAreaClientRest privateAreaClientRest) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, FilterMapper filterMapper, FreeAreaClientRest client, PrivateAreaClientRest privateAreaClientRest, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.userMapper = userMapper;
         this.filterMapper = filterMapper;
         this.freeAreaClientRest = client;
         this.privateAreaClientRest = privateAreaClientRest;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -57,6 +62,7 @@ public class UserServiceImpl implements UserService {
             UserDTO userDTO = userMapper.toDTO(user);
             FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
             PrivateAreaDTO privateAreaDTO = privateAreaClientRest.findById(user.getIdPrivateArea());
+            userDTO.setRoles(user.getRoles());
             userDTO.setFreeAreaDTO(freeAreaDTO);
             userDTO.setPrivateAreaDTO(privateAreaDTO);
             userDTO.setIdFreeArea(freeAreaDTO.getId());
@@ -97,6 +103,7 @@ public class UserServiceImpl implements UserService {
         FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
         PrivateAreaDTO privateAreaDTO = privateAreaClientRest.findById(user.getIdPrivateArea());
         UserDTO userDTO = userMapper.toDTO(user);
+        userDTO.setRoles(user.getRoles());
         userDTO.setFreeAreaDTO(freeAreaDTO);
         userDTO.setPrivateAreaDTO(privateAreaDTO);
         return Optional.of(userDTO);
@@ -115,6 +122,7 @@ public class UserServiceImpl implements UserService {
             FilterDTO filterListDTO = filterMapper.toDTO(user);
             FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
             PrivateAreaDTO privateAreaDTO = privateAreaClientRest.findById(user.getIdPrivateArea());
+            filterListDTO.setRoles(user.getRoles());
             filterListDTO.setFreeAreaDTO(freeAreaDTO);
             filterListDTO.setPrivateAreaDTO(privateAreaDTO);
             filterListDTO.setIdFreeArea(freeAreaDTO.getId());
@@ -190,9 +198,24 @@ public class UserServiceImpl implements UserService {
         Preference preference = buildPreference(userFormDTO);
         Country country = buildCountry(userFormDTO);
         City city = buildCity(userFormDTO);
+        List<Role> roles = getRoles(userFormDTO);
+
+        userFormDTO.setRoles(roles);
+        userFormDTO.setPassword(passwordEncoder.encode(userFormDTO.getPassword()));
         return buildUser(userFormDTO, newFreeAreaDTO, newPrivateAreaDTO, preference, country, city);
     }
 
+    private List<Role> getRoles(UserFormDTO userFormDTO) {
+        Optional<Role> optionalRoleUser = roleRepository.findByName("ROLE_USER");
+        List<Role> roles = new ArrayList<>();
+        optionalRoleUser.ifPresent(roles::add);
+
+        if(userFormDTO.getAdmin()) {
+            Optional<Role> optionalRoleAdmin = roleRepository.findByName("ROLE_ADMIN");
+            optionalRoleAdmin.ifPresent(roles::add);
+        }
+        return roles;
+    }
 
 
     private boolean isAdult(LocalDate birthdate) {
@@ -232,6 +255,7 @@ public class UserServiceImpl implements UserService {
         return User.builder()
                 .idFreeArea(freeAreaDTO.getId())
                 .idPrivateArea(privateAreaDTO.getId())
+                .roles(userFormDTO.getRoles())
                 .preference(preference)
                 .country(country)
                 .city(city)
@@ -244,6 +268,7 @@ public class UserServiceImpl implements UserService {
                 .description(userFormDTO.getDescription())
                 .isEnabled(UserEnabledConfiguration.IS_ENABLED.getValue())
                 .password(userFormDTO.getPassword())
+                .admin(userFormDTO.getAdmin())
                 .build();
     }
 

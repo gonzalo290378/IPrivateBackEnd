@@ -7,6 +7,7 @@ import com.ms_users.models.PrivateAreaDTO;
 import com.ms_users.models.entity.City;
 import com.ms_users.models.entity.Country;
 import com.ms_users.models.entity.Preference;
+import com.ms_users.models.entity.Role;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,6 +18,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Builder
@@ -27,6 +30,8 @@ UserDTO implements Serializable {
 
     @JsonProperty("id")
     private Long id;
+
+    private List<Role> roles = new ArrayList<>();
 
     @Size(min = 5, message = "Username should have at least 5 characters")
     @Size(max = 10, message = "Username should not have more than 10 characters")
@@ -70,7 +75,7 @@ UserDTO implements Serializable {
     @Size(max = 12, message = "Password must have less than 12 characters")
     @Size(max = 6, message = "Password must not exceed 12 characters")
     @NotEmpty(message = "Password can not be empty")
-    @JsonProperty("password")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @JsonProperty("idFreeArea")
