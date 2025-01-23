@@ -103,14 +103,14 @@ public class UserController {
         return ResponseEntity.ok(userService.save(userFormDTO));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/edit/{id}")
     public ResponseEntity<?> edit(@Valid @RequestBody UserFormDTO userFormDTO, @PathVariable Long id) {
         log.info("ms-users Calling edit with {user}");
         User user = userService.findEntityById(id).orElseThrow(()-> new UserNotFoundException("User with id " + id + " not found"));
         return ResponseEntity.ok(userService.update(userFormDTO, user));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         log.info("ms-users Calling delete with {id}");
         User user = userService.findEntityById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
