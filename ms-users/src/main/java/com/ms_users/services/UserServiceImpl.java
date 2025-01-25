@@ -146,8 +146,8 @@ public class UserServiceImpl implements UserService {
 
     public User save(UserFormDTO userFormDTO) {
         boolean userEmailExists = findByEmailWithoutException(userFormDTO.getEmail());
-        boolean usernameExists = findByUsernameWithoutException(userFormDTO.getUsername());
-        if (!userEmailExists && !usernameExists) {
+        //boolean usernameExists = findByUsernameWithoutException(userFormDTO.getUsername());
+        if (!userEmailExists) {
             validateUserForm(userFormDTO);
             User newUser = buildUser(userFormDTO);
             return userRepository.save(newUser);
@@ -161,15 +161,6 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findAll()
                 .stream()
                 .filter(e -> Objects.equals(e.getEmail(), email))
-                .findFirst();
-        return user.isPresent();
-    }
-
-
-    public boolean findByUsernameWithoutException(String username) {
-        Optional<User> user = userRepository.findAll()
-                .stream()
-                .filter(e -> Objects.equals(e.getUsername(), username))
                 .findFirst();
         return user.isPresent();
     }

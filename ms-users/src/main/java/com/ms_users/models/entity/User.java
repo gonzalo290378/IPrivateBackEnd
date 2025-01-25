@@ -102,7 +102,6 @@ public class User {
     private City city;
 
     @Transient
-    private Boolean admin;
-
+    private Boolean admin = false;
 
 }

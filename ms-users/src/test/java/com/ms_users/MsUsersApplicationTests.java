@@ -214,7 +214,7 @@ class MsUsersApplicationTests {
         assertTrue(user.isPresent());
         assertEquals(Long.valueOf(1L), user.get().getId());
         verify(userRepository, times(1)).save(any(User.class));
-        verify(userRepository, times(2)).findAll();
+        verify(userRepository, times(1)).findAll();
         verify(freeAreaClientRest, times(1)).save(true);
         verify(privateAreaClientRest, times(1)).save(false);
     }
