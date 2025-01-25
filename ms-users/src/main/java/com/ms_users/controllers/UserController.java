@@ -50,17 +50,6 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-
-    @GetMapping("/{username}")
-    public ResponseEntity<?> findByUsername(@PathVariable String username) {
-        log.info("ms-users Calling findByUsername with {username}");
-        Optional<UserDTO> userOptional = userService.findByUsername(username);
-        if (userOptional.isPresent()) {
-            return ResponseEntity.ok(userOptional.get());
-        }
-        return ResponseEntity.notFound().build();
-    }
-
     @GetMapping("/filter")
     public ResponseEntity<Page<FilterDTO>> filter(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
@@ -95,7 +84,6 @@ public class UserController {
         log.info("ms-users Calling filter with {}", filterDTO);
         return ResponseEntity.ok(userService.filter(filterDTO, page, size));
     }
-
 
     @PostMapping()
     public ResponseEntity<?> save(@RequestBody @Valid UserFormDTO userFormDTO) {

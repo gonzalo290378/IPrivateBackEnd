@@ -103,7 +103,7 @@ public class UserFormDTO implements Serializable {
     private String city;
 
     @Transient
-    private Boolean admin;
+    private Boolean admin = false;
 
     public Long getAge() {
         LocalDate today = LocalDate.now();
