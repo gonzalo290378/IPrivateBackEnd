@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 //COMUNICACION CON ENTRE MSVC-USUARIOS (POD) -> MSVC-CURSOS (POD) HACIENDO USO DE @FeignClient(name="msvc-cursos", url = "msvc-cursos:8002")
 
 //@FeignClient(name = "ms-free-area", url = "${ms.free-area.url}") //COMUNICACION MEDIANTE VARIABLES DE AMBIENTE
-@FeignClient(name = "ms-users", url = "http://localhost:8001")
+@FeignClient(name = "ms-users", url = "http://localhost:8090/ms-users")
 public interface UserClientRest {
 
 //    @GetMapping("api/v1/users/{id}")

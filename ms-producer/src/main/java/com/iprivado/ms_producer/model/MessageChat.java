@@ -12,11 +12,8 @@ import lombok.NoArgsConstructor;
 public class MessageChat {
 
     private String sender;
-
     private String receiver;
-
     private String body;
-
     private String timestamp;
 
 }

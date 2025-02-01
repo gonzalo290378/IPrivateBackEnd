@@ -36,18 +36,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         User user = null;
-        String username = null;
+        String email = null;
         String password = null;
 
         try {
             user = new ObjectMapper().readValue(request.getInputStream(), User.class);
-            username = user.getUsername();
+            email = user.getEmail();
             password = user.getPassword();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         return authenticationManager.authenticate(authenticationToken);
     }
 
@@ -55,16 +55,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 
         org.springframework.security.core.userdetails.User user = (org.springframework.security.core.userdetails.User) authResult.getPrincipal();
-        String username = user.getUsername();
+        String email = user.getUsername();
         Collection <? extends GrantedAuthority> roles =  authResult.getAuthorities();
         Claims claims = Jwts.claims()
                 .add("authorities", new ObjectMapper().writeValueAsString(roles))
-                .add("username", username)
+                .add("username", email)
                 .build();
 
         String token = Jwts
                 .builder()
-                .subject(username)
+                .subject(email)
                 .claims(claims)
                 .expiration(Date.from(Instant.now().plus(30, ChronoUnit.DAYS)))
                 .issuedAt(new Date())
@@ -74,8 +74,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.addHeader(HEADER_AUTHORIZATION, PREFIX_TOKEN + token);
         Map<String, String> body = new HashMap<>();
         body.put("token", token);
-        body.put("username", username);
-        body.put("message", String.format("Welcome %s", username));
+        body.put("email", email);
+        body.put("message", String.format("Welcome %s", email));
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setContentType(CONTENT_TYPE);
         response.setStatus(HttpServletResponse.SC_OK);
@@ -84,7 +84,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         Map<String, String> body = new HashMap<>();
-        body.put("message", "Authentication failed - Username or password incorrect");
+        body.put("message", "Authentication failed - Email or password incorrect");
         body.put("error", failed.getMessage());
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

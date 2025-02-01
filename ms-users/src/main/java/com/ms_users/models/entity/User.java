@@ -37,7 +37,6 @@ public class User {
     @Size(min = 5, message = "Username should have at least 5 characters")
     @Size(max = 10, message = "Username should not have more than 10 characters")
     @NotEmpty(message = "Username can not be empty")
-    @Column(unique = true)
     private String username;
 
     @Min(value = 18, message = "Age from must be more than 18")

@@ -1,5 +1,6 @@
 package com.ms_users.services;
 
+import com.ms_users.exceptions.EmailNotFoundException;
 import com.ms_users.models.entity.User;
 import com.ms_users.repositories.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,10 +25,10 @@ public class JpaUserDetailsService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     //ACA INGRESA POR EL POST DE ANGULAR EL USERNAME
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userOptional = userRepository.findByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException(String.format("Username %s not found", username));
+            throw new EmailNotFoundException(String.format("Email %s not found", email));
         }
         User user = userOptional.orElseThrow();
 
@@ -38,7 +39,7 @@ public class JpaUserDetailsService implements UserDetailsService {
                 .collect(Collectors.toList());
 
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
+                user.getEmail(),
                 user.getPassword(),
                 user.getIsEnabled(),
                 true,

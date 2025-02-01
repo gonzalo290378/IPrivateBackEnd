@@ -32,12 +32,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE u.id = :id")
     void delete(@Param("id") Long id);
 
-    List<User> findByIsEnabledTrueOrderByIdDesc();
-
     Page<User> findByIsEnabledTrueOrderByIdDesc(Pageable pageable);
 
-    Optional<User> findByUsername(String username);
-
-
-
+    Optional<User> findByEmail(String email);
 }
