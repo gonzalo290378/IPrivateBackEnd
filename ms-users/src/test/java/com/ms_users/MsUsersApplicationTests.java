@@ -140,27 +140,7 @@ class MsUsersApplicationTests {
         assertThrows(EmailNotFoundException.class, () -> userServiceImpl.findByEmail("noexiste@gmail.com"));
     }
 
-    @Test
-    void findByUsernameTest() {
-        //MOCK / GIVEN
-        when(userRepository.findByIsEnabledTrueOrderByIdDesc()).thenReturn(USER_LIST);
-        when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_3);
-        when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_3);
-        when(userMapper.toDTO(any(User.class))).thenReturn(USER_DTO_3);
 
-        //TEST LOGICA DE NEGOCIO / WHEN
-        Optional<UserDTO> user = userServiceImpl.findByUsername("arri");
-
-        //ASSERTIONS / THEN
-        assertTrue(user.isPresent());
-        assertEquals(Long.valueOf(3L), user.get().getId());
-    }
-
-    @Test
-    void findByUsernameExceptionTest() {
-        when(userRepository.findAll()).thenReturn(USER_LIST);
-        assertThrows(UsernameNotFoundException.class, () -> userServiceImpl.findByUsername("noexisteusername"));
-    }
 
     @Test
     void filterTest() {

@@ -91,14 +91,6 @@ public class UserServiceImpl implements UserService {
         return getUserDTO(user);
     }
 
-    @Transactional(readOnly = true)
-    public Optional<UserDTO> findByUsername(String username){
-        User user = userRepository.findByIsEnabledTrueOrderByIdDesc().stream().filter(e -> Objects.equals(e.getUsername(), username))
-                .findFirst()
-                .orElseThrow(() -> new UsernameNotFoundException("username: " + username + " does not exist"));
-        return getUserDTO(user);
-    }
-
     private Optional<UserDTO> getUserDTO(User user) {
         FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
         PrivateAreaDTO privateAreaDTO = privateAreaClientRest.findById(user.getIdPrivateArea());
@@ -295,7 +287,7 @@ public class UserServiceImpl implements UserService {
     public User delete(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
-            throw new UsernameNotFoundException("User: is not registered");
+            throw new UserNotFoundException("User: is not registered");
         }
         userRepository.delete(id);
         freeAreaClientRest.delete(user.get().getIdFreeArea());

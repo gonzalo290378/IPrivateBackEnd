@@ -23,12 +23,6 @@ public class CustomizedResponseEntityExceptionHandler {
     }
 
 
-    @ExceptionHandler(UsernameNotFoundException.class)
-    public final ResponseEntity<ErrorDetails> handleUsernameNotFoundException(Exception e, WebRequest webRequest) throws Exception {
-        ErrorDetails errorDetails = new ErrorDetails(LocalDate.now(), e.getMessage(), webRequest.getDescription(false));
-        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
-    }
-
     @ExceptionHandler(EmailNotFoundException.class)
     public final ResponseEntity<ErrorDetails> handleEmailNotFoundException(Exception e, WebRequest webRequest) throws Exception {
         ErrorDetails errorDetails = new ErrorDetails(LocalDate.now(), e.getMessage(), webRequest.getDescription(false));
@@ -83,6 +77,4 @@ public class CustomizedResponseEntityExceptionHandler {
         ErrorDetails errorDetails = new ErrorDetails(LocalDate.now(), e.getMessage(), webRequest.getDescription(false));
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }
-
-
 }
