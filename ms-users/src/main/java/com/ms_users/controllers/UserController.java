@@ -40,6 +40,12 @@ public class UserController {
         return ResponseEntity.ok(userService.findById(id));
     }
 
+    @GetMapping("/{username}")
+    public ResponseEntity<?> findByUsername(@PathVariable String username) {
+        log.info("ms-users Calling findByUsername with {}", username);
+        return ResponseEntity.ok(userService.findByUsername(username));
+    }
+
     @GetMapping("/email/{email}")
     public ResponseEntity<?> findByEmail(@PathVariable String email) {
         log.info("ms-users Calling findByEmail with {email}");
@@ -112,6 +118,4 @@ public class UserController {
         json.put("text", text);
         return ResponseEntity.ok(json);
     }
-
 }
-

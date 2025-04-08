@@ -19,6 +19,7 @@ import com.ms_users.repositories.RoleRepository;
 import com.ms_users.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,6 +91,13 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new EmailNotFoundException("email: " + email + " does not exist"));
         return getUserDTO(user);
     }
+
+    @Override
+    public Optional<UserDTO> findByUsername(String username) {
+        User user = userRepository.findByUsername(username).stream().filter(e -> Objects.equals(e.getUsername(), username))
+                .findFirst()
+                .orElseThrow(() -> new UsernameNotFoundException("username: " + username + " does not exist"));
+        return getUserDTO(user);    }
 
     private Optional<UserDTO> getUserDTO(User user) {
         FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());

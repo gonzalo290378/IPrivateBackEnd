@@ -1,6 +1,7 @@
 package com.ms_users.repositories;
 
 import com.ms_users.dto.FilterDTO;
+import com.ms_users.dto.UserDTO;
 import com.ms_users.models.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,4 +36,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findByIsEnabledTrueOrderByIdDesc(Pageable pageable);
 
     Optional<User> findByEmail(String email);
+
+    Optional<User> findByUsername(String username);
 }
