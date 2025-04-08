@@ -63,7 +63,7 @@ public class SpringSecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfig = new CorsConfiguration();
         corsConfig.applyPermitDefaultValues();
-        corsConfig.setAllowCredentials(true);
+        corsConfig.setAllowCredentials(Boolean.TRUE);
         corsConfig.addAllowedMethod("GET");
         corsConfig.addAllowedMethod("PATCH");
         corsConfig.addAllowedMethod("POST");
