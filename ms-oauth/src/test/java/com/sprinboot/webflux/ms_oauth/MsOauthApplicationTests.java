@@ -1,13 +1,13 @@
-package org.gdegenaro.springlcloud.msvcgateway;
+package com.sprinboot.webflux.ms_oauth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MsGatewayApplicationTests {
+class MsOauthApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

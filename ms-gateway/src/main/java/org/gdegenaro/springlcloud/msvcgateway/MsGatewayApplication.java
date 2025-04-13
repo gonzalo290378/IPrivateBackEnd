@@ -6,12 +6,12 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @EnableDiscoveryClient
 @SpringBootApplication
-public class MsvcGatewayApplication {
+public class MsGatewayApplication {
 
 	//Orden ejecucion ms: Eureka, ConfigServer, MsUsers, MsAccounts, MsPayments, MsQueue, ApiGateway
 
 	public static void main(String[] args) {
-		SpringApplication.run(MsvcGatewayApplication.class, args);
+		SpringApplication.run(MsGatewayApplication.class, args);
 	}
 
 }
