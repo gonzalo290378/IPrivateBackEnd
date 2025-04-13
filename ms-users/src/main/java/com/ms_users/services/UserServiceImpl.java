@@ -19,10 +19,9 @@ import com.ms_users.repositories.RoleRepository;
 import com.ms_users.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -39,16 +38,14 @@ public class UserServiceImpl implements UserService {
     private final FilterMapper filterMapper;
     private final FreeAreaClientRest freeAreaClientRest;
     private final PrivateAreaClientRest privateAreaClientRest;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, FilterMapper filterMapper, FreeAreaClientRest client, PrivateAreaClientRest privateAreaClientRest, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, FilterMapper filterMapper, FreeAreaClientRest client, PrivateAreaClientRest privateAreaClientRest) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
         this.filterMapper = filterMapper;
         this.freeAreaClientRest = client;
         this.privateAreaClientRest = privateAreaClientRest;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -96,8 +93,9 @@ public class UserServiceImpl implements UserService {
     public Optional<UserDTO> findByUsername(String username) {
         User user = userRepository.findByUsername(username).stream().filter(e -> Objects.equals(e.getUsername(), username))
                 .findFirst()
-                .orElseThrow(() -> new UsernameNotFoundException("username: " + username + " does not exist"));
-        return getUserDTO(user);    }
+                .get();
+        return getUserDTO(user);
+    }
 
     private Optional<UserDTO> getUserDTO(User user) {
         FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
@@ -146,7 +144,6 @@ public class UserServiceImpl implements UserService {
 
     public User save(UserFormDTO userFormDTO) {
         boolean userEmailExists = findByEmailWithoutException(userFormDTO.getEmail());
-        //boolean usernameExists = findByUsernameWithoutException(userFormDTO.getUsername());
         if (!userEmailExists) {
             validateUserForm(userFormDTO);
             User newUser = buildUser(userFormDTO);
@@ -192,7 +189,6 @@ public class UserServiceImpl implements UserService {
         List<Role> roles = getRoles(userFormDTO);
 
         userFormDTO.setRoles(roles);
-        userFormDTO.setPassword(passwordEncoder.encode(userFormDTO.getPassword()));
         return buildUser(userFormDTO, newFreeAreaDTO, newPrivateAreaDTO, preference, country, city);
     }
 
@@ -201,7 +197,7 @@ public class UserServiceImpl implements UserService {
         List<Role> roles = new ArrayList<>();
         optionalRoleUser.ifPresent(roles::add);
 
-        if(userFormDTO.getAdmin()) {
+        if (userFormDTO.getAdmin()) {
             Optional<Role> optionalRoleAdmin = roleRepository.findByName("ROLE_ADMIN");
             optionalRoleAdmin.ifPresent(roles::add);
         }
