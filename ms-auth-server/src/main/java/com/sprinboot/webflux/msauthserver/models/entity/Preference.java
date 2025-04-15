@@ -1,4 +1,4 @@
-package com.iprivado.authserver.models;
+package com.sprinboot.webflux.msauthserver.models.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Role {
+public class Preference {
 
     private Long id;
 
-    private String name;
+    private Long ageFrom;
+
+    private Long ageTo;
+
+    private String sexPreference;
+
 }

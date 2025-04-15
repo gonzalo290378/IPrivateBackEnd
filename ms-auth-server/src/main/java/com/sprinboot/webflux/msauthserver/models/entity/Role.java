@@ -1,6 +1,5 @@
-package com.iprivado.authserver.models;
+package com.sprinboot.webflux.msauthserver.models.entity;
 
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,11 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Country {
+public class Role {
 
     private Long id;
 
-    private String country;
-
-
+    private String name;
 }

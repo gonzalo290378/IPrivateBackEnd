@@ -3,22 +3,22 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:8090
+          issuer-uri: http://127.0.0.1:9000
       client:
         registration:
           client-app:
             provider: spring
-            client-id: gateway-app
+            client-id: client
             client-secret: 12345
             authorization-grant-type: authorization_code
-            redirect-uri: http://127.0.0.1:8090/authorized
+            redirect-uri: http://127.0.0.1:9000/authorized
             scope:
               - openid
               - profile
-            client-name: gateway-app
+            client-name: client
         provider:
           spring:
-            issuer-uri: http://127.0.0.1:9100
+            issuer-uri: http://127.0.0.1:9000
   cloud:
     gateway:
       routes:
@@ -40,10 +40,10 @@ spring:
             - Path=/ms-free-area/**
           filters:
             - StripPrefix=1
-        - id: auth-server
-          uri: lb://auth-server
+        - id: ms-auth-server
+          uri: lb://ms-auth-server
           predicates:
-            - Path=/auth-server/**
+            - Path=/ms-auth-server/**
           filters:
             - StripPrefix=1
         - id: ms-api-ext
