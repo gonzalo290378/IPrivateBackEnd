@@ -1,4 +1,4 @@
-package com.iprivado.authserver.models;
+package com.sprinboot.webflux.msauthserver.models.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,6 +14,5 @@ public class City {
     private Long id;
 
     private String city;
-
 
 }
