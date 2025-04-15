@@ -22,12 +22,6 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: ms-oauth
-          uri: lb://ms-oauth
-          predicates:
-           - Path=/api/security/**
-          filters:
-          - StripPrefix=1
         - id: ms-users
           uri: lb://ms-users
           predicates:
