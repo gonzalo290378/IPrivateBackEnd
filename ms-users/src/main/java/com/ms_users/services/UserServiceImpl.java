@@ -19,9 +19,10 @@ import com.ms_users.repositories.RoleRepository;
 import com.ms_users.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -38,6 +39,10 @@ public class UserServiceImpl implements UserService {
     private final FilterMapper filterMapper;
     private final FreeAreaClientRest freeAreaClientRest;
     private final PrivateAreaClientRest privateAreaClientRest;
+
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, FilterMapper filterMapper, FreeAreaClientRest client, PrivateAreaClientRest privateAreaClientRest) {
         this.userRepository = userRepository;
@@ -254,7 +259,7 @@ public class UserServiceImpl implements UserService {
                 .registerDate(DateConfiguration.TODAY.getValue())
                 .description(userFormDTO.getDescription())
                 .isEnabled(UserEnabledConfiguration.IS_ENABLED.getValue())
-                .password(userFormDTO.getPassword())
+                .password(passwordEncoder().encode(userFormDTO.getPassword()))
                 .admin(userFormDTO.getAdmin())
                 .build();
     }

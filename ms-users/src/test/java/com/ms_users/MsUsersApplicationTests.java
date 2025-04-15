@@ -21,9 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
 import java.util.Optional;
-
 import static com.ms_users.data.Data.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -139,7 +137,6 @@ class MsUsersApplicationTests {
         when(userRepository.findAll()).thenReturn(USER_LIST);
         assertThrows(EmailNotFoundException.class, () -> userServiceImpl.findByEmail("noexiste@gmail.com"));
     }
-
 
 
     @Test
