@@ -1,51 +1,62 @@
 package com.sprinboot.webflux.msauthserver.models.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class User {
 
+public class User implements Serializable {
+
+    @JsonProperty("id")
     private Long id;
 
     private List<Role> roles = new ArrayList<>();
 
+    @JsonProperty("username")
     private String username;
 
+    @JsonProperty("age")
     private Long age;
 
+    @JsonProperty("sex")
     private String sex;
 
+    @JsonProperty("email")
     private String email;
 
+    @JsonProperty("birthdate")
     private LocalDate birthdate;
 
+    @JsonProperty("registerDate")
     private LocalDate registerDate;
 
+    @JsonProperty("description")
     private String description;
 
+    @JsonProperty("isEnabled")
     private Boolean isEnabled;
 
     private String password;
 
+    @JsonProperty("idFreeArea")
     private Long idFreeArea;
 
+    @JsonProperty("idPrivateArea")
     private Long idPrivateArea;
 
-    private Preference preference;
+    @JsonProperty("preferenceDTO")
+    private PreferenceDTO preferenceDTO;
 
-    private Country country;
+    @JsonProperty("countryDTO")
+    private CountryDTO countryDTO;
 
-    private City city;
+    @JsonProperty("cityDTO")
+    private CityDTO cityDTO;
 
-    private Boolean admin = false;
 
 }
