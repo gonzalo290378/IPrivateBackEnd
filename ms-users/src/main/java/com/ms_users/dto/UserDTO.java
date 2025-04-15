@@ -75,7 +75,8 @@ UserDTO implements Serializable {
     @Size(max = 12, message = "Password must have less than 12 characters")
     @Size(max = 6, message = "Password must not exceed 12 characters")
     @NotEmpty(message = "Password can not be empty")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty("password")
     private String password;
 
     @JsonProperty("idFreeArea")
