@@ -64,3 +64,9 @@ spring:
             - Path=/ms-producer/**
           filters:
             - StripPrefix=1
+        - id: ms-resource-server
+          uri: lb://ms-resource-server
+          predicates:
+            - Path=/ms-resource-server/**
+          filters:
+            - StripPrefix=1
