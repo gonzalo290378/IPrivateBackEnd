@@ -14,7 +14,7 @@ spring:
             redirect-uri: http://127.0.0.1:9000/authorized
             scope:
               - openid
-              - profile
+              #- profile
             client-name: client
         provider:
           spring:
