@@ -4,6 +4,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.sprinboot.webflux.msauthserver.models.entity.UserDetails.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -101,6 +102,18 @@ public class AuthorizationSecurityConfig {
                 Set<String> roles = authentication.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.toSet());
+
+                // Add email to the access token
+                String email = null;
+                if (authentication.getPrincipal() instanceof CustomUserDetails) {
+                    CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+                    email = userDetails.getEmail();
+                }
+
+                if (email != null) {
+                    context.getClaims().claim("email", email);
+                }
+
                 context.getClaims().claim("roles", roles).claim("username", authentication.getName());
 
             }

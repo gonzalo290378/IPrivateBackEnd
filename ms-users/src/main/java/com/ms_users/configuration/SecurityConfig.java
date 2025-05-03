@@ -22,6 +22,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/filter").permitAll()
                         .requestMatchers(HttpMethod.GET, "/email/{email}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/{username}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/new-account/register-page").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
