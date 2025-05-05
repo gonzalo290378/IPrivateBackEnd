@@ -34,6 +34,7 @@ import org.springframework.security.oauth2.server.authorization.token.JwtEncodin
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
@@ -82,9 +83,19 @@ public class AuthorizationSecurityConfig {
     @Bean
     public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/auth/**", "/logout").permitAll()
+                        auth.requestMatchers("/auth/**", "/login", "/logout").permitAll()
                                 .anyRequest().authenticated())
-                .formLogin(Customizer.withDefaults());
+                .formLogin(Customizer.withDefaults())
+                        .logout().logoutSuccessUrl("http://localhost:4200/logout");
+
+//                .logout(logout -> logout
+//                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))  // Importante: cambiamos a GET
+//                        .logoutSuccessUrl("/login?logout=true")
+//                        .invalidateHttpSession(true)
+//                        .clearAuthentication(true)
+//                        .deleteCookies("JSESSIONID")
+//                );
+
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**"));
         return http.build();
     }
@@ -132,6 +143,8 @@ public class AuthorizationSecurityConfig {
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 //.redirectUri("https://oauthdebugger.com/debug")
                 .redirectUri("http://localhost:4200/authorized")
+                .postLogoutRedirectUri("http://localhost:4200/login") // Añadido URI de redirección post-logout
+
                 .scope(OidcScopes.OPENID)
                 .clientSettings(ClientSettings.builder().requireProofKey(true).build())
                 .build();
