@@ -1,3 +1,37 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en"-->
+<!--      xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="utf-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">-->
+<!--    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">-->
+<!--    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container">-->
+<!--    <form class="form-signin" method="post" th:action="@{/login}">-->
+<!--        <div th:if="${param.error}" class="alert alert-danger" role="alert">-->
+<!--            Credenciales erróneas-->
+<!--        </div>-->
+<!--        <div th:if="${param.logout}" class="alert alert-success" role="alert">-->
+<!--            Has cerrado sesión.-->
+<!--        </div>-->
+<!--        <h2 class="form-signin-heading">Inicia Sesion IPrivado</h2>-->
+<!--        <p>-->
+<!--            <label for="username" class="sr-only">Email</label>-->
+<!--            <input type="text" id="username" name="username" class="form-control" placeholder="Email" required autofocus>-->
+<!--        </p>-->
+<!--        <p>-->
+<!--            <label for="password" class="sr-only">Contraseña</label>-->
+<!--            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>-->
+<!--        </p>-->
+<!--        <button class="btn btn-lg btn-primary btn-block" type="submit">Iniciar Sesión</button>-->
+<!--    </form>-->
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
@@ -6,6 +40,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
+    <style>
+        .link {
+            font-size: 0.875rem;
+            color: blue;
+            text-decoration: none;
+        }
+        .flex {
+            display: flex;
+        }
+        .justify-content-center {
+            justify-content: center;
+        }
+        .mt-3 {
+            margin-top: 1rem;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -26,7 +76,17 @@
             <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
         </p>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Iniciar Sesión</button>
+
+        <!-- Enlaces añadidos, adaptados de Angular a Thymeleaf -->
+        <div class="flex justify-content-center mt-3">
+            <a class="link" th:href="@{http://localhost:4200/new-account}">Registrate</a>
+        </div>
+
+        <div class="flex justify-content-center mt-3">
+            <a class="link" th:href="@{http://localhost:4200}">Pagina Principal</a>
+        </div>
     </form>
 </div>
+
 </body>
 </html>

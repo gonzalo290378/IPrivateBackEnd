@@ -85,16 +85,36 @@ public class AuthorizationSecurityConfig {
         http.authorizeHttpRequests(auth ->
                         auth.requestMatchers("/auth/**", "/login", "/logout").permitAll()
                                 .anyRequest().authenticated())
-                .formLogin(Customizer.withDefaults())
-                        .logout().logoutSuccessUrl("http://localhost:4200/logout");
+//                .formLogin(Customizer.withDefaults())
 
-//                .logout(logout -> logout
-//                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))  // Importante: cambiamos a GET
-//                        .logoutSuccessUrl("/login?logout=true")
-//                        .invalidateHttpSession(true)
-//                        .clearAuthentication(true)
-//                        .deleteCookies("JSESSIONID")
-//                );
+                .formLogin(form -> form
+                        .loginPage("/login")                     // URL de tu página de login
+                        .loginProcessingUrl("/login")            // URL a la que se envía el formulario
+                        .usernameParameter("username")           // Usar "username" si tu formulario usa este nombre
+                        .passwordParameter("password")           // Nombre del campo para la contraseña
+                        .defaultSuccessUrl("/", false)           // IMPORTANTE: segundo parámetro en false para mantener la URL original
+                        .failureUrl("/login?error=true")         // URL en caso de error, consistente con loginPage
+                        .permitAll()                             // Permitir acceso a todos a estas URLs
+                )
+
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                        .logoutSuccessUrl("/login?logout=true")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
+                );
+
+//                .formLogin(form -> form
+//                        .loginPage("/login") // URL de tu formulario de inicio de sesión personalizado
+//                        .loginProcessingUrl("/login") // URL a la que se envían las credenciales
+//                        .usernameParameter("email") // Nombre del campo de usuario en tu formulario
+//                        .passwordParameter("password") // Nombre del campo de contraseña en tu formulario
+//                        .defaultSuccessUrl("/") // URL a la que se redirige tras el éxito
+//                        .failureUrl("/mi-login?error") // URL a la que se redirige en caso de fallo
+//                )
+
+//                        .logout().logoutSuccessUrl("http://localhost:4200/logout");
 
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**"));
         return http.build();
