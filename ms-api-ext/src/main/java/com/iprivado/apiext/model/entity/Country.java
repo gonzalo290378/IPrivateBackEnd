@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document(collection = "countries")
-public class Country {
+public class    Country {
 
     @Id
     private String mongoId;
