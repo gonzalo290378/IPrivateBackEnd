@@ -9,9 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,15 +30,9 @@ public class UserController {
         this.userService = userService;
     }
 
-//    @GetMapping("/authorized")
-//    public Map<String, String> authorized(@RequestParam String code) {
-//        log.info("Calling authorized with {}", code);
-//        return Collections.singletonMap("code", code);
-//    }
-
     @GetMapping("/authorized")
     public Map<String, String> authorized() {
-        log.info("Calling authorized with {}");
+        log.info("Calling authorized");
         return Collections.emptyMap();
     }
 
@@ -116,7 +109,7 @@ public class UserController {
     @PutMapping("/edit/{id}")
     public ResponseEntity<?> edit(@Valid @RequestBody UserFormDTO userFormDTO, @PathVariable Long id) {
         log.info("ms-users Calling edit with {user}");
-        User user = userService.findEntityById(id).orElseThrow(()-> new UserNotFoundException("User with id " + id + " not found"));
+        User user = userService.findEntityById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
         return ResponseEntity.ok(userService.update(userFormDTO, user));
     }
 
@@ -128,7 +121,7 @@ public class UserController {
     }
 
     @GetMapping("fetch-config")
-    public ResponseEntity<?> fetchConfig(@Value("${server.port}")  String port){
+    public ResponseEntity<?> fetchConfig(@Value("${server.port}") String port) {
         Map<String, String> json = new HashMap<>();
         json.put("port", port);
         json.put("text", text);

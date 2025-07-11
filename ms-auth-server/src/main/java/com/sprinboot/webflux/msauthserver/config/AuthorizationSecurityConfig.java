@@ -30,6 +30,7 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
+import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
@@ -39,6 +40,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.time.Duration;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -124,13 +126,10 @@ public class AuthorizationSecurityConfig {
                     CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
                     email = userDetails.getEmail();
                 }
-
                 if (email != null) {
                     context.getClaims().claim("email", email);
                 }
-
                 context.getClaims().claim("roles", roles).claim("username", authentication.getName());
-
             }
         };
 
@@ -145,10 +144,12 @@ public class AuthorizationSecurityConfig {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                //.redirectUri("https://oauthdebugger.com/debug")
                 .redirectUri("http://localhost:4200/authorized")
                 .postLogoutRedirectUri("http://localhost:4200/login")
-
+                .tokenSettings(TokenSettings.builder()
+                        .accessTokenTimeToLive(Duration.ofMinutes(180))
+                        .refreshTokenTimeToLive(Duration.ofDays(180))
+                        .build())
                 .scope(OidcScopes.OPENID)
                 .clientSettings(ClientSettings.builder().requireProofKey(true).build())
                 .build();
