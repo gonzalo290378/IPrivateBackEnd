@@ -19,8 +19,11 @@ import com.ms_users.repositories.RoleRepository;
 import com.ms_users.repositories.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -94,12 +97,10 @@ public class UserServiceImpl implements UserService {
         return getUserDTO(user);
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public Optional<UserDTO> findByUsername(String username) {
-        User user = userRepository.findByUsername(username).stream().filter(e -> Objects.equals(e.getUsername(), username))
-                .findFirst()
-                .get();
-        return getUserDTO(user);
+        return userRepository.findByUsername(username).map(this::getUserDTO).get();
+
     }
 
     private Optional<UserDTO> getUserDTO(User user) {
@@ -110,6 +111,11 @@ public class UserServiceImpl implements UserService {
         userDTO.setFreeAreaDTO(freeAreaDTO);
         userDTO.setPrivateAreaDTO(privateAreaDTO);
         return Optional.of(userDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<User> findEntityByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Transactional(readOnly = true)
@@ -209,7 +215,6 @@ public class UserServiceImpl implements UserService {
         return roles;
     }
 
-
     private boolean isAdult(LocalDate birthdate) {
         return birthdate != null && ChronoUnit.YEARS.between(birthdate, LocalDate.now()) >= 18;
     }
@@ -291,7 +296,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(userFormDTO.getPassword());
     }
 
-
     @Transactional
     public User delete(Long id) {
         Optional<User> user = userRepository.findById(id);
@@ -302,6 +306,14 @@ public class UserServiceImpl implements UserService {
         freeAreaClientRest.delete(user.get().getIdFreeArea());
         privateAreaClientRest.delete(user.get().getIdPrivateArea());
         return user.get();
+    }
+
+    public String getAuthenticatedUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof Jwt jwt) {
+            return jwt.getClaimAsString("username");
+        }
+        return null;
     }
 
 }

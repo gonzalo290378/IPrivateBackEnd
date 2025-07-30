@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,6 @@ public class UserController {
         log.info("Calling authorized");
         return Collections.emptyMap();
     }
-
 
     @GetMapping
     public ResponseEntity<Page<?>> findAll(Integer page, Integer size) {
@@ -108,14 +108,14 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<?> edit(@Valid @RequestBody UserFormDTO userFormDTO, @PathVariable Long id) {
+    @PutMapping("/edit/{username}")
+    public ResponseEntity<?> edit(@Valid @RequestBody UserFormDTO userFormDTO, @PathVariable String username) {
         log.info("ms-users Calling edit with {user}");
-        User user = userService.findEntityById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
-//        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-//        if (!user.getUsername().equals(currentUsername)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No authorized to edit this account");
-//        }
+        String authenticatedUsername = userService.getAuthenticatedUsername();
+        if (!username.equals(authenticatedUsername)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authorized to edit this user");
+        }
+        User user = userService.findEntityByUsername(username).orElseThrow(() -> new UserNotFoundException("User with username: " + username + " not found"));
         return ResponseEntity.ok(userService.update(userFormDTO, user));
     }
 
