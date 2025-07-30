@@ -6,7 +6,6 @@ import com.ms_users.dto.UserFormDTO;
 import com.ms_users.models.entity.User;
 import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -18,6 +17,8 @@ public interface UserService {
 
     Optional<UserDTO> findByUsername(String username);
 
+    Optional<User> findEntityByUsername(String username);
+
     Page<FilterDTO> filter(FilterDTO filterDTO, Integer page, Integer size);
 
     User save(UserFormDTO userFormDTO);
@@ -27,5 +28,7 @@ public interface UserService {
     User delete(Long id);
 
     Optional<User> findEntityById(Long id);
+
+    String getAuthenticatedUsername();
 
 }
