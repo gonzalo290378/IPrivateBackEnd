@@ -36,6 +36,7 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
@@ -109,13 +110,13 @@ public class AuthorizationSecurityConfig {
 
 
     @Bean
-    public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer(){
+    public OAuth2TokenCustomizer<JwtEncodingContext> tokenCustomizer() {
         return context -> {
             Authentication authentication = context.getPrincipal();
-            if(context.getTokenType().getValue().equals("id_token")){
+            if (context.getTokenType().getValue().equals("id_token")) {
                 context.getClaims().claim("token_type", "id token");
             }
-            if(context.getTokenType().getValue().equals("access_token")){
+            if (context.getTokenType().getValue().equals("access_token")) {
                 context.getClaims().claim("token_type", "access token");
                 Set<String> roles = authentication.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority)

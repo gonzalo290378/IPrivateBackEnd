@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -106,10 +107,15 @@ public class UserController {
         return ResponseEntity.ok(userService.save(userFormDTO));
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/edit/{id}")
     public ResponseEntity<?> edit(@Valid @RequestBody UserFormDTO userFormDTO, @PathVariable Long id) {
         log.info("ms-users Calling edit with {user}");
         User user = userService.findEntityById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
+//        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+//        if (!user.getUsername().equals(currentUsername)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No authorized to edit this account");
+//        }
         return ResponseEntity.ok(userService.update(userFormDTO, user));
     }
 
