@@ -51,9 +51,20 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<?> findByUsername(@PathVariable String username) {
+    public ResponseEntity<UserDTO> findByUsername(@PathVariable String username) {
         log.info("ms-users Calling findByUsername with {}", username);
-        return ResponseEntity.ok(userService.findByUsername(username));
+        return userService.findByUsername(username)
+                .map(ResponseEntity::ok)
+                .orElseThrow(() -> new UserNotFoundException("Username was not found"));
+    }
+
+    @GetMapping("/check-availability/{username}")
+    public ResponseEntity<Map<String, Boolean>> checkUsernameAvailability(@PathVariable String username) {
+        log.info("ms-users Checking username availability for {}", username);
+        boolean isAvailable = !userService.existsByUsername(username);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("available", isAvailable);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/email/{email}")

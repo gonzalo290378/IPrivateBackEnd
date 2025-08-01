@@ -31,4 +31,5 @@ public interface UserService {
 
     String getAuthenticatedUsername();
 
+    boolean existsByUsername(String username);
 }

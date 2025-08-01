@@ -22,6 +22,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/filter").permitAll()
                         .requestMatchers(HttpMethod.GET, "/email/{email}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/{username}").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/check-availability/{username}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/new-account/register-page").permitAll()
                         .anyRequest().authenticated()
                 )
