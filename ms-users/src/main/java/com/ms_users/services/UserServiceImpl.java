@@ -26,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -99,8 +100,13 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     public Optional<UserDTO> findByUsername(String username) {
-        return userRepository.findByUsername(username).map(this::getUserDTO).get();
+        return userRepository.findByUsername(username)
+                .flatMap(this::getUserDTO);
+    }
 
+    @Transactional(readOnly = true)
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 
     private Optional<UserDTO> getUserDTO(User user) {
