@@ -58,7 +58,7 @@ public class UserController {
                 .orElseThrow(() -> new UserNotFoundException("Username was not found"));
     }
 
-    @GetMapping("/check-availability/{username}")
+    @GetMapping("/check-availability-username/{username}")
     public ResponseEntity<Map<String, Boolean>> checkUsernameAvailability(@PathVariable String username) {
         log.info("ms-users Checking username availability for {}", username);
         boolean isAvailable = !userService.existsByUsername(username);
@@ -75,6 +75,15 @@ public class UserController {
             return ResponseEntity.ok(userOptional.get());
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/check-availability-email/{email}")
+    public ResponseEntity<Map<String, Boolean>> checkEmailAvailability(@PathVariable String email) {
+        log.info("ms-users Checking email availability for {}", email);
+        boolean isAvailable = !userService.existsByEmail(email);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("available", isAvailable);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/filter")
