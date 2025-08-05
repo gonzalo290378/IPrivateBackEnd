@@ -32,4 +32,6 @@ public interface UserService {
     String getAuthenticatedUsername();
 
     boolean existsByUsername(String username);
+
+    boolean existsByEmail(String email);
 }

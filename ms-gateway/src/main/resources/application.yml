@@ -11,7 +11,8 @@ spring:
             client-id: client
             client-secret: 12345
             authorization-grant-type: authorization_code
-            redirect-uri: http://127.0.0.1:9000/authorized
+            #redirect-uri: http://127.0.0.1:9000/authorized
+            redirect-uri: http://localhost:4200/authorized
             scope:
               - openid
               #- profile
