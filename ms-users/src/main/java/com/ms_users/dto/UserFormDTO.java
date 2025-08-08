@@ -29,7 +29,7 @@ public class UserFormDTO implements Serializable {
     private List<Role> roles = new ArrayList<>();
 
     @Size(min = 5, message = "Username should have at least 5 characters")
-    @Size(max = 10, message = "Username should not have more than 10 characters")
+    @Size(max = 15, message = "Username should not have more than 10 characters")
     @NotEmpty(message = "Username can not be empty")
     @JsonProperty("username")
     private String username;
@@ -67,8 +67,7 @@ public class UserFormDTO implements Serializable {
     @JsonProperty("isEnabled")
     private Boolean isEnabled;
 
-    @Size(max = 10)
-    @Size(min = 6)
+    @Size(min = 5, max = 14, message = "Password debe tener entre 5 y 14 caracteres")
     @NotEmpty(message = "Password can not be empty")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
@@ -80,12 +79,12 @@ public class UserFormDTO implements Serializable {
     private Long idPrivateArea;
 
     @Min(value = 18, message = "Age from must be more than 18")
-    @Max(value = 90, message = "Age to must be less than 90")
+    @Max(value = 89, message = "Age to must be less than 90")
     @NotNull(message = "Age from must not be empty")
     @JsonProperty("ageFrom")
     private Long ageFrom;
 
-    @Min(value = 18, message = "Age from must be more than 18")
+    @Min(value = 19, message = "Age from must be more than 18")
     @Max(value = 90, message = "Age to must be less than 90")
     @NotNull(message = "Age to must not be empty")
     @JsonProperty("ageTo")

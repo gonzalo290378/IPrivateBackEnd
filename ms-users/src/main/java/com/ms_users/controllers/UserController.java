@@ -121,7 +121,7 @@ public class UserController {
         return ResponseEntity.ok(userService.filter(filterDTO, page, size));
     }
 
-    @PostMapping()
+    @PostMapping("/")
     public ResponseEntity<?> save(@RequestBody @Valid UserFormDTO userFormDTO) {
         log.info("ms-users Calling save with {userFormDTO}");
         return ResponseEntity.ok(userService.save(userFormDTO));

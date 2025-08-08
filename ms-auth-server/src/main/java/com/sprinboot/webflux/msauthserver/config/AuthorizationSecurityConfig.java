@@ -104,7 +104,7 @@ public class AuthorizationSecurityConfig {
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
                 );
-        http.csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**"));
+        //http.csrf(csrf -> csrf.ignoringRequestMatchers("/auth/**"));
         return http.build();
     }
 
