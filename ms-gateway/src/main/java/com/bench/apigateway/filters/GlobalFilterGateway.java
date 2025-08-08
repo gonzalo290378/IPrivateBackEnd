@@ -35,7 +35,6 @@ public class GlobalFilterGateway implements GlobalFilter, Ordered {
             exchange.getResponse().getCookies()
                     .add("color", ResponseCookie.from("color", "red").build());
 
-            //exchange.getResponse().getHeaders().setContentType(MediaType.TEXT_PLAIN);
         }));
     }
 
