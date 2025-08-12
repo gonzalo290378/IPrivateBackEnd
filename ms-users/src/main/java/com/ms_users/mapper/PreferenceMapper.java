@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface PreferenceMapper {
+
     public PreferenceDTO toDTO(Preference preference);
 
     public Preference toModel(PreferenceDTO preferenceDTO);

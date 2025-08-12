@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
 @Data
@@ -29,8 +30,8 @@ public class PreferenceDTO implements Serializable {
     @JsonProperty("ageTo")
     private Long ageTo;
 
-    @Pattern(regexp = "^[FM]$", message = "Sex preference must be 'F' or 'M'")
-    @NotEmpty(message = "Sex preference must be 'F' or 'M'")
+    @Pattern(regexp = "^(F|M|T|NB)$", message = "Sex preference must be 'F', 'M', 'T' or 'NB'")
+    @NotEmpty(message = "Sex preference must be 'F', 'M', 'T' or 'NB' ")
     @JsonProperty("sexPreference")
     private String sexPreference;
 

@@ -5,14 +5,17 @@ import com.iprivado.apiext.model.entity.State;
 import com.iprivado.apiext.services.StateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @Slf4j
 @RequestMapping("/api/v1/states")
+
 public class StateController {
 
     public StateController(StateService stateService) {

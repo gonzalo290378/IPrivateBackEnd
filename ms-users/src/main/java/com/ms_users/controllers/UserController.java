@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @Slf4j
 public class UserController {
 
@@ -95,6 +94,7 @@ public class UserController {
             @RequestParam(name = "sexPreference", required = true) String sexPreference,
             @RequestParam(name = "city", required = true) String city,
             @RequestParam(name = "country", required = true) String country,
+            @RequestParam(name = "state", required = true) String state,
             @RequestParam(name = "isEnabled", required = true) Boolean isEnabled) {
 
         PreferenceDTO preferenceDTO = PreferenceDTO.builder()
@@ -107,6 +107,10 @@ public class UserController {
                 .country(country)
                 .build();
 
+        StateDTO stateDTO = StateDTO.builder()
+                .state(state)
+                .build();
+
         CityDTO cityDTO = CityDTO.builder()
                 .city(city)
                 .build();
@@ -114,6 +118,7 @@ public class UserController {
         FilterDTO filterDTO = FilterDTO.builder()
                 .preferenceDTO(preferenceDTO)
                 .countryDTO(countryDTO)
+                .stateDTO(stateDTO)
                 .cityDTO(cityDTO)
                 .isEnabled(isEnabled)
                 .build();

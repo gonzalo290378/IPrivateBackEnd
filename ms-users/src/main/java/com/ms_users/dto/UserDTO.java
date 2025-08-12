@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ms_users.models.FreeAreaDTO;
 import com.ms_users.models.PrivateAreaDTO;
-import com.ms_users.models.entity.City;
-import com.ms_users.models.entity.Country;
-import com.ms_users.models.entity.Preference;
 import com.ms_users.models.entity.Role;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -100,6 +97,8 @@ UserDTO implements Serializable {
     @JsonProperty("cityDTO")
     private CityDTO cityDTO;
 
+    @JsonProperty("stateDTO")
+    private StateDTO stateDTO;
 
     public Long getAge() {
         LocalDate today = LocalDate.now();

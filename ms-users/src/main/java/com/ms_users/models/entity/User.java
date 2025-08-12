@@ -66,6 +66,7 @@ public class User {
     private LocalDate registerDate;
 
     @Size(min = 10)
+    @Size(min = 10)
     @Size(max = 140)
     @NotEmpty(message = "Description can not be empty")
     @Column(name = "description", unique = true)
@@ -99,6 +100,10 @@ public class User {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_city")
     private City city;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_state")
+    private State state;
 
     @Transient
     private Boolean admin = false;

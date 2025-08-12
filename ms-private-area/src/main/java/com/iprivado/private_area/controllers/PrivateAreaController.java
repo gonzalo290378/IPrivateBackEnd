@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("api/v1/private-area")
 public class PrivateAreaController {
 
-    public PrivateAreaController(PrivateAreaService privateAreaService){
+    public PrivateAreaController(PrivateAreaService privateAreaService) {
         this.privateAreaService = privateAreaService;
     }
 

@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("api/v1/free-area")
 public class FreeAreaController {
 
-    public FreeAreaController(FreeAreaService freeAreaService){
+    public FreeAreaController(FreeAreaService freeAreaService) {
         this.freeAreaService = freeAreaService;
     }
 
@@ -29,7 +29,7 @@ public class FreeAreaController {
     @GetMapping("/{id}")
     public ResponseEntity<FreeAreaDTO> findById(@PathVariable Long id) {
         log.info("ms-free-area Calling findById");
-        return ResponseEntity.ok(freeAreaService.findById(id).orElseThrow(()-> new FreeAreaNotFoundException("FreeArea with id " + id + " not found")));
+        return ResponseEntity.ok(freeAreaService.findById(id).orElseThrow(() -> new FreeAreaNotFoundException("FreeArea with id " + id + " not found")));
     }
 
 

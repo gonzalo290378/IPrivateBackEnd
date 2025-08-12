@@ -2,7 +2,6 @@ package com.iprivado.apiext.services;
 
 import com.iprivado.apiext.model.entity.State;
 import com.iprivado.apiext.repositories.StateRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

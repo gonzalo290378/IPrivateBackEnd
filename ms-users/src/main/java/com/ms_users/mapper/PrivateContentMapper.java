@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface PrivateContentMapper {
+
     PrivateContentDTO toDTO(PrivateContent privateContent);
+
     PrivateContent toModel(PrivateContentDTO privateContentDTO);
 }

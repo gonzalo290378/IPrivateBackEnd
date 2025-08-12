@@ -8,6 +8,7 @@ import com.iprivado.private_area.models.entity.PrivateArea;
 import com.iprivado.private_area.repositories.PrivateAreaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

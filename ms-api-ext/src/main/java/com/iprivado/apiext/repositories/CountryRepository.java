@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface CountryRepository extends MongoRepository<Country, String> {
+
     List<Country> findByNameContainingIgnoreCase(String name);
 
     Country findByName(String name);

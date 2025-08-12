@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import java.util.Optional;
 
 public interface UserService {
+
     Page<UserDTO> findAll(Integer page, Integer size);
 
     Optional<UserDTO> findById(Long id);

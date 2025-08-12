@@ -71,4 +71,7 @@ public class FilterDTO implements Serializable {
     @JsonProperty("cityDTO")
     private CityDTO cityDTO;
 
+    @JsonProperty("stateDTO")
+    private StateDTO stateDTO;
+
 }
