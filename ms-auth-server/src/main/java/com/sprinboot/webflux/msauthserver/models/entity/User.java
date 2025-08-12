@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-
 public class User implements Serializable {
 
     @JsonProperty("id")
@@ -57,6 +56,5 @@ public class User implements Serializable {
 
     @JsonProperty("cityDTO")
     private CityDTO cityDTO;
-
 
 }

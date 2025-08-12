@@ -2,7 +2,6 @@ package com.iprivado.apiext.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iprivado.apiext.model.entity.City;
-import com.iprivado.apiext.model.entity.State;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

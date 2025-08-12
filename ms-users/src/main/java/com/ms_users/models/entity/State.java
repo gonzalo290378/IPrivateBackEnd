@@ -8,20 +8,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "country")
+@Table(name = "state")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Country {
+public class State {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(message = "Country should have not be empty")
-    @Column(name = "country")
-    private String country;
+    @Size(message = "State should have not be empty")
+    @Column(name = "state")
+    private String state;
 
 
 }

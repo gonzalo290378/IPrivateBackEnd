@@ -1,7 +1,6 @@
 package com.ms_users.repositories;
 
 import com.ms_users.dto.FilterDTO;
-import com.ms_users.dto.UserDTO;
 import com.ms_users.models.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +10,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository()
@@ -23,6 +21,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "AND (:#{#filterDTO.preferenceDTO.ageTo} is null or user.age <= :#{#filterDTO.preferenceDTO.ageTo}) " +
             "AND (:#{#filterDTO.cityDTO.city} is null or user.city.city = :#{#filterDTO.cityDTO.city}) " +
             "AND (:#{#filterDTO.countryDTO.country} is null or user.country.country = :#{#filterDTO.countryDTO.country}) " +
+            "AND (:#{#filterDTO.stateDTO.state} is null or user.state.state = :#{#filterDTO.stateDTO.state}) " +
             "AND (:#{#filterDTO.isEnabled} is null or user.isEnabled = :#{#filterDTO.isEnabled}) " +
             "ORDER BY user.id DESC")
     Page<User> filter(@Param("filterDTO") FilterDTO filterDTO, Pageable pageable);

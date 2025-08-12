@@ -92,9 +92,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     public Optional<UserDTO> findByEmail(String email) {
-        User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getEmail(), email))
-                .findFirst()
-                .orElseThrow(() -> new EmailNotFoundException("email: " + email + " does not exist"));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new EmailNotFoundException("email: " + email + " does not exist"));
         return getUserDTO(user);
     }
 
@@ -208,10 +206,11 @@ public class UserServiceImpl implements UserService {
         Preference preference = buildPreference(userFormDTO);
         Country country = buildCountry(userFormDTO);
         City city = buildCity(userFormDTO);
+        State state = buildState(userFormDTO);
         List<Role> roles = getRoles(userFormDTO);
 
         userFormDTO.setRoles(roles);
-        return buildUser(userFormDTO, newFreeAreaDTO, newPrivateAreaDTO, preference, country, city);
+        return buildUser(userFormDTO, newFreeAreaDTO, newPrivateAreaDTO, preference, country, city, state);
     }
 
     private List<Role> getRoles(UserFormDTO userFormDTO) {
@@ -258,8 +257,14 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    private State buildState(UserFormDTO userFormDTO) {
+        return State.builder()
+                .state(userFormDTO.getState())
+                .build();
+    }
+
     private User buildUser(UserFormDTO userFormDTO, FreeAreaDTO freeAreaDTO, PrivateAreaDTO privateAreaDTO,
-                           Preference preference, Country country, City city) {
+                           Preference preference, Country country, City city, State state) {
         return User.builder()
                 .idFreeArea(freeAreaDTO.getId())
                 .idPrivateArea(privateAreaDTO.getId())
@@ -267,6 +272,7 @@ public class UserServiceImpl implements UserService {
                 .preference(preference)
                 .country(country)
                 .city(city)
+                .state(state)
                 .username(userFormDTO.getUsername())
                 .age(userFormDTO.getAge())
                 .sex(userFormDTO.getSex())
@@ -297,6 +303,7 @@ public class UserServiceImpl implements UserService {
     private void updateUserLocation(User user, UserFormDTO userFormDTO) {
         user.getCountry().setCountry(userFormDTO.getCountry());
         user.getCity().setCity(userFormDTO.getCity());
+        user.getState().setState(userFormDTO.getState());
     }
 
     private void updateUserBasicInfo(User user, UserFormDTO userFormDTO) {

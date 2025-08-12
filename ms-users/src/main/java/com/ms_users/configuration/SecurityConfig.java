@@ -20,7 +20,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/").permitAll()
                         .requestMatchers(HttpMethod.GET, "/authorized").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/").permitAll()
                         .requestMatchers(HttpMethod.GET, "/filter").permitAll()
                         .requestMatchers(HttpMethod.GET, "/email/{email}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/{username}").permitAll()

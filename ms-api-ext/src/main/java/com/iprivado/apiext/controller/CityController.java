@@ -10,11 +10,12 @@ import com.iprivado.apiext.services.StateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
+
 import static java.lang.Integer.parseInt;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
 @Slf4j
 @RequestMapping("/api/v1/cities")
 public class CityController {
@@ -34,7 +35,7 @@ public class CityController {
     @GetMapping("/citiesByStates")
     public ResponseEntity<List<City>> searchCitiesByStates(@RequestParam String name, @RequestParam String country) {
         Country countrySelected = countryService.getIdByCountryname(country);
-        State state = stateService.getIdByStatenameAndIdCountry(name, parseInt( countrySelected.getId()));
+        State state = stateService.getIdByStatenameAndIdCountry(name, parseInt(countrySelected.getId()));
         List<City> result = cityService.searchCitiesByStates(state.getId());
         return ResponseEntity.ok(result);
     }

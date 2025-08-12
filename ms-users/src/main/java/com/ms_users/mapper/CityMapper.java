@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface CityMapper {
+
     public CityDTO toDTO(City city);
 
     public City toModel(CityDTO cityDTO);

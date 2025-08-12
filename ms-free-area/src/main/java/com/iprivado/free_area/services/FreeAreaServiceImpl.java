@@ -8,6 +8,7 @@ import com.iprivado.free_area.models.entity.FreeArea;
 import com.iprivado.free_area.repositories.FreeAreaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

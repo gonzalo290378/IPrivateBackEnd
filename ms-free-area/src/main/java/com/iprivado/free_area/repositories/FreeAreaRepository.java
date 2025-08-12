@@ -14,7 +14,6 @@ public interface FreeAreaRepository extends JpaRepository<FreeArea, Long> {
     @Query("UPDATE FreeArea fa " +
             "SET fa.isEnabled = false " +
             "WHERE fa.id = :id")
-
     void logicDelete(@Param("id") Long id);
 
 }

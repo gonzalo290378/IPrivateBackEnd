@@ -10,9 +10,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import java.time.Period;
+
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +40,8 @@ public class UserFormDTO implements Serializable {
     @JsonProperty("age")
     private Long age;
 
-    @Pattern(regexp = "^[FM]$", message = "Sex preference must be 'F' or 'M'")
-    @NotEmpty(message = "Sex preference must be 'F' or 'M'")
+    @Pattern(regexp = "^(F|M|T|NB)$", message = "Sex must be 'F', 'M', 'T' or 'NB'")
+    @NotEmpty(message = "Sex can not be empty")
     @JsonProperty("sex")
     private String sex;
 
@@ -79,19 +80,19 @@ public class UserFormDTO implements Serializable {
     private Long idPrivateArea;
 
     @Min(value = 18, message = "Age from must be more than 18")
-    @Max(value = 89, message = "Age to must be less than 90")
+    @Max(value = 90, message = "Age to must be less than 90")
     @NotNull(message = "Age from must not be empty")
     @JsonProperty("ageFrom")
     private Long ageFrom;
 
-    @Min(value = 19, message = "Age from must be more than 18")
+    @Min(value = 18, message = "Age from must be more than 18")
     @Max(value = 90, message = "Age to must be less than 90")
     @NotNull(message = "Age to must not be empty")
     @JsonProperty("ageTo")
     private Long ageTo;
 
-    @Pattern(regexp = "^[FM]$", message = "Sex preference must be 'F' or 'M'")
-    @NotEmpty(message = "Sex preference must be 'F' or 'M'")
+    @Pattern(regexp = "^(F|M|T|NB)$", message = "Sex preference must be 'F', 'M', 'T' or 'NB'")
+    @NotEmpty(message = "Sex preference must be 'F', 'M', 'T' or 'NB' ")
     @JsonProperty("sexPreference")
     private String sexPreference;
 
@@ -100,6 +101,10 @@ public class UserFormDTO implements Serializable {
 
     @JsonProperty("city")
     private String city;
+
+    @JsonProperty("state")
+    private String state;
+
 
     @Transient
     private Boolean admin = false;

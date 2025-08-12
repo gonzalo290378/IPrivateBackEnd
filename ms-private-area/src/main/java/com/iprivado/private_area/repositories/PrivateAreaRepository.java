@@ -14,7 +14,6 @@ public interface PrivateAreaRepository extends JpaRepository<PrivateArea, Long> 
     @Query("UPDATE PrivateArea pa " +
             "SET pa.isEnabled = false " +
             "WHERE pa.id = :id")
-
     void logicDelete(@Param("id") Long id);
 
 }
