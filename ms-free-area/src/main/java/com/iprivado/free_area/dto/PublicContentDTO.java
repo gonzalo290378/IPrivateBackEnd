@@ -27,6 +27,12 @@ public class PublicContentDTO implements Serializable {
     @JsonProperty("contentUrl")
     private String contentUrl;
 
-    @JsonProperty("like")
-    private Long like;
+    @JsonProperty("likesCount")
+    private Long likesCount;
+
+    @JsonProperty("createdAt")
+    private LocalDate createdAt;
+
+    @JsonProperty("updatedAt")
+    private LocalDate updatedAt;
 }

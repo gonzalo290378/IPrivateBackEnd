@@ -144,6 +144,7 @@ public class UserController {
         return ResponseEntity.ok(userService.update(userFormDTO, user));
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         log.info("ms-users Calling delete with {id}");
