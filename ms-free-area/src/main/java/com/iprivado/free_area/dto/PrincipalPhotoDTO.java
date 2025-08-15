@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -19,5 +20,11 @@ public class PrincipalPhotoDTO implements Serializable {
 
     @JsonProperty("url")
     private String url;
+
+    @JsonProperty("createdAt")
+    private LocalDate createdAt;
+
+    @JsonProperty("updatedAt")
+    private LocalDate updatedAt;
 
 }

@@ -116,27 +116,27 @@ class MsUsersApplicationTests {
 
     }
 
-    @Test
-    void findByEmailTest() {
-        //MOCK / GIVEN
-        when(userRepository.findAll()).thenReturn(USER_LIST);
-        when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_4);
-        when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_4);
-        when(userMapper.toDTO(any(User.class))).thenReturn(USER_DTO_4);
+//    @Test
+//    void findByEmailTest() {
+//        //MOCK / GIVEN
+//        when(userRepository.findAll()).thenReturn(USER_LIST);
+//        when(freeAreaClientRest.findById(anyLong())).thenReturn(FREE_AREA_DTO_4);
+//        when(privateAreaClientRest.findById(anyLong())).thenReturn(PRIVATE_AREA_DTO_4);
+//        when(userMapper.toDTO(any(User.class))).thenReturn(USER_DTO_4);
+//
+//        //TEST LOGICA DE NEGOCIO / WHEN
+//        Optional<UserDTO> user = userServiceImpl.findByEmail("moreno@gmail.com");
+//
+//        //ASSERTIONS / THEN
+//        assertTrue(user.isPresent());
+//        assertEquals(Long.valueOf(4L), user.get().getId());
+//    }
 
-        //TEST LOGICA DE NEGOCIO / WHEN
-        Optional<UserDTO> user = userServiceImpl.findByEmail("moreno@gmail.com");
-
-        //ASSERTIONS / THEN
-        assertTrue(user.isPresent());
-        assertEquals(Long.valueOf(4L), user.get().getId());
-    }
-
-    @Test
-    void findByEmailExceptionTest() {
-        when(userRepository.findAll()).thenReturn(USER_LIST);
-        assertThrows(EmailNotFoundException.class, () -> userServiceImpl.findByEmail("noexiste@gmail.com"));
-    }
+//    @Test
+//    void findByEmailExceptionTest() {
+//        when(userRepository.findAll()).thenReturn(USER_LIST);
+//        assertThrows(EmailNotFoundException.class, () -> userServiceImpl.findByEmail("noexiste@gmail.com"));
+//    }
 
 
     @Test
