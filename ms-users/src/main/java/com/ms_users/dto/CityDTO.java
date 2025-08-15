@@ -20,5 +20,7 @@ public class CityDTO implements Serializable {
     @JsonProperty("city")
     private String city;
 
+    @JsonProperty("id_state")
+    private Long stateId;
 
 }

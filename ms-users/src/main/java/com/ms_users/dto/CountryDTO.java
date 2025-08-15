@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Builder
@@ -20,5 +21,6 @@ public class CountryDTO implements Serializable {
     @JsonProperty("country")
     private String country;
 
-
+    @JsonProperty("state")
+    private List<StateDTO> state;
 }

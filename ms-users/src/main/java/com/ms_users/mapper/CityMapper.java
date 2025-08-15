@@ -3,11 +3,14 @@ package com.ms_users.mapper;
 import com.ms_users.dto.CityDTO;
 import com.ms_users.models.entity.City;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface CityMapper {
 
-    public CityDTO toDTO(City city);
+    @Mapping(source = "state.id", target = "stateId")
+    CityDTO toDTO(City city);
 
-    public City toModel(CityDTO cityDTO);
+    @Mapping(source = "stateId", target = "state.id")
+    City toModel(CityDTO cityDTO);
 }
