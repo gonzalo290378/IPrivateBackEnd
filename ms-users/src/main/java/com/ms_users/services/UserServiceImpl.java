@@ -15,8 +15,7 @@ import com.ms_users.mapper.UserMapper;
 import com.ms_users.models.FreeAreaDTO;
 import com.ms_users.models.PrivateAreaDTO;
 import com.ms_users.models.entity.*;
-import com.ms_users.repositories.RoleRepository;
-import com.ms_users.repositories.UserRepository;
+import com.ms_users.repositories.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
@@ -38,6 +37,9 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final CountryRepository countryRepository;
+    private final StateRepository stateRepository;
+    private final CityRepository cityRepository;
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final FilterMapper filterMapper;
@@ -48,8 +50,11 @@ public class UserServiceImpl implements UserService {
         return new BCryptPasswordEncoder();
     }
 
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserMapper userMapper, FilterMapper filterMapper, FreeAreaClientRest client, PrivateAreaClientRest privateAreaClientRest) {
+    public UserServiceImpl(UserRepository userRepository, CountryRepository countryRepository, StateRepository stateRepository, CityRepository cityRepository, RoleRepository roleRepository, UserMapper userMapper, FilterMapper filterMapper, FreeAreaClientRest client, PrivateAreaClientRest privateAreaClientRest) {
         this.userRepository = userRepository;
+        this.countryRepository = countryRepository;
+        this.stateRepository = stateRepository;
+        this.cityRepository = cityRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
         this.filterMapper = filterMapper;
@@ -205,10 +210,9 @@ public class UserServiceImpl implements UserService {
         PrivateAreaDTO newPrivateAreaDTO = createPrivateArea();
         Preference preference = buildPreference(userFormDTO);
         Country country = buildCountry(userFormDTO);
-        City city = buildCity(userFormDTO);
-        State state = buildState(userFormDTO);
+        State state = buildState(userFormDTO, country);
+        City city = buildCity(userFormDTO, state);
         List<Role> roles = getRoles(userFormDTO);
-
         userFormDTO.setRoles(roles);
         return buildUser(userFormDTO, newFreeAreaDTO, newPrivateAreaDTO, preference, country, city, state);
     }
@@ -246,22 +250,38 @@ public class UserServiceImpl implements UserService {
     }
 
     private Country buildCountry(UserFormDTO userFormDTO) {
-        return Country.builder()
-                .country(userFormDTO.getCountry())
-                .build();
+        return countryRepository.findByCountry(userFormDTO.getCountry())
+                .orElseGet(() -> {
+                    Country newCountry = Country.builder()
+                            .country(userFormDTO.getCountry())
+                            .build();
+                    return countryRepository.save(newCountry);
+                });
     }
 
-    private City buildCity(UserFormDTO userFormDTO) {
-        return City.builder()
-                .city(userFormDTO.getCity())
-                .build();
+    private State buildState(UserFormDTO userFormDTO, Country country) {
+        return stateRepository.findByStateAndCountry(userFormDTO.getState(), country)
+                .orElseGet(() -> {
+                    State newState = State.builder()
+                            .state(userFormDTO.getState())
+                            .country(country)
+                            .build();
+                    return stateRepository.save(newState);
+                });
     }
 
-    private State buildState(UserFormDTO userFormDTO) {
-        return State.builder()
-                .state(userFormDTO.getState())
-                .build();
+
+    private City buildCity(UserFormDTO userFormDTO, State state) {
+        return cityRepository.findByCityAndState(userFormDTO.getCity(), state)
+                .orElseGet(() -> {
+                    City newCity = City.builder()
+                            .city(userFormDTO.getCity())
+                            .state(state)
+                            .build();
+                    return cityRepository.save(newCity);
+                });
     }
+
 
     private User buildUser(UserFormDTO userFormDTO, FreeAreaDTO freeAreaDTO, PrivateAreaDTO privateAreaDTO,
                            Preference preference, Country country, City city, State state) {

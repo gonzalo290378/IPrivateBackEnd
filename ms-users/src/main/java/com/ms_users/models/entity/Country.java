@@ -1,5 +1,6 @@
 package com.ms_users.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -7,8 +8,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
-@Table(name = "country")
+@Table(name = "country", uniqueConstraints = @UniqueConstraint(columnNames = "country"))
 @Data
 @Builder
 @NoArgsConstructor
@@ -23,5 +26,8 @@ public class Country {
     @Column(name = "country")
     private String country;
 
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
+    @JsonManagedReference("country-state")
+    private List<State> states;
 
 }

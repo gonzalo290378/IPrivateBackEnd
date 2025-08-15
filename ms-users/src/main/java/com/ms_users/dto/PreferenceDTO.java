@@ -18,14 +18,14 @@ public class PreferenceDTO implements Serializable {
     @JsonProperty("id")
     private Long id;
 
-    @Min(value = 18, message = "Age from must be more than 18")
-    @Max(value = 90, message = "Age to must be less than 90")
+    @Min(value = 18, message = "Age must be at least 18")
+    @Max(value = 90, message = "Age must be at most 90")
     @NotNull(message = "Age from must not be empty")
     @JsonProperty("ageFrom")
     private Long ageFrom;
 
-    @Min(value = 18, message = "Age from must be more than 18")
-    @Max(value = 90, message = "Age to must be less than 90")
+    @Min(value = 18, message = "Age must be at least 18")
+    @Max(value = 90, message = "Age must be at most 90")
     @NotNull(message = "Age to must not be empty")
     @JsonProperty("ageTo")
     private Long ageTo;

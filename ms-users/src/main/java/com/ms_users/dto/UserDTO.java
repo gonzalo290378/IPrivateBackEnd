@@ -30,9 +30,8 @@ UserDTO implements Serializable {
 
     private List<Role> roles = new ArrayList<>();
 
-    @Size(min = 5, message = "Username should have at least 5 characters")
-    @Size(max = 10, message = "Username should not have more than 10 characters")
-    @NotEmpty(message = "Username can not be empty")
+    @Size(min = 5, max = 15, message = "Username must be between 5 and 15 characters")
+    @NotEmpty(message = "Username cannot be empty")
     @JsonProperty("username")
     private String username;
 
@@ -60,17 +59,15 @@ UserDTO implements Serializable {
     @JsonProperty("registerDate")
     private LocalDate registerDate;
 
-    @Size(min = 10, message = "The description must have more than 10 characters")
-    @Size(max = 140, message = "The description must not exceed 144 characters")
-    @NotEmpty(message = "Description can not be empty")
+    @Size(min = 4, max = 140, message = "Description must be between 60 and 140 characters")
+    @NotEmpty(message = "Description cannot be empty")
     @JsonProperty("description")
     private String description;
 
     @JsonProperty("isEnabled")
     private Boolean isEnabled;
 
-    @Size(max = 12, message = "Password must have less than 12 characters")
-    @Size(max = 6, message = "Password must not exceed 12 characters")
+    @Size(min = 5, max = 14, message = "Password debe tener entre 5 y 14 caracteres")
     @NotEmpty(message = "Password can not be empty")
     //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonProperty("password")

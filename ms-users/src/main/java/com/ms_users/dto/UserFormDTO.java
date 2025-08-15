@@ -29,9 +29,8 @@ public class UserFormDTO implements Serializable {
     @JsonProperty("roles")
     private List<Role> roles = new ArrayList<>();
 
-    @Size(min = 5, message = "Username should have at least 5 characters")
-    @Size(max = 15, message = "Username should not have more than 10 characters")
-    @NotEmpty(message = "Username can not be empty")
+    @Size(min = 5, max = 15, message = "Username must be between 5 and 15 characters")
+    @NotEmpty(message = "Username cannot be empty")
     @JsonProperty("username")
     private String username;
 
@@ -59,9 +58,8 @@ public class UserFormDTO implements Serializable {
     @JsonProperty("registerDate")
     private LocalDate registerDate;
 
-    @Size(min = 10)
-    @Size(max = 140)
-    @NotEmpty(message = "Description can not be empty")
+    @Size(min = 4, max = 140, message = "Description must be between 60 and 140 characters")
+    @NotEmpty(message = "Description cannot be empty")
     @JsonProperty("description")
     private String description;
 

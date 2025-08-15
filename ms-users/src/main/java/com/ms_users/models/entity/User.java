@@ -65,8 +65,7 @@ public class User {
     @Temporal(TemporalType.DATE)
     private LocalDate registerDate;
 
-    @Size(min = 10)
-    @Size(min = 10)
+    @Size(min = 4)
     @Size(max = 140)
     @NotEmpty(message = "Description can not be empty")
     @Column(name = "description", unique = true)
