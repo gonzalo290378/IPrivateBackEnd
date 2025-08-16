@@ -1,5 +1,6 @@
 package com.iprivado.free_area.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -29,5 +30,6 @@ public class FreeArea {
     private List<PrincipalPhoto> principalPhoto;
 
     @OneToMany(mappedBy = "freeArea", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<PublicContent> publicContent;
 }

@@ -1,5 +1,6 @@
 package com.iprivado.free_area.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -26,6 +27,7 @@ public class PrincipalPhoto {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_free_area")
+    @JsonBackReference
     private FreeArea freeArea;
 
     @NotEmpty(message = "Url content can not be empty")
