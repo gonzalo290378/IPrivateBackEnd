@@ -18,4 +18,10 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
     }
 
+    @ExceptionHandler(PrincipalPhotoNotFoundException.class)
+    public final ResponseEntity<ErrorDetails> handleUserURLException(Exception e, WebRequest webRequest) throws Exception {
+        ErrorDetails errorDetails = new ErrorDetails(LocalDate.now(), e.getMessage(), webRequest.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.CONFLICT);
+    }
+
 }

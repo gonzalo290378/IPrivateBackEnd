@@ -89,13 +89,13 @@ public class UserController {
     public ResponseEntity<Page<FilterDTO>> filter(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
             @RequestParam(name = "size", defaultValue = "10") Integer size,
-            @RequestParam(name = "ageFrom", required = true) Long ageFrom,
-            @RequestParam(name = "ageTo", required = true) Long ageTo,
-            @RequestParam(name = "sexPreference", required = true) String sexPreference,
-            @RequestParam(name = "city", required = true) String city,
-            @RequestParam(name = "country", required = true) String country,
-            @RequestParam(name = "state", required = true) String state,
-            @RequestParam(name = "isEnabled", required = true) Boolean isEnabled) {
+            @RequestParam(name = "ageFrom") Long ageFrom,
+            @RequestParam(name = "ageTo") Long ageTo,
+            @RequestParam(name = "sexPreference") String sexPreference,
+            @RequestParam(name = "city") String city,
+            @RequestParam(name = "country") String country,
+            @RequestParam(name = "state") String state,
+            @RequestParam(name = "isEnabled") Boolean isEnabled) {
 
         PreferenceDTO preferenceDTO = PreferenceDTO.builder()
                 .ageFrom(ageFrom)

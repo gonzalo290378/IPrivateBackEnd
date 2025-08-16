@@ -5,6 +5,7 @@ import com.iprivado.free_area.exceptions.FreeAreaNotFoundException;
 import com.iprivado.free_area.services.FreeAreaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,25 @@ public class FreeAreaController {
     public ResponseEntity<FreeAreaDTO> findById(@PathVariable Long id) {
         log.info("ms-free-area Calling findById");
         return ResponseEntity.ok(freeAreaService.findById(id).orElseThrow(() -> new FreeAreaNotFoundException("FreeArea with id " + id + " not found")));
+    }
+
+    @GetMapping("/{id}/principal-photo")
+    public ResponseEntity<?> findPrincipalPhoto(@PathVariable Long id) {
+        log.info("ms-free-area Calling findPrincipalPhoto for FreeArea id {}", id);
+        return ResponseEntity.ok(freeAreaService.getPrincipalPhoto(id));
+    }
+
+    @GetMapping("/{id}/public-content")
+    public ResponseEntity<?> findPublicContent(@PathVariable Long id, @RequestParam() Long lastId, @RequestParam(defaultValue = "10") int limit) {
+        log.info("ms-free-area Calling getPublicContent for FreeArea id {}", id);
+        return ResponseEntity.ok(freeAreaService.getPublicContent(id, lastId, limit));
+    }
+
+    //@PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("{id}/principal-photo")
+    public ResponseEntity<?> editPrincipalPhoto(@PathVariable Long id, @RequestParam(name = "principalPhotoUrl") String principalPhotoUrl) {
+        log.info("ms-free-area Calling editPrincipalPhoto for FreeArea id {}", id);
+        return ResponseEntity.ok(freeAreaService.editPrincipalPhoto(id, principalPhotoUrl));
     }
 
 
