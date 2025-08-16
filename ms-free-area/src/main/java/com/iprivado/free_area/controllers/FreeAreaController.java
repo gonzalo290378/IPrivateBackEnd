@@ -5,7 +5,6 @@ import com.iprivado.free_area.exceptions.FreeAreaNotFoundException;
 import com.iprivado.free_area.services.FreeAreaService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,13 +44,11 @@ public class FreeAreaController {
         return ResponseEntity.ok(freeAreaService.getPublicContent(id, lastId, limit));
     }
 
-    //@PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("{id}/principal-photo")
     public ResponseEntity<?> editPrincipalPhoto(@PathVariable Long id, @RequestParam(name = "principalPhotoUrl") String principalPhotoUrl) {
         log.info("ms-free-area Calling editPrincipalPhoto for FreeArea id {}", id);
         return ResponseEntity.ok(freeAreaService.editPrincipalPhoto(id, principalPhotoUrl));
     }
-
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Boolean isEnabled) {
