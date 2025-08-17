@@ -18,12 +18,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/api/v1/free-area").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/free-area/authorized").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/free-area/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/free-area/{id}/principal-photo").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/free-area/{id}/public-content").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/free-area").permitAll()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
