@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -132,7 +131,6 @@ public class UserController {
         return ResponseEntity.ok(userService.save(userFormDTO));
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("/edit/{username}")
     public ResponseEntity<?> edit(@Valid @RequestBody UserFormDTO userFormDTO, @PathVariable String username) {
         log.info("ms-users Calling edit with {user}");
@@ -144,7 +142,6 @@ public class UserController {
         return ResponseEntity.ok(userService.update(userFormDTO, user));
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         log.info("ms-users Calling delete with {id}");
