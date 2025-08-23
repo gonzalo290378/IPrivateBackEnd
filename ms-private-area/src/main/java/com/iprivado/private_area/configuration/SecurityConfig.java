@@ -1,4 +1,4 @@
-package com.ms_users.configuration;
+package com.iprivado.private_area.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,18 +18,12 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/authorized").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/filter").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/email/*").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/*").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/check-availability-username/*").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/check-availability-email/*").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/new-account/register-page").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/private-area").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/private-area/*").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/private-area").permitAll()
 
                         //A ELIMINAR
-                        .requestMatchers(HttpMethod.DELETE, "/delete/*").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/private-area/*").permitAll()
 
                         .anyRequest().authenticated()
                 )

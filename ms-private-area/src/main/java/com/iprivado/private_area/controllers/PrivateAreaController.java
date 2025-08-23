@@ -2,8 +2,11 @@ package com.iprivado.private_area.controllers;
 
 import com.iprivado.private_area.dto.PrivateAreaDTO;
 import com.iprivado.private_area.exceptions.PrivateAreaNotFoundException;
+import com.iprivado.private_area.models.entity.PrivateArea;
 import com.iprivado.private_area.services.PrivateAreaService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +23,9 @@ public class PrivateAreaController {
 
     private final PrivateAreaService privateAreaService;
 
+    @Value("${freearea.internal-token}")
+    private String SECRET_KEY;
+
     @GetMapping
     public ResponseEntity<List<PrivateAreaDTO>> findAll() {
         log.info("ms-private-area Calling findAll");
@@ -34,9 +40,17 @@ public class PrivateAreaController {
 
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Boolean isEnabled) {
-        log.info("ms-private-area Calling save with {new FreeArea object}");
-        return ResponseEntity.ok(privateAreaService.save(isEnabled));
+    public ResponseEntity<?> save(
+            @RequestBody Boolean isEnabled,
+            @RequestHeader(value = "X-Internal-Token", required = false) String token) {
+
+        if (!SECRET_KEY.equals(token)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
+        }
+
+        log.info("ms-free-area Calling save with new FreeArea object");
+        PrivateArea saved = privateAreaService.save(isEnabled);
+        return ResponseEntity.ok(saved);
     }
 
     @DeleteMapping("/{id}")
@@ -44,6 +58,4 @@ public class PrivateAreaController {
         log.info("ms-private-area Calling delete with {id}");
         privateAreaService.delete(id);
     }
-
-
 }

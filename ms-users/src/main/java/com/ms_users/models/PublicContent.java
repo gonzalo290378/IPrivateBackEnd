@@ -18,13 +18,15 @@ public class PublicContent {
 
     private Long idFreeArea;
 
-    private LocalDate date;
-
     private String description;
 
     private String contentUrl;
 
     private Long like;
+
+    private LocalDate createdAt;
+
+    private LocalDate updatedAt;
 
 
 }

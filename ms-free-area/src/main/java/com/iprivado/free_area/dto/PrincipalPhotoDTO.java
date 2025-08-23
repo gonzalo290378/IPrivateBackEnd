@@ -18,6 +18,9 @@ public class PrincipalPhotoDTO implements Serializable {
     @JsonProperty("id")
     private Long id;
 
+    @JsonProperty("isEnabled")
+    private Boolean isEnabled;
+
     @JsonProperty("url")
     private String url;
 

@@ -16,6 +16,7 @@ import com.ms_users.models.FreeAreaDTO;
 import com.ms_users.models.PrivateAreaDTO;
 import com.ms_users.models.entity.*;
 import com.ms_users.repositories.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
@@ -35,6 +36,9 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    @Value("${freearea.internal-token}")
+    private String SECRET_KEY;
 
     private final UserRepository userRepository;
     private final CountryRepository countryRepository;
@@ -156,7 +160,6 @@ public class UserServiceImpl implements UserService {
     private void validateUserAgeSelected(FilterDTO filterDTO) {
         Long ageFrom = filterDTO.getPreferenceDTO().getAgeFrom();
         Long ageTo = filterDTO.getPreferenceDTO().getAgeTo();
-
         boolean isAgeFromTooLow = ageFrom < AgeConfiguration.ADULT.getValue();
         boolean isAgeRangeInvalid = ageFrom > ageTo;
         boolean isAgeToTooHigh = ageTo > AgeConfiguration.SENIOR.getValue();
@@ -167,6 +170,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Transactional()
     public User save(UserFormDTO userFormDTO) {
         boolean userEmailExists = findByEmailWithoutException(userFormDTO.getEmail());
         if (!userEmailExists) {
@@ -176,9 +180,9 @@ public class UserServiceImpl implements UserService {
         }
         throw new UsernameRegisteredException("User: " + userFormDTO.getUsername()
                 + " is registered");
-
     }
 
+    @Transactional(readOnly = true)
     public boolean findByEmailWithoutException(String email) {
         Optional<User> user = userRepository.findAll()
                 .stream()
@@ -186,7 +190,6 @@ public class UserServiceImpl implements UserService {
                 .findFirst();
         return user.isPresent();
     }
-
 
     private void validateUserForm(UserFormDTO userFormDTO) {
         validateAgeFromAndAgeTo(userFormDTO.getAgeFrom(), userFormDTO.getAgeTo());
@@ -233,12 +236,14 @@ public class UserServiceImpl implements UserService {
         return birthdate != null && ChronoUnit.YEARS.between(birthdate, LocalDate.now()) >= 18;
     }
 
-    private FreeAreaDTO createFreeArea() {
-        return freeAreaClientRest.save(AreaConfiguration.ENABLED.getValue());
+    @Transactional()
+    public FreeAreaDTO createFreeArea() {
+        return freeAreaClientRest.save(AreaConfiguration.ENABLED.getValue(), SECRET_KEY);
     }
 
+    @Transactional()
     private PrivateAreaDTO createPrivateArea() {
-        return privateAreaClientRest.save(AreaConfiguration.DISABLED.getValue());
+        return privateAreaClientRest.save(AreaConfiguration.DISABLED.getValue(), SECRET_KEY);
     }
 
     private Preference buildPreference(UserFormDTO userFormDTO) {
@@ -306,6 +311,7 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+    @Transactional()
     public User update(UserFormDTO userFormDTO, User user) {
         validateUserForm(userFormDTO);
         updateUserPreferences(user, userFormDTO);
@@ -340,12 +346,13 @@ public class UserServiceImpl implements UserService {
         if (user.isEmpty()) {
             throw new UserNotFoundException("User: is not registered");
         }
-        userRepository.delete(id);
-        freeAreaClientRest.delete(user.get().getIdFreeArea());
-        privateAreaClientRest.delete(user.get().getIdPrivateArea());
+        freeAreaClientRest.logicalDelete(user.get().getIdFreeArea());
+        privateAreaClientRest.logicalDelete(user.get().getIdPrivateArea());
+        userRepository.logicDelete(id);
         return user.get();
     }
 
+    @Transactional(readOnly = true)
     public String getAuthenticatedUsername() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication.getPrincipal() instanceof Jwt jwt) {

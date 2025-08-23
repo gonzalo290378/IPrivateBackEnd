@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +30,10 @@ public class PrincipalPhoto {
     @JoinColumn(name = "id_free_area")
     @JsonBackReference
     private FreeArea freeArea;
+
+    @NotNull
+    @Column(name = "is_enabled")
+    private Boolean isEnabled;
 
     @NotEmpty(message = "Url content can not be empty")
     @Size(max = 255, message = "The url principal photo must have 255 characters as max.")

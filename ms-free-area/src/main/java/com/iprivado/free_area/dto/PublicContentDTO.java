@@ -18,11 +18,11 @@ public class PublicContentDTO implements Serializable {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("date")
-    private LocalDate date;
-
     @JsonProperty("description")
     private String description;
+
+    @JsonProperty("isEnabled")
+    private Boolean isEnabled;
 
     @JsonProperty("contentUrl")
     private String contentUrl;

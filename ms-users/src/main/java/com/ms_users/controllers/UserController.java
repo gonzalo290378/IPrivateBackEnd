@@ -128,7 +128,8 @@ public class UserController {
     @PostMapping("/")
     public ResponseEntity<?> save(@RequestBody @Valid UserFormDTO userFormDTO) {
         log.info("ms-users Calling save with {userFormDTO}");
-        return ResponseEntity.ok(userService.save(userFormDTO));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userService.save(userFormDTO));
     }
 
     @PutMapping("/edit/{username}")
@@ -143,10 +144,10 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public void delete(@PathVariable Long id) {
         log.info("ms-users Calling delete with {id}");
         User user = userService.findEntityById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
-        return ResponseEntity.ok(userService.delete(user.getId()));
+        userService.delete(user.getId());
     }
 
     @GetMapping("fetch-config")

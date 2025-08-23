@@ -1,8 +1,10 @@
 package com.iprivado.free_area.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,11 +28,12 @@ public class PublicContent {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_free_area")
+    @JsonBackReference
     private FreeArea freeArea;
 
-    @Temporal(TemporalType.DATE)
-    @Column(unique = true, name = "date")
-    private LocalDate date;
+    @NotNull
+    @Column(name = "is_enabled")
+    private Boolean isEnabled;
 
     @Size(min = 10, message = "The description must have more than 10 characters")
     @Size(max = 600, message = "The description must not exceed 144 characters")

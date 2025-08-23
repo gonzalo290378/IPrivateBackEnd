@@ -181,8 +181,8 @@ class MsUsersApplicationTests {
         when(userRepository.save(any(User.class))).thenReturn(USER_1);
         when(userRepository.findAll()).thenReturn(USER_LIST);
         when(roleRepository.findByName(anyString())).thenReturn(Optional.ofNullable(ROLE));
-        when(freeAreaClientRest.save(true)).thenReturn(FREE_AREA_DTO_6);
-        when(privateAreaClientRest.save(false)).thenReturn(PRIVATE_AREA_DTO_6);
+        when(freeAreaClientRest.save(true, "secret")).thenReturn(FREE_AREA_DTO_6);
+        when(privateAreaClientRest.save(false, "secret")).thenReturn(PRIVATE_AREA_DTO_6);
 
         //TEST LOGICA DE NEGOCIO / WHEN
         Optional<User> user = Optional.ofNullable(userServiceImpl.save(NEW_USER_FORM_DTO));
@@ -192,8 +192,8 @@ class MsUsersApplicationTests {
         assertEquals(Long.valueOf(1L), user.get().getId());
         verify(userRepository, times(1)).save(any(User.class));
         verify(userRepository, times(1)).findAll();
-        verify(freeAreaClientRest, times(1)).save(true);
-        verify(privateAreaClientRest, times(1)).save(false);
+        verify(freeAreaClientRest, times(1)).save(true, "secret");
+        verify(privateAreaClientRest, times(1)).save(false, "secret");
     }
 
     @Test
