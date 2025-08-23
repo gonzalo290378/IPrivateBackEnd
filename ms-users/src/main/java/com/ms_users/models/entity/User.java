@@ -35,7 +35,7 @@ public class User {
     private List<Role> roles = new ArrayList<>();
 
     @Size(min = 5, message = "Username should have at least 5 characters")
-    @Size(max = 10, message = "Username should not have more than 10 characters")
+    @Size(max = 15, message = "Username should not have more than 15 characters")
     @NotEmpty(message = "Username can not be empty")
     private String username;
 

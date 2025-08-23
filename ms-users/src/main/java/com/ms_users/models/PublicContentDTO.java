@@ -18,9 +18,6 @@ public class PublicContentDTO implements Serializable {
     @JsonProperty("id")
     private Long id;
 
-    @JsonProperty("date")
-    private LocalDate date;
-
     @JsonProperty("description")
     private String description;
 
@@ -29,4 +26,10 @@ public class PublicContentDTO implements Serializable {
 
     @JsonProperty("like")
     private Long like;
+
+    @JsonProperty("createdAt")
+    private LocalDate createdAt;
+
+    @JsonProperty("updatedAt")
+    private LocalDate updatedAt;
 }

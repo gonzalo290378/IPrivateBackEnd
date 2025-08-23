@@ -30,7 +30,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User u " +
             "SET u.isEnabled = false " +
             "WHERE u.id = :id")
-    void delete(@Param("id") Long id);
+    void logicDelete(@Param("id") Long id);
 
     Page<User> findByIsEnabledTrueOrderByIdDesc(Pageable pageable);
 

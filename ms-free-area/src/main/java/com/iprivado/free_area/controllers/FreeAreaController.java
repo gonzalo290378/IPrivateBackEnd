@@ -1,9 +1,14 @@
 package com.iprivado.free_area.controllers;
 
 import com.iprivado.free_area.dto.FreeAreaDTO;
+import com.iprivado.free_area.dto.PublicContentDTO;
 import com.iprivado.free_area.exceptions.FreeAreaNotFoundException;
+import com.iprivado.free_area.models.entity.FreeArea;
 import com.iprivado.free_area.services.FreeAreaService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +24,9 @@ public class FreeAreaController {
     }
 
     private final FreeAreaService freeAreaService;
+
+    @Value("${freearea.internal-token}")
+    private String SECRET_KEY;
 
     @GetMapping
     public ResponseEntity<List<FreeAreaDTO>> findAll() {
@@ -44,6 +52,14 @@ public class FreeAreaController {
         return ResponseEntity.ok(freeAreaService.getPublicContent(id, lastId, limit));
     }
 
+    //ACA HACER SECRET KEY
+    @PutMapping("/{id}/public-content/{idContent}")
+    public ResponseEntity<?> editPublicContent(@PathVariable Long id, @PathVariable Long idContent, @RequestBody PublicContentDTO publicContentDTO) {
+        log.info("ms-free-area Calling editPublicContent for freeAreaId {} and contentId {}", id, idContent);
+        return ResponseEntity.ok(freeAreaService.updatePublicContent(id, idContent, publicContentDTO));
+    }
+
+    //ACA HACER SECRET KEY
     @PutMapping("{id}/principal-photo")
     public ResponseEntity<?> editPrincipalPhoto(@PathVariable Long id, @RequestParam(name = "principalPhotoUrl") String principalPhotoUrl) {
         log.info("ms-free-area Calling editPrincipalPhoto for FreeArea id {}", id);
@@ -51,15 +67,52 @@ public class FreeAreaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Boolean isEnabled) {
-        log.info("ms-free-area Calling save with {new FreeArea object}");
-        return ResponseEntity.ok(freeAreaService.save(isEnabled));
+    public ResponseEntity<?> save(@RequestBody Boolean isEnabled, @RequestHeader(value = "X-Internal-Token", required = false) String token) {
+        if (!SECRET_KEY.equals(token)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
+        }
+
+        log.info("ms-free-area Calling save with new FreeArea object");
+        FreeArea saved = freeAreaService.save(isEnabled);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(saved);
     }
 
+    //ACA HACER SECRET KEY
+    @PostMapping("{id}/principal-photo")
+    public ResponseEntity<?> savePrincipalPhoto(@PathVariable Long id, @RequestParam(name = "principalPhotoUrl") String principalPhotoUrl) {
+        log.info("ms-free-area Calling savePrincipalPhoto for FreeArea id {}", id);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(freeAreaService.savePrincipalPhoto(id, principalPhotoUrl));
+    }
+
+    //ACA HACER SECRET KEY
+    @PostMapping("/{id}/public-content")
+    public ResponseEntity<?> savePublicContent(@PathVariable Long id, @Valid @RequestBody PublicContentDTO publicContentDTO) {
+        log.info("ms-free-area Calling savePublicContent for FreeArea id {}", id);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(freeAreaService.addPublicContent(id, publicContentDTO));
+    }
+
+    //ACA HACER SECRET KEY FALTA ESTE PROBAR
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         log.info("ms-free-area Calling delete with {id}");
         freeAreaService.delete(id);
+    }
+
+    //ACA HACER SECRET KEY FALTA
+    @DeleteMapping("/{id}/principal-photo")
+    public void deletePrincipalPhoto(@PathVariable Long id) {
+        log.info("ms-free-area Calling deletePrincipalPhoto for FreeArea id {}", id);
+        freeAreaService.deletePrincipalPhoto(id);
+    }
+
+    //ACA HACER SECRET KEY
+    @DeleteMapping("/{id}/public-content/{idContent}")
+    public void deletePublicContent(@PathVariable Long id, @PathVariable Long idContent) {
+        log.info("ms-free-area Calling deletePublicContent for FreeArea id {}", id);
+        freeAreaService.deletePublicContent(id, idContent);
     }
 
 }

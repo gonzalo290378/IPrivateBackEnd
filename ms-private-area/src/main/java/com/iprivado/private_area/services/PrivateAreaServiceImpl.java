@@ -29,7 +29,7 @@ public class PrivateAreaServiceImpl implements PrivateAreaService {
         this.privateAreaMapper = privateAreaMapper;
     }
 
-    @Override
+    @Transactional(readOnly = true)
     public List<PrivateAreaDTO> findAll() {
         List<PrivateArea> privateArea = privateAreaRepository.findAll();
         return privateArea.stream()
@@ -39,6 +39,7 @@ public class PrivateAreaServiceImpl implements PrivateAreaService {
 
     }
 
+    @Transactional(readOnly = true)
     public Optional<PrivateAreaDTO> findById(Long id) {
         return Optional.ofNullable(privateAreaRepository.findAll()
                 .stream()

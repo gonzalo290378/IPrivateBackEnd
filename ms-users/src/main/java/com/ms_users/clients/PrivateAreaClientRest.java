@@ -18,8 +18,9 @@ public interface PrivateAreaClientRest {
     PrivateAreaDTO findById(@PathVariable Long id);
 
     @PostMapping("/api/v1/private-area")
-    PrivateAreaDTO save(@RequestBody Boolean isEnabled);
+    PrivateAreaDTO save(@RequestBody Boolean isEnabled,
+                        @RequestHeader("X-Internal-Token") String token);
 
     @DeleteMapping("/api/v1/private-area/{id}")
-    void delete(@PathVariable Long id);
+    void logicalDelete(@PathVariable Long id);
 }
