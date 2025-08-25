@@ -36,6 +36,7 @@ public class UserController {
         return Collections.emptyMap();
     }
 
+    // ESTE ENDPOINT SE TIENE QUE PROTEGER PUES ES PUBLICO
     @GetMapping
     public ResponseEntity<Page<?>> findAll(Integer page, Integer size) {
         log.info("ms-users Calling findAll");
@@ -48,6 +49,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findById(id));
     }
 
+    // ESTE ENDPOINT SE TIENE QUE PROTEGER PUES ES PUBLICO
     @GetMapping("/{username}")
     public ResponseEntity<UserDTO> findByUsername(@PathVariable String username) {
         log.info("ms-users Calling findByUsername with {}", username);
@@ -65,6 +67,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    // ESTE ENDPOINT SE TIENE QUE PROTEGER PUES ES PUBLICO
     @GetMapping("/email/{email}")
     public ResponseEntity<?> findByEmail(@PathVariable String email) {
         log.info("ms-users Calling findByEmail with {email}");
@@ -84,6 +87,7 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    // ESTE ENDPOINT SE TIENE QUE PROTEGER PUES ES PUBLICO
     @GetMapping("/filter")
     public ResponseEntity<Page<FilterDTO>> filter(
             @RequestParam(name = "page", defaultValue = "0") Integer page,
