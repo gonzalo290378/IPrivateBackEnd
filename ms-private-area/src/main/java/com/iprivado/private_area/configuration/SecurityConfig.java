@@ -23,7 +23,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/private-area").permitAll()
 
                         //A ELIMINAR
-                        .requestMatchers(HttpMethod.DELETE, "/api/v1/private-area/*").permitAll()
+                        //.requestMatchers(HttpMethod.DELETE, "/api/v1/private-area/*").permitAll()
 
                         .anyRequest().authenticated()
                 )
