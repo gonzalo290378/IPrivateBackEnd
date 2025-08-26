@@ -106,12 +106,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<UserDTO> findByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .flatMap(this::getUserDTO);
-    }
-
-    @Transactional(readOnly = true)
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
