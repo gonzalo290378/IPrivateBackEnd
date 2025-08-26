@@ -69,7 +69,7 @@ public class FreeAreaController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody Boolean isEnabled, @RequestHeader(value = "X-Internal-Token", required = false) String token) {
+    public ResponseEntity<?> save(@RequestBody Boolean isEnabled, @RequestHeader(value = "X-Internal-Token") String token) {
         if (!SECRET_KEY.equals(token)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
         }

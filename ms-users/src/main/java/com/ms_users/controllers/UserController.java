@@ -24,6 +24,9 @@ public class UserController {
     @Value("${configuration.text}")
     private String text;
 
+    @Value("${auth.internal-token}")
+    private String SECRET_KEY_AUTH;
+
     private final UserService userService;
 
     public UserController(UserService userService) {
@@ -49,9 +52,11 @@ public class UserController {
         return ResponseEntity.ok(userService.findById(id));
     }
 
-    // ESTE ENDPOINT SE TIENE QUE PROTEGER PUES ES PUBLICO
     @GetMapping("/{username}")
-    public ResponseEntity<UserDTO> findByUsername(@PathVariable String username) {
+    public ResponseEntity<?> findByUsername(@PathVariable String username, @RequestHeader("X-Internal-Service") String token) {
+        if (!SECRET_KEY_AUTH.equals(token)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
+        }
         log.info("ms-users Calling findByUsername with {}", username);
         return userService.findByUsername(username)
                 .map(ResponseEntity::ok)

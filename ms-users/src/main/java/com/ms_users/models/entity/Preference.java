@@ -1,5 +1,6 @@
 package com.ms_users.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -31,9 +32,9 @@ public class Preference {
     @Column(name = "age_to")
     private Long ageTo;
 
-    @Pattern(regexp = "^[FM]$", message = "Sex preference must be 'F' or 'M'")
-    @NotEmpty(message = "Sex preference must be 'F' or 'M'")
-    @Column(name = "sex_preference")
+    @Pattern(regexp = "^(F|M|T|NB)$", message = "Sex preference must be 'F', 'M', 'T' or 'NB'")
+    @NotEmpty(message = "Sex preference must be 'F', 'M', 'T' or 'NB' ")
+    @JsonProperty("sexPreference")
     private String sexPreference;
 
 }
