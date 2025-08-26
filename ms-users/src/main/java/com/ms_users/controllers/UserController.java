@@ -52,16 +52,6 @@ public class UserController {
         return ResponseEntity.ok(userService.findById(id));
     }
 
-    @GetMapping("/{username}")
-    public ResponseEntity<?> findByUsername(@PathVariable String username, @RequestHeader("X-Internal-Service") String token) {
-        if (!SECRET_KEY_AUTH.equals(token)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
-        }
-        log.info("ms-users Calling findByUsername with {}", username);
-        return userService.findByUsername(username)
-                .map(ResponseEntity::ok)
-                .orElseThrow(() -> new UserNotFoundException("Username was not found"));
-    }
 
     @GetMapping("/check-availability-username/{username}")
     public ResponseEntity<Map<String, Boolean>> checkUsernameAvailability(@PathVariable String username) {
@@ -72,9 +62,11 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // ESTE ENDPOINT SE TIENE QUE PROTEGER PUES ES PUBLICO
     @GetMapping("/email/{email}")
-    public ResponseEntity<?> findByEmail(@PathVariable String email) {
+    public ResponseEntity<?> findByEmail(@PathVariable String email, @RequestHeader("X-Internal-Service") String token)  {
+        if (!SECRET_KEY_AUTH.equals(token)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
+        }
         log.info("ms-users Calling findByEmail with {email}");
         Optional<UserDTO> userOptional = userService.findByEmail(email);
         if (userOptional.isPresent()) {

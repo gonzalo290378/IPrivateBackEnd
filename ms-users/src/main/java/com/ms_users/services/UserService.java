@@ -16,8 +16,6 @@ public interface UserService {
 
     Optional<UserDTO> findByEmail(String email);
 
-    Optional<UserDTO> findByUsername(String username);
-
     Optional<User> findEntityByUsername(String username);
 
     Page<FilterDTO> filter(FilterDTO filterDTO, Integer page, Integer size);
