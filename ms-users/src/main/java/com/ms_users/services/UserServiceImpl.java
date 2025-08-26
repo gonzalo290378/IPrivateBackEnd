@@ -38,7 +38,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     @Value("${freearea.internal-token}")
-    private String SECRET_KEY;
+    private String SECRET_KEY_FREE_AREA;
 
     private final UserRepository userRepository;
     private final CountryRepository countryRepository;
@@ -238,12 +238,12 @@ public class UserServiceImpl implements UserService {
 
     @Transactional()
     public FreeAreaDTO createFreeArea() {
-        return freeAreaClientRest.save(AreaConfiguration.ENABLED.getValue(), SECRET_KEY);
+        return freeAreaClientRest.save(AreaConfiguration.ENABLED.getValue(), SECRET_KEY_FREE_AREA);
     }
 
     @Transactional()
     private PrivateAreaDTO createPrivateArea() {
-        return privateAreaClientRest.save(AreaConfiguration.DISABLED.getValue(), SECRET_KEY);
+        return privateAreaClientRest.save(AreaConfiguration.DISABLED.getValue(), SECRET_KEY_FREE_AREA);
     }
 
     private Preference buildPreference(UserFormDTO userFormDTO) {

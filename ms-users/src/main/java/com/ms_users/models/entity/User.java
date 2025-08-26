@@ -44,8 +44,8 @@ public class User {
     @Column(name = "age")
     private Long age;
 
-    @Pattern(regexp = "^[FM]$", message = "Sex preference must be 'F' or 'M'")
-    @NotEmpty(message = "Sex preference must be 'F' or 'M'")
+    @Pattern(regexp = "^(F|M|T|NB)$", message = "Sex must be 'F', 'M', 'T' or 'NB'")
+    @NotEmpty(message = "Sex preference must be 'F', 'M', 'T' or 'NB' ")
     @Column(name = "sex")
     private String sex;
 

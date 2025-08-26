@@ -40,8 +40,8 @@ UserDTO implements Serializable {
     @JsonProperty("age")
     private Long age;
 
-    @Pattern(regexp = "^[FM]$", message = "Sex preference must be 'F' or 'M'")
-    @NotEmpty(message = "Sex preference must be 'F' or 'M'")
+    @Pattern(regexp = "^(F|M|T|NB)$", message = "Sex preference must be 'F', 'M', 'T' or 'NB'")
+    @NotEmpty(message = "Sex preference must be 'F', 'M', 'T' or 'NB' ")
     @JsonProperty("sex")
     private String sex;
 
