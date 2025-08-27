@@ -3,6 +3,7 @@ package com.ms_users.services;
 import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
 import com.ms_users.dto.UserFormDTO;
+import com.ms_users.dto.UserProfileDTO;
 import com.ms_users.models.entity.User;
 import org.springframework.data.domain.Page;
 
@@ -12,9 +13,9 @@ public interface UserService {
 
     Page<UserDTO> findAll(Integer page, Integer size);
 
-    Optional<UserDTO> findById(Long id);
+    Optional<UserProfileDTO> findById(Long id);
 
-    Optional<UserDTO> findByEmail(String email);
+    Optional<UserProfileDTO> findByEmail(String email);
 
     Optional<User> findEntityByUsername(String username);
 
@@ -22,9 +23,9 @@ public interface UserService {
 
     User save(UserFormDTO userFormDTO);
 
-    User update(UserFormDTO userFormDTO, User user);
+    String update(UserFormDTO userFormDTO, User user);
 
-    User delete(Long id);
+    void delete(Long id);
 
     Optional<User> findEntityById(Long id);
 

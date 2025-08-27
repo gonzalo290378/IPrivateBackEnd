@@ -1,6 +1,6 @@
 package com.sprinboot.webflux.msauthserver.services;
 
-import com.sprinboot.webflux.msauthserver.models.entity.User;
+import com.sprinboot.webflux.msauthserver.models.entity.UserProfileDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -21,7 +21,7 @@ public class UserService {
     @Value("${users.service.token}")
     private String SECRET_KEY_USERS;
 
-    public User findByEmail(String email) {
+    public UserProfileDTO findByEmail(String email) {
         HashMap<String, String> uriPathVariable = new HashMap<>();
         uriPathVariable.put("email", email);
 
@@ -30,11 +30,11 @@ public class UserService {
 
         HttpEntity<?> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<User> response = restTemplate.exchange(
+        ResponseEntity<UserProfileDTO> response = restTemplate.exchange(
                 "http://localhost:8090/ms-users/email/{email}",
                 HttpMethod.GET,
                 entity,
-                User.class,
+                UserProfileDTO.class,
                 uriPathVariable
         );
 

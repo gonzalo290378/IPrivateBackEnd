@@ -63,12 +63,12 @@ public class UserController {
     }
 
     @GetMapping("/email/{email}")
-    public ResponseEntity<?> findByEmail(@PathVariable String email, @RequestHeader("X-Internal-Service") String token)  {
+    public ResponseEntity<?> findByEmail(@PathVariable String email, @RequestHeader("X-Internal-Service") String token) {
         if (!SECRET_KEY_AUTH.equals(token)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Forbidden");
         }
         log.info("ms-users Calling findByEmail with {email}");
-        Optional<UserDTO> userOptional = userService.findByEmail(email);
+        Optional<UserProfileDTO> userOptional = userService.findByEmail(email);
         if (userOptional.isPresent()) {
             return ResponseEntity.ok(userOptional.get());
         }

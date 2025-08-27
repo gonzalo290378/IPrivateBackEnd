@@ -1,7 +1,7 @@
 package com.sprinboot.webflux.msauthserver.config;
 
-import com.sprinboot.webflux.msauthserver.models.entity.User;
 import com.sprinboot.webflux.msauthserver.models.entity.UserDetails.CustomUserDetails;
+import com.sprinboot.webflux.msauthserver.models.entity.UserProfileDTO;
 import com.sprinboot.webflux.msauthserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User userEntity = userService.findByEmail(email);
+        UserProfileDTO userEntity = userService.findByEmail(email);
 
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("email", email);

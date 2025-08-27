@@ -5,6 +5,7 @@ import com.ms_users.clients.PrivateAreaClientRest;
 import com.ms_users.dto.FilterDTO;
 import com.ms_users.dto.UserDTO;
 import com.ms_users.dto.UserFormDTO;
+import com.ms_users.dto.UserProfileDTO;
 import com.ms_users.enums.AgeConfiguration;
 import com.ms_users.enums.AreaConfiguration;
 import com.ms_users.enums.DateConfiguration;
@@ -87,11 +88,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<UserDTO> findById(Long id) {
+    public Optional<UserProfileDTO> findById(Long id) {
         User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getId(), id))
                 .findFirst()
                 .orElseThrow(() -> new UserNotFoundException("id: " + id + " does not exist"));
-        return getUserDTO(user);
+        return getUserProfileDTO(user);
     }
 
     @Transactional(readOnly = true)
@@ -100,9 +101,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<UserDTO> findByEmail(String email) {
+    public Optional<UserProfileDTO> findByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new EmailNotFoundException("email: " + email + " does not exist"));
-        return getUserDTO(user);
+        return getUserProfileDTO(user);
     }
 
     @Transactional(readOnly = true)
@@ -123,6 +124,22 @@ public class UserServiceImpl implements UserService {
         userDTO.setFreeAreaDTO(freeAreaDTO);
         userDTO.setPrivateAreaDTO(privateAreaDTO);
         return Optional.of(userDTO);
+    }
+
+    private Optional<UserProfileDTO> getUserProfileDTO(User user) {
+        Long id = user.getId();
+        String username = user.getUsername();
+        String email = user.getEmail();
+        String password = user.getPassword();
+        List<Role> roles = user.getRoles();
+        UserProfileDTO userProfileDTO = UserProfileDTO.builder()
+                .id(id)
+                .username(username)
+                .email(email)
+                .password(password)
+                .roles(roles)
+                .build();
+        return Optional.of(userProfileDTO);
     }
 
     @Transactional(readOnly = true)
@@ -306,12 +323,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional()
-    public User update(UserFormDTO userFormDTO, User user) {
+    public String update(UserFormDTO userFormDTO, User user) {
         validateUserForm(userFormDTO);
         updateUserPreferences(user, userFormDTO);
         updateUserLocation(user, userFormDTO);
         updateUserBasicInfo(user, userFormDTO);
-        return userRepository.save(user);
+        User useredited = userRepository.save(user);
+        return useredited.getEmail();
     }
 
     private void updateUserPreferences(User user, UserFormDTO userFormDTO) {
@@ -335,7 +353,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
-    public User delete(Long id) {
+    public void delete(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
             throw new UserNotFoundException("User: is not registered");
@@ -343,7 +361,6 @@ public class UserServiceImpl implements UserService {
         freeAreaClientRest.logicalDelete(user.get().getIdFreeArea());
         privateAreaClientRest.logicalDelete(user.get().getIdPrivateArea());
         userRepository.logicDelete(id);
-        return user.get();
     }
 
     @Transactional(readOnly = true)
