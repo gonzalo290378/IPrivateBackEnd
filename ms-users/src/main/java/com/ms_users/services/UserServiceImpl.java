@@ -78,10 +78,7 @@ public class UserServiceImpl implements UserService {
         return userPage.map(user -> {
             UserDTO userDTO = userMapper.toDTO(user);
             FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
-            PrivateAreaDTO privateAreaDTO = privateAreaClientRest.findById(user.getIdPrivateArea());
-            userDTO.setRoles(user.getRoles());
             userDTO.setFreeAreaDTO(freeAreaDTO);
-            userDTO.setPrivateAreaDTO(privateAreaDTO);
             userDTO.setIdFreeArea(freeAreaDTO.getId());
             return userDTO;
         });
@@ -116,13 +113,18 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByEmail(email);
     }
 
+    @Override
+    public Optional<UserDTO> findByUsername(String username) {
+        User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getUsername(), username))
+                .findFirst()
+                .orElseThrow(() -> new UserNotFoundException("username: " + username + " does not exist"));
+        return getUserDTO(user);
+    }
+
     private Optional<UserDTO> getUserDTO(User user) {
         FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
-        PrivateAreaDTO privateAreaDTO = privateAreaClientRest.findById(user.getIdPrivateArea());
         UserDTO userDTO = userMapper.toDTO(user);
-        userDTO.setRoles(user.getRoles());
         userDTO.setFreeAreaDTO(freeAreaDTO);
-        userDTO.setPrivateAreaDTO(privateAreaDTO);
         return Optional.of(userDTO);
     }
 
@@ -159,10 +161,8 @@ public class UserServiceImpl implements UserService {
         return filterUserList.map(user -> {
             FilterDTO filterListDTO = filterMapper.toDTO(user);
             FreeAreaDTO freeAreaDTO = freeAreaClientRest.findById(user.getIdFreeArea());
-            PrivateAreaDTO privateAreaDTO = privateAreaClientRest.findById(user.getIdPrivateArea());
             filterListDTO.setRoles(user.getRoles());
             filterListDTO.setFreeAreaDTO(freeAreaDTO);
-            filterListDTO.setPrivateAreaDTO(privateAreaDTO);
             filterListDTO.setIdFreeArea(freeAreaDTO.getId());
             return filterListDTO;
         });

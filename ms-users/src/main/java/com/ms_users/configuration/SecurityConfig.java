@@ -29,6 +29,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/new-account/register-page").permitAll()
 
                         //A ELIMINAR
+                        .requestMatchers(HttpMethod.GET, "/username").permitAll()
                         //.requestMatchers(HttpMethod.DELETE, "/delete/*").permitAll()
 
                         .anyRequest().authenticated()

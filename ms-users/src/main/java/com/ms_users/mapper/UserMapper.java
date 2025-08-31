@@ -5,7 +5,7 @@ import com.ms_users.models.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {PreferenceMapper.class, CountryMapper.class, CityMapper.class, StateMapper.class, FreeAreaMapper.class, PrivateAreaMapper.class})
+@Mapper(componentModel = "spring", uses = {PreferenceMapper.class, CountryMapper.class, CityMapper.class, StateMapper.class, FreeAreaMapper.class})
 public interface UserMapper {
 
     @Mapping(target = "preferenceDTO", source = "preference")
