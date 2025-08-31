@@ -39,7 +39,6 @@ public class UserController {
         return Collections.emptyMap();
     }
 
-    // ESTE ENDPOINT SE TIENE QUE PROTEGER PUES ES PUBLICO
     @GetMapping
     public ResponseEntity<Page<?>> findAll(Integer page, Integer size) {
         log.info("ms-users Calling findAll");
@@ -56,7 +55,7 @@ public class UserController {
     @GetMapping("/check-availability-username/{username}")
     public ResponseEntity<Map<String, Boolean>> checkUsernameAvailability(@PathVariable String username) {
         log.info("ms-users Checking username availability for {}", username);
-        boolean isAvailable = !userService.existsByUsername(username);
+        boolean isAvailable = userService.existsByUsername(username);
         Map<String, Boolean> response = new HashMap<>();
         response.put("available", isAvailable);
         return ResponseEntity.ok(response);
@@ -75,6 +74,16 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/username")
+    public ResponseEntity<?> findByUsername(@RequestParam String username) {
+        log.info("ms-users Calling findByUsername with {username}");
+        Optional<UserDTO> userOptional = userService.findByUsername(username);
+        if (userOptional.isPresent()) {
+            return ResponseEntity.ok(userOptional.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @GetMapping("/check-availability-email/{email}")
     public ResponseEntity<Map<String, Boolean>> checkEmailAvailability(@PathVariable String email) {
         log.info("ms-users Checking email availability for {}", email);
@@ -84,7 +93,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    // ESTE ENDPOINT SE TIENE QUE PROTEGER PUES ES PUBLICO
     @GetMapping("/filter")
     public ResponseEntity<Page<FilterDTO>> filter(
             @RequestParam(name = "page", defaultValue = "0") Integer page,

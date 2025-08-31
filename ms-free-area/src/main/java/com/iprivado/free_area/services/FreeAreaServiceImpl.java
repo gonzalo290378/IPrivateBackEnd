@@ -62,8 +62,11 @@ public class FreeAreaServiceImpl implements FreeAreaService {
     public Optional<PrincipalPhotoDTO> getPrincipalPhoto(Long id) {
         FreeArea freeArea = freeAreaRepository.findById(id)
                 .orElseThrow(() -> new FreeAreaNotFoundException("FreeArea with id " + id + " not found"));
-        PrincipalPhotoDTO principalPhotoDTO = principalPhotoMapper.toDTO(freeArea.getPrincipalPhoto().get(0));
-        return Optional.ofNullable(principalPhotoDTO);
+
+        return freeArea.getPrincipalPhoto().stream()
+                .filter(principalPhoto -> principalPhoto.getId() != null)
+                .findFirst()
+                .map(principalPhotoMapper::toDTO);
     }
 
     @Transactional()

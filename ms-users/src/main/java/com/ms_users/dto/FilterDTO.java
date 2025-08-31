@@ -2,7 +2,6 @@ package com.ms_users.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ms_users.models.FreeAreaDTO;
-import com.ms_users.models.PrivateAreaDTO;
 import com.ms_users.models.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -53,14 +52,8 @@ public class FilterDTO implements Serializable {
     @JsonProperty("idFreeArea")
     private Long idFreeArea;
 
-    @JsonProperty("idPrivateArea")
-    private Long idPrivateArea;
-
     @JsonProperty("freeAreaDTO")
     private FreeAreaDTO freeAreaDTO;
-
-    @JsonProperty("privateAreaDTO")
-    private PrivateAreaDTO privateAreaDTO;
 
     @JsonProperty("preferenceDTO")
     private PreferenceDTO preferenceDTO;

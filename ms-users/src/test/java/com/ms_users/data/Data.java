@@ -54,7 +54,7 @@ public final class Data {
 
     public final static List<PublicContentDTO> PUBLIC_CONTENT_DTO = Collections.singletonList(PublicContentDTO.builder()
             .id(1L)
-            .date(LocalDate.now())
+            //.date(LocalDate.now())
             .description("Foto Publica")
             .contentUrl("Contenido publico")
             .like(100L)
@@ -343,23 +343,23 @@ public final class Data {
                     "Hola soy Lucia", true, "12345", 5L, 5L, PREFERENCE, COUNTRY, CITY, STATE, false)
     );
 
-    public final static List<UserDTO> USER_DTO_LIST =
-            List.of(
-                    new UserDTO(1L, List.of(ROLE), "romina", 35L, "F", "romina@gmail.com", LocalDate.of(1989, 11, 1), LocalDate.of(2024, 12, 23),
-                            "Hola soy Romina", true, "12345", 1L, 1L, FREE_AREA_DTO_1, PRIVATE_AREA_DTO_1, PREFERENCE_DTO_1, COUNTRY_DTO_1, CITY_DTO_1, STATE_DTO_1),
-
-                    new UserDTO(2L, List.of(ROLE), "genaro", 30L, "M", "genaro@gmail.com", LocalDate.of(1993, 5, 15), LocalDate.of(2024, 12, 23),
-                            "Hola soy Genaro", true, "12345", 2L, 2L, FREE_AREA_DTO_2, PRIVATE_AREA_DTO_2, PREFERENCE_DTO_2, COUNTRY_DTO_2, CITY_DTO_2, STATE_DTO_2),
-
-                    new UserDTO(3L, List.of(ROLE), "arri", 28L, "M", "arri@gmail.com", LocalDate.of(1995, 3, 10), LocalDate.of(2024, 12, 23),
-                            "Hola soy Arri", true, "12345", 3L, 3L, FREE_AREA_DTO_3, PRIVATE_AREA_DTO_3, PREFERENCE_DTO_3, COUNTRY_DTO_3, CITY_DTO_3, STATE_DTO_3),
-
-                    new UserDTO(4L, List.of(ROLE), "moreno", 32L, "F", "moreno@gmail.com", LocalDate.of(1991, 7, 20), LocalDate.of(2024, 12, 23),
-                            "Hola soy Moreno", true, "12345", 4L, 4L, FREE_AREA_DTO_4, PRIVATE_AREA_DTO_4, PREFERENCE_DTO_4, COUNTRY_DTO_4, CITY_DTO_4, STATE_DTO_4),
-
-                    new UserDTO(5L, List.of(ROLE), "lucia", 29L, "F", "lucia@gmail.com", LocalDate.of(1994, 2, 8), LocalDate.of(2024, 12, 23),
-                            "Hola soy Lucia", true, "12345", 5L, 5L, FREE_AREA_DTO_5, PRIVATE_AREA_DTO_5, PREFERENCE_DTO_5, COUNTRY_DTO_5, CITY_DTO_5, STATE_DTO_5)
-            );
+//    public final static List<UserDTO> USER_DTO_LIST =
+//            List.of(
+//                    new UserDTO(1L, List.of(ROLE), "romina", 35L, "F", "romina@gmail.com", LocalDate.of(1989, 11, 1), LocalDate.of(2024, 12, 23),
+//                            "Hola soy Romina", true, "12345", 1L, 1L, FREE_AREA_DTO_1, PRIVATE_AREA_DTO_1, PREFERENCE_DTO_1, COUNTRY_DTO_1, CITY_DTO_1, STATE_DTO_1),
+//
+//                    new UserDTO(2L, List.of(ROLE), "genaro", 30L, "M", "genaro@gmail.com", LocalDate.of(1993, 5, 15), LocalDate.of(2024, 12, 23),
+//                            "Hola soy Genaro", true, "12345", 2L, 2L, FREE_AREA_DTO_2, PRIVATE_AREA_DTO_2, PREFERENCE_DTO_2, COUNTRY_DTO_2, CITY_DTO_2, STATE_DTO_2),
+//
+//                    new UserDTO(3L, List.of(ROLE), "arri", 28L, "M", "arri@gmail.com", LocalDate.of(1995, 3, 10), LocalDate.of(2024, 12, 23),
+//                            "Hola soy Arri", true, "12345", 3L, 3L, FREE_AREA_DTO_3, PRIVATE_AREA_DTO_3, PREFERENCE_DTO_3, COUNTRY_DTO_3, CITY_DTO_3, STATE_DTO_3),
+//
+//                    new UserDTO(4L, List.of(ROLE), "moreno", 32L, "F", "moreno@gmail.com", LocalDate.of(1991, 7, 20), LocalDate.of(2024, 12, 23),
+//                            "Hola soy Moreno", true, "12345", 4L, 4L, FREE_AREA_DTO_4, PRIVATE_AREA_DTO_4, PREFERENCE_DTO_4, COUNTRY_DTO_4, CITY_DTO_4, STATE_DTO_4),
+//
+//                    new UserDTO(5L, List.of(ROLE), "lucia", 29L, "F", "lucia@gmail.com", LocalDate.of(1994, 2, 8), LocalDate.of(2024, 12, 23),
+//                            "Hola soy Lucia", true, "12345", 5L, 5L, FREE_AREA_DTO_5, PRIVATE_AREA_DTO_5, PREFERENCE_DTO_5, COUNTRY_DTO_5, CITY_DTO_5, STATE_DTO_5)
+//            );
 
 
     public final static User USER_1 = new User(1L, List.of(ROLE), "romina", 35L, "F", "romina@gmail.com", LocalDate.of(1989, 11, 1), LocalDate.of(2024, 12, 23),
@@ -378,20 +378,6 @@ public final class Data {
             "Hola soy Moreno", true, "12345", 4L, 4L, PREFERENCE, COUNTRY, CITY, STATE, false);
 
 
-    public final static UserDTO USER_DTO_1 = new UserDTO(1L, List.of(ROLE), "romina", 35L, "F", "lucia@gmail.com", LocalDate.of(1989, 11, 1), LocalDate.of(2024, 12, 23),
-            "Hola soy Romina", true, "12345", 1L, 1L, new FreeAreaDTO(), new PrivateAreaDTO(), PREFERENCE_DTO_1, COUNTRY_DTO_1, CITY_DTO_1, STATE_DTO_1);
-
-
-    public final static UserDTO USER_DTO_2 = new UserDTO(2L, List.of(ROLE), "genaro", 30L, "F", "genaro@gmail.com", LocalDate.of(1993, 5, 15), LocalDate.of(2024, 12, 23),
-            "Hola soy Genaro", true, "12345", 2L, 2L, new FreeAreaDTO(), new PrivateAreaDTO(), PREFERENCE_DTO_2, COUNTRY_DTO_2, CITY_DTO_2, STATE_DTO_2);
-
-
-    public final static UserDTO USER_DTO_3 = new UserDTO(3L, List.of(ROLE), "arri", 28L, "M", "arri@gmail.com", LocalDate.of(1995, 3, 10), LocalDate.of(2024, 12, 23),
-            "Hola soy Arri", true, "12345", 3L, 3L, new FreeAreaDTO(), new PrivateAreaDTO(), PREFERENCE_DTO_3, COUNTRY_DTO_3, CITY_DTO_3, STATE_DTO_3);
-
-
-    public final static UserDTO USER_DTO_4 = new UserDTO(4L, List.of(ROLE), "moreno", 32L, "M", "moreno@gmail.com", LocalDate.of(1991, 7, 20), LocalDate.of(2024, 12, 23),
-            "Hola soy Moreno", true, "12345", 4L, 4L, new FreeAreaDTO(), new PrivateAreaDTO(), PREFERENCE_DTO_4, COUNTRY_DTO_4, CITY_DTO_4, STATE_DTO_1);
 
 
     public static Page<User> USERS_PAGINATOR(List<User> users, int page, int size) {
