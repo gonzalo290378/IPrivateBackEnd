@@ -16,9 +16,18 @@ import com.iprivado.free_area.models.entity.PublicContent;
 import com.iprivado.free_area.repositories.FreeAreaRepository;
 import com.iprivado.free_area.repositories.PrincipalPhotoRepository;
 import com.iprivado.free_area.repositories.PublicContentRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,6 +36,7 @@ import static com.iprivado.free_area.enums.StateConfiguration.DISABLED;
 import static com.iprivado.free_area.enums.StateConfiguration.ENABLED;
 
 @Service
+@Slf4j
 public class FreeAreaServiceImpl implements FreeAreaService {
 
     private final FreeAreaRepository freeAreaRepository;
@@ -56,6 +66,16 @@ public class FreeAreaServiceImpl implements FreeAreaService {
         return freeArea.stream()
                 .map(freeAreaMapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<FreeAreaDTO> findById(Long id) {
+        return Optional.ofNullable(freeAreaRepository.findAll()
+                .stream()
+                .filter(e -> Objects.equals(e.getId(), id))
+                .map(freeAreaMapper::toDTO)
+                .findFirst().orElseThrow(() ->
+                        new FreeAreaNotFoundException("FreeArea with id " + id + " not found")));
     }
 
     @Transactional(readOnly = true)
@@ -112,15 +132,42 @@ public class FreeAreaServiceImpl implements FreeAreaService {
     }
 
 
-    @Transactional(readOnly = true)
-    public Optional<FreeAreaDTO> findById(Long id) {
-        return Optional.ofNullable(freeAreaRepository.findAll()
-                .stream()
-                .filter(e -> Objects.equals(e.getId(), id))
-                .map(freeAreaMapper::toDTO)
-                .findFirst().orElseThrow(() ->
-                        new FreeAreaNotFoundException("FreeArea with id " + id + " not found")));
+    @Override
+    public PrincipalPhoto uploadPrincipalPhoto(MultipartFile file, Long idFreeArea) {
+        try {
+            File uploadDir = new File("C:/Users/Gonzalo/Desktop/Programacion-Verdadero/IPrivate/Backend/uploads/principal-photo");
+            if (!uploadDir.exists()) uploadDir.mkdirs();
+
+            String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            Path filePath = uploadDir.toPath().resolve(fileName);
+            file.transferTo(filePath.toFile());
+
+            // Buscar si ya existe
+            Optional<PrincipalPhoto> existing = principalPhotoRepository.findByIdFreeArea(idFreeArea);
+
+            PrincipalPhoto principalPhoto;
+            if (existing.isPresent()) {
+                principalPhoto = existing.get();
+                // Actualizar campos
+                principalPhoto.setUrl("/uploads/principal-photo/" + fileName);
+                principalPhoto.setUpdatedAt(LocalDate.now());
+            } else {
+                PrincipalPhotoDTO dto = new PrincipalPhotoDTO();
+                dto.setIdFreeArea(idFreeArea);
+                dto.setIsEnabled(true);
+                dto.setCreatedAt(LocalDate.now());
+                dto.setUpdatedAt(LocalDate.now());
+                dto.setUrl("/uploads/principal-photo/" + fileName);
+                principalPhoto = principalPhotoMapper.toModel(dto);
+            }
+
+            return principalPhotoRepository.save(principalPhoto);
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar la foto localmente", e);
+        }
     }
+
+
 
     @Transactional
     public FreeArea save(Boolean isEnabled) {

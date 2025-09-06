@@ -18,19 +18,22 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.GET, "/api/v1/free-area/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/v1/free-area").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/free-area/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/v1/free-area").permitAll()
 
-                        //A ELIMINAR
+                                //A ELIMINAR
 //                        .requestMatchers(HttpMethod.PUT, "/api/v1/free-area/**").permitAll()
 //                        .requestMatchers(HttpMethod.PUT, "/api/v1/free-area/*/public-content/*").permitAll()
  //                       .requestMatchers(HttpMethod.POST, "/api/v1/free-area/*/public-content").permitAll()
 //                        .requestMatchers(HttpMethod.DELETE, "/api/v1/free-area/*/public-content/*").permitAll()
 //                        .requestMatchers(HttpMethod.DELETE, "/api/v1/free-area/*/principal-photo").permitAll()
 //                        .requestMatchers(HttpMethod.DELETE, "/api/v1/free-area/*").permitAll()
-//                        .requestMatchers(HttpMethod.POST, "/api/v1/free-area/*/principal-photo").permitAll()
 
-                        .anyRequest().authenticated()
+                                //A ELIMINAR
+                                .requestMatchers(HttpMethod.POST, "/api/v1/free-area/principal-photo/upload").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+
+                                .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 
