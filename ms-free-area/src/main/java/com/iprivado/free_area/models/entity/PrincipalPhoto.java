@@ -36,7 +36,7 @@ public class PrincipalPhoto {
     private Boolean isEnabled;
 
     @NotEmpty(message = "Url content can not be empty")
-    @Size(max = 255, message = "The url principal photo must have 255 characters as max.")
+    @Size(max = 2048, message = "The url principal photo must have 2048 characters as max.")
     @Column(name = "url")
     private String url;
 

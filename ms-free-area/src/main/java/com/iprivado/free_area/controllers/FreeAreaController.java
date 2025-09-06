@@ -1,6 +1,7 @@
 package com.iprivado.free_area.controllers;
 
 import com.iprivado.free_area.dto.FreeAreaDTO;
+import com.iprivado.free_area.dto.PrincipalPhotoDTO;
 import com.iprivado.free_area.dto.PublicContentDTO;
 import com.iprivado.free_area.exceptions.FreeAreaNotFoundException;
 import com.iprivado.free_area.models.entity.FreeArea;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -62,6 +64,13 @@ public class FreeAreaController {
     public ResponseEntity<?> editPrincipalPhoto(@PathVariable Long id, @RequestParam(name = "principalPhotoUrl") String principalPhotoUrl) {
         log.info("ms-free-area Calling editPrincipalPhoto for FreeArea id {}", id);
         return ResponseEntity.ok(freeAreaService.editPrincipalPhoto(id, principalPhotoUrl));
+    }
+
+    @PostMapping("/principal-photo/upload")
+    public ResponseEntity<?> uploadPrincipalPhoto(@RequestParam("file") MultipartFile file, @RequestParam("idFreeArea") Long idFreeArea) {
+        log.info("ms-free-area Calling uploadPrincipalPhoto for FreeArea id {}", idFreeArea);
+        return ResponseEntity.ok(freeAreaService.uploadPrincipalPhoto(file, idFreeArea));
+
     }
 
     @PostMapping
