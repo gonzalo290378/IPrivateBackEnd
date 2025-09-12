@@ -19,6 +19,13 @@ public class GlobalFilterGateway implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        String path = exchange.getRequest().getURI().getPath();
+
+        if (isStaticResource(path)) {
+            logger.debug("Skipping filter for static resource: {}", path);
+            return chain.filter(exchange);
+        }
+
         logger.info("PRE Filter: Request");
         exchange.getRequest().mutate().headers(header ->
                 header.add("token", "123456"));
@@ -36,6 +43,20 @@ public class GlobalFilterGateway implements GlobalFilter, Ordered {
                     .add("color", ResponseCookie.from("color", "red").build());
 
         }));
+    }
+
+    private boolean isStaticResource(String path) {
+        return path.startsWith("/ms-free-area/uploads/") ||
+                path.startsWith("/uploads/") ||
+                path.endsWith(".jpg") ||
+                path.endsWith(".jpeg") ||
+                path.endsWith(".png") ||
+                path.endsWith(".gif") ||
+                path.endsWith(".svg") ||
+                path.endsWith(".webp") ||
+                path.endsWith(".css") ||
+                path.endsWith(".js") ||
+                path.endsWith(".ico");
     }
 
     @Override

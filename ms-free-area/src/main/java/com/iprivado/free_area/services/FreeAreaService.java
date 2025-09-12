@@ -19,15 +19,13 @@ public interface FreeAreaService {
 
     Optional<PrincipalPhotoDTO> getPrincipalPhoto(Long id);
 
-    PrincipalPhoto editPrincipalPhoto(Long id, String principalPhoto);
-
     Optional<List<PublicContentDTO>> getPublicContent(Long id, Long lastId, int limit);
 
     Optional<PublicContentDTO> updatePublicContent(Long id, Long contentId, PublicContentDTO publicContentDTO);
 
     FreeArea save(Boolean isEnabled);
 
-    PrincipalPhoto savePrincipalPhoto(Long id, String principalPhotoUrl);
+    //PrincipalPhoto savePrincipalPhoto(Long id, String principalPhotoUrl);
 
     PublicContent addPublicContent(Long id, PublicContentDTO publicContentDTO);
 

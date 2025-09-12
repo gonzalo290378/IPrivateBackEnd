@@ -54,18 +54,14 @@ public class FreeAreaController {
         return ResponseEntity.ok(freeAreaService.getPublicContent(id, lastId, limit));
     }
 
+    //SECURIZAR
     @PutMapping("/{id}/public-content/{idContent}")
     public ResponseEntity<?> editPublicContent(@PathVariable Long id, @PathVariable Long idContent, @RequestBody PublicContentDTO publicContentDTO) {
         log.info("ms-free-area Calling editPublicContent for freeAreaId {} and contentId {}", id, idContent);
         return ResponseEntity.ok(freeAreaService.updatePublicContent(id, idContent, publicContentDTO));
     }
 
-    @PutMapping("{id}/principal-photo")
-    public ResponseEntity<?> editPrincipalPhoto(@PathVariable Long id, @RequestParam(name = "principalPhotoUrl") String principalPhotoUrl) {
-        log.info("ms-free-area Calling editPrincipalPhoto for FreeArea id {}", id);
-        return ResponseEntity.ok(freeAreaService.editPrincipalPhoto(id, principalPhotoUrl));
-    }
-
+    //SECURIZAR 1RO
     @PostMapping("/principal-photo/upload")
     public ResponseEntity<?> uploadPrincipalPhoto(@RequestParam("file") MultipartFile file, @RequestParam("idFreeArea") Long idFreeArea) {
         log.info("ms-free-area Calling uploadPrincipalPhoto for FreeArea id {}", idFreeArea);
@@ -73,6 +69,7 @@ public class FreeAreaController {
 
     }
 
+    //SECURIZAR
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Boolean isEnabled, @RequestHeader(value = "X-Internal-Token") String token) {
         if (!SECRET_KEY.equals(token)) {
@@ -85,13 +82,8 @@ public class FreeAreaController {
                 .body(saved);
     }
 
-    @PostMapping("{id}/principal-photo")
-    public ResponseEntity<?> savePrincipalPhoto(@PathVariable Long id, @RequestParam(name = "principalPhotoUrl") String principalPhotoUrl) {
-        log.info("ms-free-area Calling savePrincipalPhoto for FreeArea id {}", id);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(freeAreaService.savePrincipalPhoto(id, principalPhotoUrl));
-    }
 
+    //SECURIZAR
     @PostMapping("/{id}/public-content")
     public ResponseEntity<?> savePublicContent(@PathVariable Long id, @Valid @RequestBody PublicContentDTO publicContentDTO) {
         log.info("ms-free-area Calling savePublicContent for FreeArea id {}", id);
@@ -99,18 +91,21 @@ public class FreeAreaController {
                 .body(freeAreaService.addPublicContent(id, publicContentDTO));
     }
 
+    //SECURIZAR
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         log.info("ms-free-area Calling delete with {id}");
         freeAreaService.delete(id);
     }
 
+    //SECURIZAR 2DO
     @DeleteMapping("/{id}/principal-photo")
     public void deletePrincipalPhoto(@PathVariable Long id) {
         log.info("ms-free-area Calling deletePrincipalPhoto for FreeArea id {}", id);
         freeAreaService.deletePrincipalPhoto(id);
     }
 
+    //SECURIZAR
     @DeleteMapping("/{id}/public-content/{idContent}")
     public void deletePublicContent(@PathVariable Long id, @PathVariable Long idContent) {
         log.info("ms-free-area Calling deletePublicContent for FreeArea id {}", id);
