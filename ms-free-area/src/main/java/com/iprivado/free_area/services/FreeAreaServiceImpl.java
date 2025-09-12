@@ -5,7 +5,6 @@ import com.iprivado.free_area.dto.FreeAreaDTO;
 import com.iprivado.free_area.dto.PrincipalPhotoDTO;
 import com.iprivado.free_area.dto.PublicContentDTO;
 import com.iprivado.free_area.exceptions.FreeAreaNotFoundException;
-import com.iprivado.free_area.exceptions.PrincipalPhotoNotFoundException;
 import com.iprivado.free_area.exceptions.PublicContentNotFoundException;
 import com.iprivado.free_area.mapper.FreeAreaMapper;
 import com.iprivado.free_area.mapper.PrincipalPhotoMapper;
@@ -17,14 +16,12 @@ import com.iprivado.free_area.repositories.FreeAreaRepository;
 import com.iprivado.free_area.repositories.PrincipalPhotoRepository;
 import com.iprivado.free_area.repositories.PublicContentRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -32,7 +29,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.iprivado.free_area.enums.DateConfiguration.TODAY;
-import static com.iprivado.free_area.enums.StateConfiguration.DISABLED;
 import static com.iprivado.free_area.enums.StateConfiguration.ENABLED;
 
 @Service
@@ -89,18 +85,6 @@ public class FreeAreaServiceImpl implements FreeAreaService {
                 .map(principalPhotoMapper::toDTO);
     }
 
-    @Transactional()
-    public PrincipalPhoto editPrincipalPhoto(Long id, String principalPhotoUrl) {
-        FreeArea freeArea = freeAreaRepository.findById(id)
-                .orElseThrow(() -> new FreeAreaNotFoundException("FreeArea with id " + id + " not found"));
-        PrincipalPhoto principalPhoto = freeArea.getPrincipalPhoto().stream()
-                .findFirst()
-                .orElseThrow(() -> new PrincipalPhotoNotFoundException("PrincipalPhoto with for FreeArea id " + id + "not found"));
-        principalPhoto.setUrl(principalPhotoUrl);
-        principalPhoto.setUpdatedAt(TODAY.getValue());
-        return principalPhotoRepository.save(principalPhoto);
-    }
-
     @Transactional(readOnly = true)
     public Optional<List<PublicContentDTO>> getPublicContent(Long id, Long lastId, int limit) {
         FreeArea freeArea = freeAreaRepository.findById(id)
@@ -142,13 +126,19 @@ public class FreeAreaServiceImpl implements FreeAreaService {
             Path filePath = uploadDir.toPath().resolve(fileName);
             file.transferTo(filePath.toFile());
 
-            // Buscar si ya existe
             Optional<PrincipalPhoto> existing = principalPhotoRepository.findByIdFreeArea(idFreeArea);
 
             PrincipalPhoto principalPhoto;
             if (existing.isPresent()) {
                 principalPhoto = existing.get();
-                // Actualizar campos
+                String oldUrl = principalPhoto.getUrl();
+                if (oldUrl != null) {
+                    Path oldPath = Paths.get("C:/Users/Gonzalo/Desktop/Programacion-Verdadero/IPrivate/Backend" + oldUrl);
+                    File oldFile = oldPath.toFile();
+                    if (oldFile.exists()) {
+                        oldFile.delete();
+                    }
+                }
                 principalPhoto.setUrl("/uploads/principal-photo/" + fileName);
                 principalPhoto.setUpdatedAt(LocalDate.now());
             } else {
@@ -167,8 +157,6 @@ public class FreeAreaServiceImpl implements FreeAreaService {
         }
     }
 
-
-
     @Transactional
     public FreeArea save(Boolean isEnabled) {
         FreeArea freeArea = FreeArea.builder()
@@ -178,30 +166,6 @@ public class FreeAreaServiceImpl implements FreeAreaService {
                 .build();
         freeAreaRepository.save(freeArea);
         return freeArea;
-    }
-
-    @Transactional
-    public PrincipalPhoto savePrincipalPhoto(Long id, String principalPhotoUrl) {
-        FreeArea freeArea = freeAreaRepository.findById(id)
-                .orElseThrow(() -> new FreeAreaNotFoundException("FreeArea with id " + id + " not found"));
-
-        if (freeArea.getPrincipalPhoto().stream().anyMatch(photo -> photo.getIsEnabled().equals(DISABLED.getValue()) || photo.getIsEnabled() == ENABLED.getValue())) {
-            PrincipalPhoto principalPhoto = freeArea.getPrincipalPhoto().get(0);
-            principalPhoto.setUrl(principalPhotoUrl);
-            principalPhoto.setIsEnabled(ENABLED.getValue());
-            principalPhoto.setUpdatedAt(TODAY.getValue());
-            return principalPhotoRepository.save(principalPhoto);
-        }
-
-        PrincipalPhoto principalPhoto = PrincipalPhoto.builder()
-                .freeArea(freeArea)
-                .isEnabled(ENABLED.getValue())
-                .url(principalPhotoUrl)
-                .createdAt(TODAY.getValue())
-                .updatedAt(TODAY.getValue())
-                .build();
-
-        return principalPhotoRepository.save(principalPhoto);
     }
 
     @Transactional

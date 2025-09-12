@@ -24,7 +24,7 @@ public class SecurityConfig {
                                 //A ELIMINAR
 //                        .requestMatchers(HttpMethod.PUT, "/api/v1/free-area/**").permitAll()
 //                        .requestMatchers(HttpMethod.PUT, "/api/v1/free-area/*/public-content/*").permitAll()
- //                       .requestMatchers(HttpMethod.POST, "/api/v1/free-area/*/public-content").permitAll()
+                                //                       .requestMatchers(HttpMethod.POST, "/api/v1/free-area/*/public-content").permitAll()
 //                        .requestMatchers(HttpMethod.DELETE, "/api/v1/free-area/*/public-content/*").permitAll()
 //                        .requestMatchers(HttpMethod.DELETE, "/api/v1/free-area/*/principal-photo").permitAll()
 //                        .requestMatchers(HttpMethod.DELETE, "/api/v1/free-area/*").permitAll()
