@@ -117,7 +117,7 @@ public class FreeAreaServiceImpl implements FreeAreaService {
 
 
     @Override
-    public PrincipalPhoto uploadPrincipalPhoto(MultipartFile file, Long idFreeArea) {
+    public PrincipalPhoto addPrincipalPhoto(MultipartFile file, Long idFreeArea) {
         try {
             File uploadDir = new File("C:/Users/Gonzalo/Desktop/Programacion-Verdadero/IPrivate/Backend/uploads/principal-photo");
             if (!uploadDir.exists()) uploadDir.mkdirs();
@@ -209,7 +209,7 @@ public class FreeAreaServiceImpl implements FreeAreaService {
     }
 
     @Transactional
-    public void deletePrincipalPhoto(Long idPrincipalPhoto) {
+    private void deletePrincipalPhoto(Long idPrincipalPhoto) {
         principalPhotoRepository.logicalDelete(idPrincipalPhoto);
     }
 
