@@ -25,15 +25,13 @@ public interface FreeAreaService {
 
     FreeArea save(Boolean isEnabled);
 
-    //PrincipalPhoto savePrincipalPhoto(Long id, String principalPhotoUrl);
-
     PublicContent addPublicContent(Long id, PublicContentDTO publicContentDTO);
 
     void delete(Long id);
 
-    void deletePrincipalPhoto(Long id);
+    //void deletePrincipalPhoto(Long id);
 
     void deletePublicContent(Long id, Long idContent);
 
-    PrincipalPhoto uploadPrincipalPhoto(MultipartFile file, Long idFreeArea);
+    PrincipalPhoto addPrincipalPhoto(MultipartFile file, Long idFreeArea);
 }

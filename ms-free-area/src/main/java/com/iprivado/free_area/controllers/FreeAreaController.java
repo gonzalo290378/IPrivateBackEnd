@@ -1,7 +1,6 @@
 package com.iprivado.free_area.controllers;
 
 import com.iprivado.free_area.dto.FreeAreaDTO;
-import com.iprivado.free_area.dto.PrincipalPhotoDTO;
 import com.iprivado.free_area.dto.PublicContentDTO;
 import com.iprivado.free_area.exceptions.FreeAreaNotFoundException;
 import com.iprivado.free_area.models.entity.FreeArea;
@@ -11,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -61,15 +61,13 @@ public class FreeAreaController {
         return ResponseEntity.ok(freeAreaService.updatePublicContent(id, idContent, publicContentDTO));
     }
 
-    //SECURIZAR 1RO
     @PostMapping("/principal-photo/upload")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> uploadPrincipalPhoto(@RequestParam("file") MultipartFile file, @RequestParam("idFreeArea") Long idFreeArea) {
         log.info("ms-free-area Calling uploadPrincipalPhoto for FreeArea id {}", idFreeArea);
-        return ResponseEntity.ok(freeAreaService.uploadPrincipalPhoto(file, idFreeArea));
-
+        return ResponseEntity.ok(freeAreaService.addPrincipalPhoto(file, idFreeArea));
     }
 
-    //SECURIZAR
     @PostMapping
     public ResponseEntity<?> save(@RequestBody Boolean isEnabled, @RequestHeader(value = "X-Internal-Token") String token) {
         if (!SECRET_KEY.equals(token)) {
@@ -81,7 +79,6 @@ public class FreeAreaController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(saved);
     }
-
 
     //SECURIZAR
     @PostMapping("/{id}/public-content")
@@ -98,18 +95,19 @@ public class FreeAreaController {
         freeAreaService.delete(id);
     }
 
-    //SECURIZAR 2DO
-    @DeleteMapping("/{id}/principal-photo")
-    public void deletePrincipalPhoto(@PathVariable Long id) {
-        log.info("ms-free-area Calling deletePrincipalPhoto for FreeArea id {}", id);
-        freeAreaService.deletePrincipalPhoto(id);
-    }
-
     //SECURIZAR
     @DeleteMapping("/{id}/public-content/{idContent}")
     public void deletePublicContent(@PathVariable Long id, @PathVariable Long idContent) {
         log.info("ms-free-area Calling deletePublicContent for FreeArea id {}", id);
         freeAreaService.deletePublicContent(id, idContent);
     }
+
+    //SECURIZAR 2DO
+//    @DeleteMapping("/{id}/principal-photo")
+//    public void deletePrincipalPhoto(@PathVariable Long id) {
+//        log.info("ms-free-area Calling deletePrincipalPhoto for FreeArea id {}", id);
+//        freeAreaService.deletePrincipalPhoto(id);
+//    }
+
 
 }
