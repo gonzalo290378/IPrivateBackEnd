@@ -5,7 +5,6 @@ import com.iprivado.free_area.dto.PublicContentDTO;
 import com.iprivado.free_area.exceptions.FreeAreaNotFoundException;
 import com.iprivado.free_area.models.entity.FreeArea;
 import com.iprivado.free_area.services.FreeAreaService;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -80,12 +79,14 @@ public class FreeAreaController {
                 .body(saved);
     }
 
-    //SECURIZAR
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{id}/public-content")
-    public ResponseEntity<?> savePublicContent(@PathVariable Long id, @Valid @RequestBody PublicContentDTO publicContentDTO) {
+    public ResponseEntity<?> savePublicContent(@PathVariable Long id, @RequestPart("description") String description,
+                                               @RequestPart("files") List<MultipartFile> files) {
+
         log.info("ms-free-area Calling savePublicContent for FreeArea id {}", id);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(freeAreaService.addPublicContent(id, publicContentDTO));
+                .body(freeAreaService.addPublicContent(id, description, files));
     }
 
     //SECURIZAR

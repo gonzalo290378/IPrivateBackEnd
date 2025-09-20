@@ -35,14 +35,12 @@ public class PublicContent {
     @Column(name = "is_enabled")
     private Boolean isEnabled;
 
-    @Size(min = 10, message = "The description must have more than 10 characters")
-    @Size(max = 600, message = "The description must not exceed 144 characters")
+    @Size(min = 1, max = 600, message = "The description must be between 1 and 600 characters")
     @NotEmpty(message = "Description can not be empty")
     @Column(name = "description", unique = true)
     private String description;
 
-    @Size(min = 10)
-    @Size(max = 255, message = "The contentUrl must not exceed 255 characters")
+    @Size(min = 10, max = 255, message = "The contentUrl must be between 10 and 255 characters")
     @Column(name = "content_url")
     private String contentUrl;
 

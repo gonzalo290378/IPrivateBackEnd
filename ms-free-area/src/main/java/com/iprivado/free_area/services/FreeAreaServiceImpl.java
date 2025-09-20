@@ -29,7 +29,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.iprivado.free_area.enums.DateConfiguration.TODAY;
-import static com.iprivado.free_area.enums.StateConfiguration.ENABLED;
 
 @Service
 @Slf4j
@@ -142,18 +141,18 @@ public class FreeAreaServiceImpl implements FreeAreaService {
                 principalPhoto.setUrl("/uploads/principal-photo/" + fileName);
                 principalPhoto.setUpdatedAt(LocalDate.now());
             } else {
-                PrincipalPhotoDTO dto = new PrincipalPhotoDTO();
-                dto.setIdFreeArea(idFreeArea);
-                dto.setIsEnabled(true);
-                dto.setCreatedAt(LocalDate.now());
-                dto.setUpdatedAt(LocalDate.now());
-                dto.setUrl("/uploads/principal-photo/" + fileName);
-                principalPhoto = principalPhotoMapper.toModel(dto);
+                PrincipalPhotoDTO principalPhotoDTO = new PrincipalPhotoDTO();
+                principalPhotoDTO.setIdFreeArea(idFreeArea);
+                principalPhotoDTO.setIsEnabled(true);
+                principalPhotoDTO.setCreatedAt(LocalDate.now());
+                principalPhotoDTO.setUpdatedAt(LocalDate.now());
+                principalPhotoDTO.setUrl("/uploads/principal-photo/" + fileName);
+                principalPhoto = principalPhotoMapper.toModel(principalPhotoDTO);
             }
 
             return principalPhotoRepository.save(principalPhoto);
         } catch (IOException e) {
-            throw new RuntimeException("Error al guardar la foto localmente", e);
+            throw new RuntimeException("Error al guardar PrincipalPhoto", e);
         }
     }
 
@@ -168,26 +167,45 @@ public class FreeAreaServiceImpl implements FreeAreaService {
         return freeArea;
     }
 
+
     @Transactional
-    public PublicContent addPublicContent(Long id, PublicContentDTO publicContentDTO) {
-        FreeArea freeArea = freeAreaRepository.findById(id)
-                .orElseThrow(() -> new FreeAreaNotFoundException("FreeArea with id " + id + " not found"));
+    public List<PublicContentDTO> addPublicContent(Long id, String description, List<MultipartFile> files) {
+        try {
+            FreeArea freeArea = freeAreaRepository.findById(id)
+                    .orElseThrow(() -> new FreeAreaNotFoundException("FreeArea with id " + id + " not found"));
+            List<PublicContentDTO> listPublicContentDTO = new ArrayList<>();
 
-        PublicContent publicContent = PublicContent.builder()
-                .freeArea(freeArea)
-                .isEnabled(ENABLED.getValue())
-                .description(publicContentDTO.getDescription())
-                .contentUrl(publicContentDTO.getContentUrl())
-                .likesCount(0L)
-                .createdAt(TODAY.getValue())
-                .updatedAt(TODAY.getValue())
-                .build();
+            for (MultipartFile file : files) {
+                File uploadDir = new File("C:/Users/Gonzalo/Desktop/Programacion-Verdadero/IPrivate/Backend/uploads/public-content");
+                if (!uploadDir.exists()) uploadDir.mkdirs();
+                String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+                Path filePath = uploadDir.toPath().resolve(fileName);
+                file.transferTo(filePath.toFile());
 
-        freeArea.getPublicContent().add(publicContent);
-        freeAreaRepository.save(freeArea);
+                PublicContentDTO publicContentDTO = PublicContentDTO.builder()
+                        .description(description)
+                        .idFreeArea(id)
+                        .isEnabled(true)
+                        .contentUrl("/uploads/public-content/" + fileName)
+                        .likesCount(0L)
+                        .createdAt(LocalDate.now())
+                        .updatedAt(LocalDate.now())
+                        .build();
 
-        return publicContent;
+                PublicContent publicContent = publicContentMapper.toModel(publicContentDTO);
+                PublicContent newPublicContent = publicContentRepository.save(publicContent);
+                freeArea.getPublicContent().add(newPublicContent);
+                listPublicContentDTO.add(publicContentDTO);
+            }
+
+            freeAreaRepository.save(freeArea);
+            return listPublicContentDTO;
+
+        } catch (IOException e) {
+            throw new RuntimeException("Error al guardar PublicContent", e);
+        }
     }
+
 
     @Transactional
     public void delete(Long id) {

@@ -25,7 +25,7 @@ public interface FreeAreaService {
 
     FreeArea save(Boolean isEnabled);
 
-    PublicContent addPublicContent(Long id, PublicContentDTO publicContentDTO);
+    List<PublicContentDTO> addPublicContent(Long id, String descripcion, List<MultipartFile> files);
 
     void delete(Long id);
 
