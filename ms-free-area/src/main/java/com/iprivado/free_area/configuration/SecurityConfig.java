@@ -30,7 +30,7 @@ public class SecurityConfig {
 //                        .requestMatchers(HttpMethod.DELETE, "/api/v1/free-area/*").permitAll()
 
                                 //TODO A ELIMINAR
-                                .requestMatchers(HttpMethod.POST, "/api/v1/free-area/principal-photo/upload").authenticated()
+                                //.requestMatchers(HttpMethod.POST, "/api/v1/free-area/principal-photo/upload").authenticated()
                                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
 
                                 //TODO ANALIZAR SI EN ALGUN MOMENTO SE UTILIZARA ESTE ENDPOINT
