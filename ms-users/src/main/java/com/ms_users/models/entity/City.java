@@ -3,10 +3,7 @@ package com.ms_users.models.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "city", uniqueConstraints = {
@@ -29,5 +26,6 @@ public class City {
     @ManyToOne
     @JoinColumn(name = "id_state", nullable = false)
     @JsonBackReference("state-city")
+    @ToString.Exclude
     private State state;
 }

@@ -19,9 +19,11 @@ public interface FreeAreaClientRest {
     FreeAreaDTO findById(@PathVariable Long id);
 
     @PostMapping("/api/v1/free-area")
-    FreeAreaDTO save(@RequestBody Boolean isEnabled,
-                     @RequestHeader("X-Internal-Token") String token);
+    FreeAreaDTO save(@RequestBody Boolean isEnabled, @RequestHeader("X-Internal-Token") String token);
 
     @DeleteMapping("/api/v1/free-area/{id}")
-    void logicalDelete(@PathVariable Long id);
+    void logicalDelete(@PathVariable("id") Long id, @RequestHeader("Authorization") String token);
+
+    @PutMapping("/api/v1/free-area/{id}/reactivate")
+    void reactivateUser(@PathVariable("id") Long id, @RequestHeader("Authorization") String token);
 }

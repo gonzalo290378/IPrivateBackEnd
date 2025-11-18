@@ -89,11 +89,18 @@ public class FreeAreaController {
                 .body(freeAreaService.addPublicContent(id, description, files));
     }
 
-    //SECURIZAR
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         log.info("ms-free-area Calling delete with {id}");
         freeAreaService.delete(id);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/{id}/reactivate")
+    public void reactivateUser(@PathVariable Long id) {
+        log.info("ms-free-area Calling reactivateUser with {id}");
+        freeAreaService.reactivateUser(id);
     }
 
     //SECURIZAR

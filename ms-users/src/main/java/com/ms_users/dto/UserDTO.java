@@ -50,7 +50,7 @@ UserDTO implements Serializable {
     @JsonProperty("registerDate")
     private LocalDate registerDate;
 
-    @Size(min = 4, max = 140, message = "Description must be between 60 and 140 characters")
+    @Size(min = 4, max = 400, message = "Description must be between 4 and 400 characters")
     @NotEmpty(message = "Description cannot be empty")
     @JsonProperty("description")
     private String description;

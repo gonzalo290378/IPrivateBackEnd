@@ -21,10 +21,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/v1/private-area").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/private-area/*").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/private-area").permitAll()
-
-                        //A ELIMINAR
-                        //.requestMatchers(HttpMethod.DELETE, "/api/v1/private-area/*").permitAll()
-
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));

@@ -27,11 +27,6 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/check-availability-username/*").permitAll()
                         .requestMatchers(HttpMethod.GET, "/check-availability-email/*").permitAll()
                         .requestMatchers(HttpMethod.GET, "/new-account/register-page").permitAll()
-
-                        //A ELIMINAR
-                        .requestMatchers(HttpMethod.GET, "/username").permitAll()
-                        //.requestMatchers(HttpMethod.DELETE, "/delete/*").permitAll()
-
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));

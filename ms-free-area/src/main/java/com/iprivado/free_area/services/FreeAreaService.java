@@ -5,7 +5,6 @@ import com.iprivado.free_area.dto.PrincipalPhotoDTO;
 import com.iprivado.free_area.dto.PublicContentDTO;
 import com.iprivado.free_area.models.entity.FreeArea;
 import com.iprivado.free_area.models.entity.PrincipalPhoto;
-import com.iprivado.free_area.models.entity.PublicContent;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -34,4 +33,6 @@ public interface FreeAreaService {
     void deletePublicContent(Long id, Long idContent);
 
     PrincipalPhoto addPrincipalPhoto(MultipartFile file, Long idFreeArea);
+
+    void reactivateUser(Long id);
 }

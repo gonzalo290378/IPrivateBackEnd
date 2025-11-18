@@ -15,9 +15,12 @@ import com.iprivado.free_area.models.entity.PublicContent;
 import com.iprivado.free_area.repositories.FreeAreaRepository;
 import com.iprivado.free_area.repositories.PrincipalPhotoRepository;
 import com.iprivado.free_area.repositories.PublicContentRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -113,7 +116,6 @@ public class FreeAreaServiceImpl implements FreeAreaService {
 
         return Optional.ofNullable(publicContentMapper.toDTO(publicContentRepository.save(content)));
     }
-
 
     @Override
     public PrincipalPhoto addPrincipalPhoto(MultipartFile file, Long idFreeArea) {
@@ -234,6 +236,16 @@ public class FreeAreaServiceImpl implements FreeAreaService {
     @Transactional
     public void deletePublicContent(Long id, Long idContent) {
         publicContentRepository.logicalDelete(id, idContent);
+    }
+
+    @Transactional
+    public void reactivateUser(Long id) {
+        Optional<FreeArea> freeArea = freeAreaRepository.findById(id);
+        if (freeArea.isEmpty()) {
+            throw new FreeAreaNotFoundException("Free Area was not found with id:" + id);
+        }
+        freeArea.get().setIsEnabled(true);
+        freeAreaRepository.save(freeArea.get());
     }
 
 }

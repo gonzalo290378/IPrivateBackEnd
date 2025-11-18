@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -141,22 +142,27 @@ public class UserController {
                 .body(userService.save(userFormDTO));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/edit/{username}")
-    public ResponseEntity<?> edit(@Valid @RequestBody UserFormDTO userFormDTO, @PathVariable String username) {
-        log.info("ms-users Calling edit with {user}");
-        String authenticatedUsername = userService.getAuthenticatedUsername();
-        if (!username.equals(authenticatedUsername)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Not authorized to edit this user");
-        }
-        User user = userService.findEntityByUsername(username).orElseThrow(() -> new UserNotFoundException("User with username: " + username + " not found"));
-        return ResponseEntity.ok(userService.update(userFormDTO, user));
+    public ResponseEntity<?> edit(@PathVariable String username, @RequestBody UserDetailsFreeAreaDTO userDetailsFreeAreaDTO) {
+        log.info("ms-free-area Calling edit for username {} ", username);
+        return ResponseEntity.ok(userService.updateUserDetails(username, userDetailsFreeAreaDTO));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable Long id) {
         log.info("ms-users Calling delete with {id}");
         User user = userService.findEntityById(id).orElseThrow(() -> new UserNotFoundException("User with id " + id + " not found"));
         userService.delete(user.getId());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/{id}/reactivate")
+    public ResponseEntity<?> reactivateUser(@PathVariable Long id) {
+        log.info("ms-users Calling reactivateUser with {id}");
+        userService.reactivateUser(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("fetch-config")
