@@ -2,10 +2,7 @@ package com.ms_users.services;
 
 import com.ms_users.clients.FreeAreaClientRest;
 import com.ms_users.clients.PrivateAreaClientRest;
-import com.ms_users.dto.FilterDTO;
-import com.ms_users.dto.UserDTO;
-import com.ms_users.dto.UserFormDTO;
-import com.ms_users.dto.UserProfileDTO;
+import com.ms_users.dto.*;
 import com.ms_users.enums.AgeConfiguration;
 import com.ms_users.enums.AreaConfiguration;
 import com.ms_users.enums.DateConfiguration;
@@ -17,6 +14,7 @@ import com.ms_users.models.FreeAreaDTO;
 import com.ms_users.models.PrivateAreaDTO;
 import com.ms_users.models.entity.*;
 import com.ms_users.repositories.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -322,15 +322,59 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-    @Transactional()
-    public String update(UserFormDTO userFormDTO, User user) {
-        validateUserForm(userFormDTO);
-        updateUserPreferences(user, userFormDTO);
-        updateUserLocation(user, userFormDTO);
-        updateUserBasicInfo(user, userFormDTO);
-        User useredited = userRepository.save(user);
-        return useredited.getEmail();
+//    @Transactional()
+//    public String update(UserFormDTO userFormDTO, User user) {
+//        validateUserForm(userFormDTO);
+//        updateUserPreferences(user, userFormDTO);
+//        updateUserLocation(user, userFormDTO);
+//        updateUserBasicInfo(user, userFormDTO);
+//        User useredited = userRepository.save(user);
+//        return useredited.getEmail();
+//    }
+
+    public User updateUserDetails(String username, UserDetailsFreeAreaDTO userDetailsFreeAreaDTO) {
+        Optional<User> userEdited = findEntityByUsername(username);
+        if (userEdited.isPresent()) {
+            userEdited.get().setBirthdate(userDetailsFreeAreaDTO.getBirthdate());
+            userEdited.get().setDescription(userDetailsFreeAreaDTO.getDescription());
+            Country country = countryRepository.findByCountry(userDetailsFreeAreaDTO.getCountry())
+                    .orElseGet(() -> {
+                        Country newCountry = Country.builder()
+                                .country(userDetailsFreeAreaDTO.getCountry())
+                                .build();
+                        return countryRepository.save(newCountry);
+                    });
+            userEdited.get().setCountry(country);
+
+            City city = cityRepository.findByCityAndState(userDetailsFreeAreaDTO.getCity(), userEdited.get().getState())
+                    .orElseGet(() -> {
+                        City newCity = City.builder()
+                                .city(userDetailsFreeAreaDTO.getCity())
+                                .state(userEdited.get().getState())
+                                .build();
+                        return cityRepository.save(newCity);
+                    });
+            userEdited.get().setCity(city);
+
+            State state = stateRepository.findByStateAndCountry(userDetailsFreeAreaDTO.getState(), country)
+                    .orElseGet(() -> {
+                        State newState = State.builder()
+                                .state(userDetailsFreeAreaDTO.getState())
+                                .country(country)
+                                .build();
+                        return stateRepository.save(newState);
+                    });
+            userEdited.get().setState(state);
+            userEdited.get().setSex(userDetailsFreeAreaDTO.getSex());
+
+        }
+
+        return userEdited
+                .map(userRepository::save)
+                .orElseThrow(() -> new UserNotFoundException("User with username: " + username + " not found"));
+
     }
+
 
     private void updateUserPreferences(User user, UserFormDTO userFormDTO) {
         user.getPreference().setAgeFrom(userFormDTO.getAgeFrom());
@@ -356,12 +400,48 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isEmpty()) {
-            throw new UserNotFoundException("User: is not registered");
+            throw new UserNotFoundException("User is not registered");
         }
-        freeAreaClientRest.logicalDelete(user.get().getIdFreeArea());
-        privateAreaClientRest.logicalDelete(user.get().getIdPrivateArea());
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        String token = null;
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            token = request.getHeader("Authorization");
+        }
+
+        if (token != null) {
+            freeAreaClientRest.logicalDelete(user.get().getIdFreeArea(), token);
+        } else {
+            throw new RuntimeException("Token not found");
+        }
+
+        freeAreaClientRest.logicalDelete(user.get().getIdFreeArea(), token);
+        privateAreaClientRest.logicalDelete(user.get().getIdPrivateArea(), token);
         userRepository.logicDelete(id);
     }
+
+    @Transactional
+    public void reactivateUser(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        String token = null;
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            token = request.getHeader("Authorization");
+        }
+
+        if (token != null && user.isPresent()) {
+            freeAreaClientRest.reactivateUser(user.get().getIdFreeArea(), token);
+        } else {
+            throw new RuntimeException("Token not found");
+        }
+
+        user.get().setIsEnabled(true);
+        userRepository.save(user.get());
+    }
+
 
     @Transactional(readOnly = true)
     public String getAuthenticatedUsername() {

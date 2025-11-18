@@ -1,9 +1,6 @@
 package com.ms_users.services;
 
-import com.ms_users.dto.FilterDTO;
-import com.ms_users.dto.UserDTO;
-import com.ms_users.dto.UserFormDTO;
-import com.ms_users.dto.UserProfileDTO;
+import com.ms_users.dto.*;
 import com.ms_users.models.entity.User;
 import org.springframework.data.domain.Page;
 
@@ -23,7 +20,9 @@ public interface UserService {
 
     User save(UserFormDTO userFormDTO);
 
-    String update(UserFormDTO userFormDTO, User user);
+    //String update(UserFormDTO userFormDTO, User user);
+
+    User updateUserDetails(String username, UserDetailsFreeAreaDTO userDetailsFreeAreaDTO);
 
     void delete(Long id);
 
@@ -36,4 +35,6 @@ public interface UserService {
     boolean existsByEmail(String email);
 
     Optional<UserDTO> findByUsername(String username);
+
+    void reactivateUser(Long id);
 }

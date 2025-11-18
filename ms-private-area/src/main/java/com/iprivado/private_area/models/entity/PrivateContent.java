@@ -1,5 +1,6 @@
 package com.iprivado.private_area.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -30,10 +31,9 @@ public class PrivateContent {
     @Column(unique = true, name = "date")
     private LocalDate date;
 
-    @Size(min = 10, message = "The description must have more than 10 characters")
-    @Size(max = 600, message = "The description must not exceed 600 characters")
-    @NotEmpty(message = "Description can not be empty")
-    @Column(name = "description", unique = true)
+    @Size(min = 4, max = 400, message = "Description must be between 4 and 400 characters")
+    @NotEmpty(message = "Description cannot be empty")
+    @JsonProperty("description")
     private String description;
 
     @NotEmpty(message = "Private content URL can not be empty")

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -32,9 +29,11 @@ public class State {
     @ManyToOne
     @JoinColumn(name = "id_country", nullable = false)
     @JsonBackReference("country-state")
+    @ToString.Exclude
     private Country country;
 
     @OneToMany(mappedBy = "state", cascade = CascadeType.ALL)
     @JsonManagedReference("state-city")
+    @ToString.Exclude
     private List<City> city;
 }

@@ -22,5 +22,5 @@ public interface PrivateAreaClientRest {
                         @RequestHeader("X-Internal-Token") String token);
 
     @DeleteMapping("/api/v1/private-area/{id}")
-    void logicalDelete(@PathVariable Long id);
+    void logicalDelete(@PathVariable Long id, @RequestHeader("Authorization") String token);
 }
