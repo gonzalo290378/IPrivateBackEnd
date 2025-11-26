@@ -110,12 +110,4 @@ public class FreeAreaController {
         freeAreaService.deletePublicContent(id, idContent);
     }
 
-    //SECURIZAR 2DO
-//    @DeleteMapping("/{id}/principal-photo")
-//    public void deletePrincipalPhoto(@PathVariable Long id) {
-//        log.info("ms-free-area Calling deletePrincipalPhoto for FreeArea id {}", id);
-//        freeAreaService.deletePrincipalPhoto(id);
-//    }
-
-
 }

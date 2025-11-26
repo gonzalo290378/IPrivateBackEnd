@@ -28,8 +28,6 @@ public interface FreeAreaService {
 
     void delete(Long id);
 
-    //void deletePrincipalPhoto(Long id);
-
     void deletePublicContent(Long id, Long idContent);
 
     PrincipalPhoto addPrincipalPhoto(MultipartFile file, Long idFreeArea);

@@ -24,8 +24,6 @@ UserDTO implements Serializable {
     @JsonProperty("id")
     private Long id;
 
-    //private List<Role> roles = new ArrayList<>();
-
     @Size(min = 5, max = 15, message = "Username must be between 5 and 15 characters")
     @NotEmpty(message = "Username cannot be empty")
     @JsonProperty("username")

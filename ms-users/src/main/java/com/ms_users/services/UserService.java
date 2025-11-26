@@ -20,8 +20,6 @@ public interface UserService {
 
     User save(UserFormDTO userFormDTO);
 
-    //String update(UserFormDTO userFormDTO, User user);
-
     User updateUserDetails(String username, UserDetailsFreeAreaDTO userDetailsFreeAreaDTO);
 
     void delete(Long id);
