@@ -38,7 +38,6 @@ UserProfileDTO implements Serializable {
 
     @Size(min = 5, max = 14, message = "Password debe tener entre 5 y 14 caracteres")
     @NotEmpty(message = "Password can not be empty")
-    //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonProperty("password")
     private String password;
 

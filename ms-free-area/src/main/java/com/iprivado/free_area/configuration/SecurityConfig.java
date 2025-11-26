@@ -20,13 +20,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                                 .requestMatchers(HttpMethod.GET, "/api/v1/free-area/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/v1/free-area").permitAll()
-
                                 //TODO A ELIMINAR
                                 .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
-
-                                //TODO ANALIZAR SI EN ALGUN MOMENTO SE UTILIZARA ESTE ENDPOINT
-                                //.requestMatchers(HttpMethod.DELETE, "/api/v1/free-area/*/principal-photo").permitAll()
-
                                 .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));

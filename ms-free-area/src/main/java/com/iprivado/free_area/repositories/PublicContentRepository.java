@@ -19,7 +19,6 @@ public interface PublicContentRepository extends JpaRepository<PublicContent, Lo
     Optional<PublicContent> findByIdAndFreeAreaId(@Param("idPublicContent") Long idPublicContent,
                                                   @Param("id") Long id);
 
-
     @Modifying
     @Query("UPDATE PublicContent pc " +
             "SET pc.isEnabled = false " +
