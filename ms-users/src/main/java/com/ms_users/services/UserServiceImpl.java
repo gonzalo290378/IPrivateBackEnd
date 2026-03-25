@@ -433,39 +433,70 @@ public class UserServiceImpl implements UserService {
         Preference pref = user.getPreference();
 
         if (pref == null) {
-            return new PreferenceDTO(); // vacío
+            return new PreferenceDTO();
         }
 
+        return mapToDTO(pref);
+    }
+
+    private PreferenceDTO mapToDTO(Preference pref) {
         return PreferenceDTO.builder()
+                .id(pref.getId())
                 .ageFrom(pref.getAgeFrom())
                 .ageTo(pref.getAgeTo())
                 .sexPreference(pref.getSexPreference())
-                .filterCountry(pref.getFilterCountry())
-                .filterState(pref.getFilterState())
-                .filterCity(pref.getFilterCity())
+                .filterCountry(mapCountry(pref.getFilterCountry()))
+                .filterState(mapState(pref.getFilterState()))
+                .filterCity(mapCity(pref.getFilterCity()))
                 .build();
     }
 
+    private CountryDTO mapCountry(Country country) {
+        if (country == null) return null;
 
-    private void updateUserPreferences(User user, UserFormDTO userFormDTO) {
-        user.getPreference().setAgeFrom(userFormDTO.getAgeFrom());
-        user.getPreference().setAgeTo(userFormDTO.getAgeTo());
-        user.getPreference().setSexPreference(userFormDTO.getSexPreference());
+        return CountryDTO.builder()
+                .id(country.getId())
+                .country(country.getCountry())
+                .build();
     }
 
-    private void updateUserLocation(User user, UserFormDTO userFormDTO) {
-        user.getCountry().setCountry(userFormDTO.getCountry());
-        user.getCity().setCity(userFormDTO.getCity());
-        user.getState().setState(userFormDTO.getState());
+    private StateDTO mapState(State state) {
+        if (state == null) return null;
+
+        return StateDTO.builder()
+                .id(state.getId())
+                .state(state.getState())
+                .build();
     }
 
-    private void updateUserBasicInfo(User user, UserFormDTO userFormDTO) {
-        user.setUsername(userFormDTO.getUsername());
-        user.setAge(userFormDTO.getAge());
-        user.setBirthdate(userFormDTO.getBirthdate());
-        user.setDescription(userFormDTO.getDescription());
-        user.setPassword(userFormDTO.getPassword());
+    private CityDTO mapCity(City city) {
+        if (city == null) return null;
+
+        return CityDTO.builder()
+                .id(city.getId())
+                .city(city.getCity())
+                .build();
     }
+
+//    private void updateUserPreferences(User user, UserFormDTO userFormDTO) {
+//        user.getPreference().setAgeFrom(userFormDTO.getAgeFrom());
+//        user.getPreference().setAgeTo(userFormDTO.getAgeTo());
+//        user.getPreference().setSexPreference(userFormDTO.getSexPreference());
+//    }
+//
+//    private void updateUserLocation(User user, UserFormDTO userFormDTO) {
+//        user.getCountry().setCountry(userFormDTO.getCountry());
+//        user.getCity().setCity(userFormDTO.getCity());
+//        user.getState().setState(userFormDTO.getState());
+//    }
+//
+//    private void updateUserBasicInfo(User user, UserFormDTO userFormDTO) {
+//        user.setUsername(userFormDTO.getUsername());
+//        user.setAge(userFormDTO.getAge());
+//        user.setBirthdate(userFormDTO.getBirthdate());
+//        user.setDescription(userFormDTO.getDescription());
+//        user.setPassword(userFormDTO.getPassword());
+//    }
 
     @Transactional
     public void delete(Long id) {
