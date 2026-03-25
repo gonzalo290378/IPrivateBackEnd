@@ -1,12 +1,6 @@
 package com.ms_users.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ms_users.models.entity.City;
-import com.ms_users.models.entity.Country;
-import com.ms_users.models.entity.State;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,12 +36,12 @@ public class PreferenceDTO implements Serializable {
     private String sexPreference;
 
     @JsonProperty("filterCountry")
-    private Country filterCountry;
+    private CountryDTO filterCountry;
 
     @JsonProperty("filterState")
-    private State filterState;
+    private StateDTO filterState;
 
     @JsonProperty("filterCity")
-    private City filterCity;
+    private CityDTO filterCity;
 
 }
