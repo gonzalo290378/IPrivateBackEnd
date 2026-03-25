@@ -149,6 +149,21 @@ public class UserController {
     }
 
     @PreAuthorize("isAuthenticated()")
+    @PutMapping("/preferences")
+    public ResponseEntity<?> updatePreferences(@RequestBody PreferenceDTO preferenceDTO) {
+        log.info("ms-users Calling updatePreferences with {}", preferenceDTO);
+        userService.updatePreferences(preferenceDTO);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/preferences")
+    public ResponseEntity<PreferenceDTO> getPreferences() {
+        log.info("ms-users Calling getPreferences");
+        return ResponseEntity.ok(userService.getPreferences());
+    }
+
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable Long id) {
         log.info("ms-users Calling delete with {id}");

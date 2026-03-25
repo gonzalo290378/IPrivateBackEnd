@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional(readOnly = true)
     public Optional<User> findEntityById(Long id) {
-        return Optional.ofNullable(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("id: " + id + " does not exist")));
+        return Optional.of(userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("id: " + id + " does not exist")));
     }
 
     @Transactional(readOnly = true)
@@ -222,10 +222,10 @@ public class UserServiceImpl implements UserService {
     private User buildUser(UserFormDTO userFormDTO) {
         FreeAreaDTO newFreeAreaDTO = createFreeArea();
         PrivateAreaDTO newPrivateAreaDTO = createPrivateArea();
-        Preference preference = buildPreference(userFormDTO);
         Country country = buildCountry(userFormDTO);
         State state = buildState(userFormDTO, country);
         City city = buildCity(userFormDTO, state);
+        Preference preference = buildPreference(userFormDTO, country, state, city);
         List<Role> roles = getRoles(userFormDTO);
         userFormDTO.setRoles(roles);
         return buildUser(userFormDTO, newFreeAreaDTO, newPrivateAreaDTO, preference, country, city, state);
@@ -257,11 +257,14 @@ public class UserServiceImpl implements UserService {
         return privateAreaClientRest.save(AreaConfiguration.DISABLED.getValue(), SECRET_KEY_FREE_AREA);
     }
 
-    private Preference buildPreference(UserFormDTO userFormDTO) {
+    private Preference buildPreference(UserFormDTO userFormDTO, Country country, State state, City city) {
         return Preference.builder()
                 .ageFrom(userFormDTO.getAgeFrom())
                 .ageTo(userFormDTO.getAgeTo())
                 .sexPreference(userFormDTO.getSexPreference())
+                .filterCountry(country)
+                .filterState(state)
+                .filterCity(city)
                 .build();
     }
 
@@ -322,15 +325,6 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-//    @Transactional()
-//    public String update(UserFormDTO userFormDTO, User user) {
-//        validateUserForm(userFormDTO);
-//        updateUserPreferences(user, userFormDTO);
-//        updateUserLocation(user, userFormDTO);
-//        updateUserBasicInfo(user, userFormDTO);
-//        User useredited = userRepository.save(user);
-//        return useredited.getEmail();
-//    }
 
     public User updateUserDetails(String username, UserDetailsFreeAreaDTO userDetailsFreeAreaDTO) {
         Optional<User> userEdited = findEntityByUsername(username);
@@ -373,6 +367,83 @@ public class UserServiceImpl implements UserService {
                 .map(userRepository::save)
                 .orElseThrow(() -> new UserNotFoundException("User with username: " + username + " not found"));
 
+    }
+
+    @Override
+    @Transactional
+    public void updatePreferences(PreferenceDTO preferenceDTO) {
+        String username = getAuthenticatedUsername();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User with username " + username + " not found"));
+
+        Preference preference = user.getPreference();
+        if (preference == null) {
+            preference = new Preference();
+            user.setPreference(preference);
+        }
+
+        preference.setAgeFrom(preferenceDTO.getAgeFrom());
+        preference.setAgeTo(preferenceDTO.getAgeTo());
+        preference.setSexPreference(preferenceDTO.getSexPreference());
+
+        preference.setFilterCity(null);
+        preference.setFilterState(null);
+        preference.setFilterCountry(null);
+        userRepository.save(user);
+
+        if (preferenceDTO.getFilterCountry() != null && preferenceDTO.getFilterCountry().getCountry() != null) {
+            Country country = countryRepository.findByCountry(preferenceDTO.getFilterCountry().getCountry())
+                    .orElseGet(() -> countryRepository.save(
+                            Country.builder().country(preferenceDTO.getFilterCountry().getCountry()).build()
+                    ));
+            preference.setFilterCountry(country);
+        }
+
+        if (preferenceDTO.getFilterState() != null && preferenceDTO.getFilterState().getState() != null
+                && preference.getFilterCountry() != null) {
+            Country country = preference.getFilterCountry();
+            State state = stateRepository.findByStateAndCountry(preferenceDTO.getFilterState().getState(), country)
+                    .orElseGet(() -> stateRepository.save(
+                            State.builder().state(preferenceDTO.getFilterState().getState()).country(country).build()
+                    ));
+            preference.setFilterState(state);
+        }
+
+        if (preferenceDTO.getFilterCity() != null && preferenceDTO.getFilterCity().getCity() != null
+                && preference.getFilterState() != null) {
+            State state = preference.getFilterState();
+            City city = cityRepository.findByCityAndState(preferenceDTO.getFilterCity().getCity(), state)
+                    .orElseGet(() -> cityRepository.save(
+                            City.builder().city(preferenceDTO.getFilterCity().getCity()).state(state).build()
+                    ));
+            preference.setFilterCity(city);
+        }
+
+        userRepository.save(user);
+    }
+
+
+    @Override
+    public PreferenceDTO getPreferences() {
+        String username = getAuthenticatedUsername();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        Preference pref = user.getPreference();
+
+        if (pref == null) {
+            return new PreferenceDTO(); // vacío
+        }
+
+        return PreferenceDTO.builder()
+                .ageFrom(pref.getAgeFrom())
+                .ageTo(pref.getAgeTo())
+                .sexPreference(pref.getSexPreference())
+                .filterCountry(pref.getFilterCountry())
+                .filterState(pref.getFilterState())
+                .filterCity(pref.getFilterCity())
+                .build();
     }
 
 
