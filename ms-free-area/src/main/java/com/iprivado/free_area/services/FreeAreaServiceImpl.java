@@ -101,17 +101,14 @@ public class FreeAreaServiceImpl implements FreeAreaService {
     }
 
     @Transactional()
-    public Optional<PublicContentDTO> updatePublicContent(Long id, Long idContent, PublicContentDTO publicContentDTO) {
+    public Optional<PublicContentDTO> updatePublicContent(Long id, Long idContent, String descripcion) {
         FreeArea freeArea = freeAreaRepository.findById(id)
                 .orElseThrow(() -> new FreeAreaNotFoundException("FreeArea with id" + id + " not found"));
 
         PublicContent content = publicContentRepository.findByIdAndFreeAreaId(idContent, freeArea.getId())
                 .orElseThrow(() -> new PublicContentNotFoundException("PublicContent idContent" + idContent + "not found"));
 
-        content.setDescription(publicContentDTO.getDescription());
-        content.setContentUrl(publicContentDTO.getContentUrl());
-        content.setIsEnabled(publicContentDTO.getIsEnabled());
-        content.setLikesCount(0L);
+        content.setDescription(descripcion);
         content.setUpdatedAt(TODAY.getValue());
 
         return Optional.ofNullable(publicContentMapper.toDTO(publicContentRepository.save(content)));

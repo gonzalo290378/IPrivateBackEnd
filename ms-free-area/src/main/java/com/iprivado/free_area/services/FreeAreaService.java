@@ -20,7 +20,7 @@ public interface FreeAreaService {
 
     Optional<List<PublicContentDTO>> getPublicContent(Long id, Long lastId, int limit);
 
-    Optional<PublicContentDTO> updatePublicContent(Long id, Long contentId, PublicContentDTO publicContentDTO);
+    Optional<PublicContentDTO> updatePublicContent(Long id, Long contentId, String descripcion);
 
     FreeArea save(Boolean isEnabled);
 

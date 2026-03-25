@@ -388,37 +388,6 @@ public final class Data {
         return new PageImpl<>(subList, pageRequest, users.size());
     }
 
-    public final static FilterDTO FILTER_DTO_1 = new FilterDTO(null, List.of(ROLE), null, null, "F", "romina@gmail.com", null, null,
-            null, true, null, null, null, null, PREFERENCE_DTO_1, null, null, null);
-
-    public final static FilterDTO FILTER_DTO_2 = new FilterDTO(null, List.of(ROLE), null, null, "F", "romina@gmail.com", null, null,
-            null, true, null, null, null, null, PREFERENCE_DTO_TEST_AGE, null, null, null);
-
-    public final static FilterDTO FILTER_DTO_3 = new FilterDTO(null, List.of(ROLE), null, null, "F", "romina@gmail.com", null, null,
-            null, true, null, null, null, null, PREFERENCE_DTO_TEST_AGE_1, null, null, null);
-
-    public final static FilterDTO FILTER_DTO_4 = new FilterDTO(null, List.of(ROLE), null, null, "F", "romina@gmail.com", null, null,
-            null, true, null, null, null, null, PREFERENCE_DTO_TEST_AGE_3, null, null, null);
-
-    public final static List<FilterDTO> USER_DTO_FILTER_LIST =
-            List.of(
-                    new FilterDTO(1L, List.of(ROLE), "romina", 35L, "F", "romina@gmail.com", LocalDate.of(1989, 11, 1), LocalDate.of(2024, 12, 23),
-                            "Hola soy Romina", true, 1L, 1L, FREE_AREA_DTO_1, PRIVATE_AREA_DTO_1, PREFERENCE_DTO_1, COUNTRY_DTO_1, CITY_DTO_1, STATE_DTO_4),
-
-                    new FilterDTO(2L, List.of(ROLE), "genaro", 30L, "M", "genaro@gmail.com", LocalDate.of(1993, 5, 15), LocalDate.of(2024, 12, 23),
-                            "Hola soy Genaro", true, 2L, 2L, FREE_AREA_DTO_2, PRIVATE_AREA_DTO_2, PREFERENCE_DTO_1, COUNTRY_DTO_1, CITY_DTO_1, STATE_DTO_3),
-
-                    new FilterDTO(3L, List.of(ROLE), "arri", 28L, "M", "arri@gmail.com", LocalDate.of(1995, 3, 10), LocalDate.of(2024, 12, 23),
-                            "Hola soy Arri", true, 3L, 3L, FREE_AREA_DTO_3, PRIVATE_AREA_DTO_3, PREFERENCE_DTO_1, COUNTRY_DTO_1, CITY_DTO_1, STATE_DTO_2),
-
-                    new FilterDTO(4L, List.of(ROLE), "moreno", 32L, "F", "moreno@gmail.com", LocalDate.of(1991, 7, 20), LocalDate.of(2024, 12, 23),
-                            "Hola soy Moreno", true, 4L, 4L, FREE_AREA_DTO_4, PRIVATE_AREA_DTO_4, PREFERENCE_DTO_1, COUNTRY_DTO_1, CITY_DTO_1, STATE_DTO_1),
-
-                    new FilterDTO(5L, List.of(ROLE), "lucia", 29L, "F", "lucia@gmail.com", LocalDate.of(1994, 2, 8), LocalDate.of(2024, 12, 23),
-                            "Hola soy Lucia", true, 5L, 5L, FREE_AREA_DTO_5, PRIVATE_AREA_DTO_5, PREFERENCE_DTO_1, COUNTRY_DTO_1, CITY_DTO_1, STATE_DTO_1)
-            );
-
-
     public final static UserFormDTO NEW_USER_FORM_EXISTED_1 = new UserFormDTO(1L, List.of(ROLE), "romina", 50L, "F", "romina@gmail.com", LocalDate.of(1945, 5, 1), LocalDate.of(2024, 12, 23),
             "Hola soy Romina", true, "12345", 1L, 1L, 25L, 39L, "M", "Argentina", "Buenos Aires", "Mar del Plata", false);
 

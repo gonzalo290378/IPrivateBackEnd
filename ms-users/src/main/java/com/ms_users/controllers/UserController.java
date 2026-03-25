@@ -101,10 +101,9 @@ public class UserController {
             @RequestParam(name = "ageFrom") Long ageFrom,
             @RequestParam(name = "ageTo") Long ageTo,
             @RequestParam(name = "sexPreference") String sexPreference,
-            @RequestParam(name = "city") String city,
-            @RequestParam(name = "country") String country,
-            @RequestParam(name = "state") String state,
-            @RequestParam(name = "isEnabled") Boolean isEnabled) {
+            @RequestParam(name = "city", required = false) String city,
+            @RequestParam(name = "country", required = false) String country,
+            @RequestParam(name = "state", required = false) String state) {
 
         PreferenceDTO preferenceDTO = PreferenceDTO.builder()
                 .ageFrom(ageFrom)
@@ -112,16 +111,16 @@ public class UserController {
                 .sexPreference(sexPreference)
                 .build();
 
-        CountryDTO countryDTO = CountryDTO.builder()
-                .country(country)
+        CityDTO cityDTO = CityDTO.builder()
+                .city(city)
                 .build();
 
         StateDTO stateDTO = StateDTO.builder()
                 .state(state)
                 .build();
 
-        CityDTO cityDTO = CityDTO.builder()
-                .city(city)
+        CountryDTO countryDTO = CountryDTO.builder()
+                .country(country)
                 .build();
 
         FilterDTO filterDTO = FilterDTO.builder()
@@ -129,7 +128,7 @@ public class UserController {
                 .countryDTO(countryDTO)
                 .stateDTO(stateDTO)
                 .cityDTO(cityDTO)
-                .isEnabled(isEnabled)
+                .isEnabled(true)
                 .build();
         log.info("ms-users Calling filter with {}", filterDTO);
         return ResponseEntity.ok(userService.filter(filterDTO, page, size));
@@ -147,6 +146,21 @@ public class UserController {
     public ResponseEntity<?> edit(@PathVariable String username, @RequestBody UserDetailsFreeAreaDTO userDetailsFreeAreaDTO) {
         log.info("ms-free-area Calling edit for username {} ", username);
         return ResponseEntity.ok(userService.updateUserDetails(username, userDetailsFreeAreaDTO));
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PutMapping("/preferences")
+    public ResponseEntity<?> updatePreferences(@RequestBody PreferenceDTO preferenceDTO) {
+        log.info("ms-users Calling updatePreferences with {}", preferenceDTO);
+        userService.updatePreferences(preferenceDTO);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/preferences")
+    public ResponseEntity<PreferenceDTO> getPreferences() {
+        log.info("ms-users Calling getPreferences");
+        return ResponseEntity.ok(userService.getPreferences());
     }
 
     @PreAuthorize("isAuthenticated()")

@@ -37,4 +37,16 @@ public class Preference {
     @JsonProperty("sexPreference")
     private String sexPreference;
 
+    @OneToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "id_filter_country")
+    private Country filterCountry;
+
+    @OneToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "id_filter_state")
+    private State filterState;
+
+    @OneToOne(cascade = {CascadeType.PERSIST})
+    @JoinColumn(name = "id_filter_city")
+    private City filterCity;
+
 }

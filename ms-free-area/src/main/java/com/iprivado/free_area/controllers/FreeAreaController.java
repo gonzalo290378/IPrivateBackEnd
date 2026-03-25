@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
@@ -53,11 +54,15 @@ public class FreeAreaController {
         return ResponseEntity.ok(freeAreaService.getPublicContent(id, lastId, limit));
     }
 
-    //SECURIZAR
+    @PreAuthorize("isAuthenticated()")
     @PutMapping("/{id}/public-content/{idContent}")
-    public ResponseEntity<?> editPublicContent(@PathVariable Long id, @PathVariable Long idContent, @RequestBody PublicContentDTO publicContentDTO) {
+    public ResponseEntity<?> editPublicContent(
+            @PathVariable Long id,
+            @PathVariable Long idContent,
+            @RequestBody Map<String, String> body) {
+        String descripcion = body.get("description");
         log.info("ms-free-area Calling editPublicContent for freeAreaId {} and contentId {}", id, idContent);
-        return ResponseEntity.ok(freeAreaService.updatePublicContent(id, idContent, publicContentDTO));
+        return ResponseEntity.ok(freeAreaService.updatePublicContent(id, idContent, descripcion));
     }
 
     @PostMapping("/principal-photo/upload")
@@ -103,7 +108,7 @@ public class FreeAreaController {
         freeAreaService.reactivateUser(id);
     }
 
-    //SECURIZAR
+    @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{id}/public-content/{idContent}")
     public void deletePublicContent(@PathVariable Long id, @PathVariable Long idContent) {
         log.info("ms-free-area Calling deletePublicContent for FreeArea id {}", id);

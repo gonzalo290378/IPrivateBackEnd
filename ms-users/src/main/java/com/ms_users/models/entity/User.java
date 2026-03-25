@@ -92,15 +92,15 @@ public class User {
     @JoinColumn(name = "id_preference")
     private Preference preference;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = false)
     @JoinColumn(name = "id_country")
     private Country country;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = false)
     @JoinColumn(name = "id_city")
     private City city;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = false)
     @JoinColumn(name = "id_state")
     private State state;
 

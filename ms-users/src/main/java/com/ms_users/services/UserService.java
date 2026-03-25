@@ -22,6 +22,10 @@ public interface UserService {
 
     User updateUserDetails(String username, UserDetailsFreeAreaDTO userDetailsFreeAreaDTO);
 
+    void updatePreferences(PreferenceDTO preferenceDTO);
+
+    public PreferenceDTO getPreferences();
+
     void delete(Long id);
 
     Optional<User> findEntityById(Long id);
