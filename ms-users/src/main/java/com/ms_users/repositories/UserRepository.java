@@ -14,17 +14,22 @@ import java.util.Optional;
 
 @Repository()
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Query("SELECT user  " +
+    @Query("SELECT user " +
             "FROM User user " +
             "WHERE (:#{#filterDTO.preferenceDTO.sexPreference} is null or user.sex = :#{#filterDTO.preferenceDTO.sexPreference}) " +
             "AND (:#{#filterDTO.preferenceDTO.ageFrom} is null or user.age >= :#{#filterDTO.preferenceDTO.ageFrom}) " +
             "AND (:#{#filterDTO.preferenceDTO.ageTo} is null or user.age <= :#{#filterDTO.preferenceDTO.ageTo}) " +
-            "AND (:#{#filterDTO.cityDTO.city} is null or user.city.city = :#{#filterDTO.cityDTO.city}) " +
             "AND (:#{#filterDTO.countryDTO.country} is null or user.country.country = :#{#filterDTO.countryDTO.country}) " +
-            "AND (:#{#filterDTO.stateDTO.state} is null or user.state.state = :#{#filterDTO.stateDTO.state}) " +
             "AND (:#{#filterDTO.isEnabled} is null or user.isEnabled = :#{#filterDTO.isEnabled}) " +
-            "ORDER BY user.id DESC")
+            "ORDER BY " +
+            "CASE " +
+            "  WHEN (:#{#filterDTO.cityDTO.city} is not null AND user.city.city = :#{#filterDTO.cityDTO.city} " +
+            "        AND :#{#filterDTO.stateDTO.state} is not null AND user.state.state = :#{#filterDTO.stateDTO.state}) THEN 1 " +
+            "  WHEN (:#{#filterDTO.stateDTO.state} is not null AND user.state.state = :#{#filterDTO.stateDTO.state}) THEN 2 " +
+            "  ELSE 3 " +
+            "END ASC, user.id DESC")
     Page<User> filter(@Param("filterDTO") FilterDTO filterDTO, Pageable pageable);
+
 
     @Modifying
     @Query("UPDATE User u " +
