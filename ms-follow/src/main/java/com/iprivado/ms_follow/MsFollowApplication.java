@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IprivateApplication {
+public class MsFollowApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IprivateApplication.class, args);
+		SpringApplication.run(MsFollowApplication.class, args);
 	}
 
 }
