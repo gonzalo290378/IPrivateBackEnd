@@ -65,6 +65,12 @@ spring:
             - Path=/ms-api-ext/**
           filters:
             - StripPrefix=1
+        - id: ms-follow
+          uri: lb://ms-follow
+          predicates:
+            - Path=/ms-follow/**
+          filters:
+            - StripPrefix=1
         - id: ms-consumer
           uri: lb://ms-consumer
           predicates:
