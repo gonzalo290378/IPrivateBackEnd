@@ -140,10 +140,10 @@ public class UserServiceImpl implements UserService {
                 .email(email)
                 .password(password)
                 .roles(roles)
+                .idFreeArea(user.getIdFreeArea())
                 .build();
         return Optional.of(userProfileDTO);
     }
-
     @Transactional(readOnly = true)
     public Optional<User> findEntityByUsername(String username) {
         return userRepository.findByUsername(username);
