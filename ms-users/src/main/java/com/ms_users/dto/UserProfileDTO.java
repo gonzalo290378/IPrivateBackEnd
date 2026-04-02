@@ -41,4 +41,7 @@ UserProfileDTO implements Serializable {
     @JsonProperty("password")
     private String password;
 
+    @JsonProperty("idFreeArea")
+    private Long idFreeArea;
+
 }

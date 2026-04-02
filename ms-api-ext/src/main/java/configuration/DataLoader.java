@@ -17,7 +17,7 @@ public class DataLoader {
     @Bean
     CommandLineRunner loadData(CityRepository cityRepository) {
         return args -> {
-            if (cityRepository.count() == 0) { // Solo cargar si no hay datos
+            if (cityRepository.count() == 0) {
                 ObjectMapper mapper = new ObjectMapper();
                 TypeReference<List<City>> typeReference = new TypeReference<>() {
                 };
