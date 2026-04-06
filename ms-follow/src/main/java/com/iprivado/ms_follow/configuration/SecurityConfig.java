@@ -18,9 +18,9 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers(HttpMethod.GET, "/api/v1/follow/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/v1/follow").permitAll()
-
+                        .requestMatchers(HttpMethod.GET, "/api/v1/follow/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/follow").permitAll()
+                        .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
 
