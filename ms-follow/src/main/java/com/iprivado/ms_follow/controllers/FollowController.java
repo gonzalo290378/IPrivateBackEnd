@@ -22,7 +22,6 @@ public class FollowController {
         this.followService = followService;
     }
 
-    // Seguir a un usuario
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/{followedId}")
     public ResponseEntity<Void> follow(@PathVariable Long followedId) {
@@ -31,7 +30,6 @@ public class FollowController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    // Dejar de seguir
     @PreAuthorize("isAuthenticated()")
     @DeleteMapping("/{followedId}")
     public ResponseEntity<Void> unfollow(@PathVariable Long followedId) {
@@ -40,21 +38,20 @@ public class FollowController {
         return ResponseEntity.noContent().build();
     }
 
-    // Seguidores de un usuario (quien lo sigue)
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{userId}/followers")
     public ResponseEntity<List<FollowResponseDTO>> getFollowers(@PathVariable Long userId) {
         log.info("ms-follow Calling getFollowers for userId {}", userId);
         return ResponseEntity.ok(followService.getFollowers(userId));
     }
 
-    // Seguidos de un usuario (a quién sigue)
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{userId}/following")
     public ResponseEntity<List<FollowResponseDTO>> getFollowing(@PathVariable Long userId) {
         log.info("ms-follow Calling getFollowing for userId {}", userId);
         return ResponseEntity.ok(followService.getFollowing(userId));
     }
 
-    // Contadores
     @GetMapping("/{userId}/count")
     public ResponseEntity<Map<String, Long>> getCounts(@PathVariable Long userId) {
         log.info("ms-follow Calling getCounts for userId {}", userId);
@@ -64,7 +61,6 @@ public class FollowController {
         ));
     }
 
-    // Saber si el usuario autenticado sigue a alguien
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/is-following/{followedId}")
     public ResponseEntity<Map<String, Boolean>> isFollowing(@PathVariable Long followedId) {
