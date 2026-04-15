@@ -25,11 +25,11 @@ public class ChatConsumerService {
 
     @KafkaListener(topics = "chat-topic", groupId = "chat-group", containerFactory = "kafkaListenerContainerFactory")
     public void listen(MessageChat messageChat) {
-        User receiver = userClientRest.getUserById(Long.valueOf(messageChat.getReceiver()));
-        User sender = userClientRest.getUserById(Long.valueOf(messageChat.getSender()));
+        User receiver = userClientRest.getUserById(Long.valueOf(messageChat.getReceiverId()));
+        User sender = userClientRest.getUserById(Long.valueOf(messageChat.getSenderId()));
         String formattedMessage = "From: " + receiver.getUsername() + " " + receiver.getEmail() + "\n" +
                 messageChat.getBody();
-        webSocketService.sendMessageToUser(String.valueOf(messageChat.getReceiver()), formattedMessage);
+        webSocketService.sendMessageToUser(String.valueOf(messageChat.getReceiverId()), formattedMessage);
         LOGGER.info("Received Message: " + messageChat + " " + formattedMessage);
         LOGGER.info("Receiver: " + receiver);
         LOGGER.info("Sender: " + sender);

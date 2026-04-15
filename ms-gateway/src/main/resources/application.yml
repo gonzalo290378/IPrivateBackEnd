@@ -71,6 +71,12 @@ spring:
             - Path=/ms-follow/**
           filters:
             - StripPrefix=1
+        - id: ms-messages
+          uri: lb://ms-messages
+          predicates:
+            - Path=/ms-messages/**
+          filters:
+            - StripPrefix=1
         - id: ms-consumer
           uri: lb://ms-consumer
           predicates:

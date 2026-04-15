@@ -29,6 +29,7 @@
         <module>ms-auth-server</module>
         <module>ms-resource-server</module>
         <module>ms-follow</module>
+        <module>ms-messages</module>
     </modules>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
