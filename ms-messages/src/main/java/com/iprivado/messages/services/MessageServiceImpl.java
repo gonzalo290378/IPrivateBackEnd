@@ -1,16 +1,24 @@
 package com.iprivado.messages.services;
 
 import com.iprivado.messages.dto.MessageDTO;
+import com.iprivado.messages.dto.SeenDTO;
 import com.iprivado.messages.enums.MessageStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.iprivado.messages.entity.Message;
+import org.springframework.data.mongodb.repository.*;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import com.iprivado.messages.repositories.MessageRepository;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -18,7 +26,10 @@ import java.util.List;
 public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
+
     private final SimpMessagingTemplate messagingTemplate;
+
+    private final MongoTemplate mongoTemplate;
 
     @Override
     public Message sendMessage(MessageDTO messageDTO) {
@@ -75,5 +86,30 @@ public class MessageServiceImpl implements MessageService {
         return id1.compareTo(id2) < 0
                 ? id1 + "_" + id2
                 : id2 + "_" + id1;
+    }
+
+    @Override
+    public void markAsSeen(SeenDTO dto) {
+
+        Query query = new Query();
+        query.addCriteria(
+                Criteria.where("conversationId").is(dto.getConversationId())
+                        .and("senderId").ne(dto.getViewerId())
+                        .and("status").ne(MessageStatus.SEEN)
+        );
+
+        Update update = new Update();
+        update.set("status", MessageStatus.SEEN);
+
+        mongoTemplate.updateMulti(query, update, Message.class);
+
+        messagingTemplate.convertAndSend(
+                "/topic/conversations/" + dto.getConversationId(),
+                Map.of(
+                        "type", "SEEN",
+                        "conversationId", dto.getConversationId(),
+                        "viewerId", dto.getViewerId()
+                )
+        );
     }
 }
