@@ -1,6 +1,7 @@
 package com.iprivado.messages.controller;
 
 import com.iprivado.messages.dto.MessageDTO;
+import com.iprivado.messages.dto.SeenDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -28,5 +29,10 @@ public class MessageController {
             @PathVariable String senderId,
             @PathVariable String receiverId) {
         return ResponseEntity.ok(messageService.getConversation(senderId, receiverId));
+    }
+
+    @MessageMapping("/chat.seen")
+    public void markAsSeen(@Payload SeenDTO dto) {
+        messageService.markAsSeen(dto);
     }
 }
