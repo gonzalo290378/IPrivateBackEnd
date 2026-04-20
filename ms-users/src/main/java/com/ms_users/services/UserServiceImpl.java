@@ -14,10 +14,12 @@ import com.ms_users.models.FreeAreaDTO;
 import com.ms_users.models.PrivateAreaDTO;
 import com.ms_users.models.entity.*;
 import com.ms_users.repositories.*;
+import com.ms_users.specifications.UserSpecification;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -156,7 +158,8 @@ public class UserServiceImpl implements UserService {
     }
 
     private Page<FilterDTO> getFilteredUsers(FilterDTO filterDTO, Integer page, Integer size) {
-        Page<User> filterUserList = userRepository.filter(filterDTO, PageRequest.of(page, size));
+        Specification<User> spec = UserSpecification.filter(filterDTO);
+        Page<User> filterUserList = userRepository.findAll(spec, PageRequest.of(page, size));
 
         return filterUserList.map(user -> {
             FilterDTO filterListDTO = filterMapper.toDTO(user);
@@ -167,7 +170,6 @@ public class UserServiceImpl implements UserService {
             return filterListDTO;
         });
     }
-
     private void validateUserAgeSelected(FilterDTO filterDTO) {
         Long ageFrom = filterDTO.getPreferenceDTO().getAgeFrom();
         Long ageTo = filterDTO.getPreferenceDTO().getAgeTo();
