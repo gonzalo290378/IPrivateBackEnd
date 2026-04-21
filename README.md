@@ -161,3 +161,33 @@ Conclusion
 
 This dating application combines modern technologies and a microservices architecture to deliver a scalable and user-friendly platform. By focusing on modular design and leveraging tools like Kafka, MongoDB, and Angular, the system ensures an efficient and enjoyable user experience for all.
 
+
+Websocket:
+
+Gonzalo escribe "hola" y hace click en Enviar
+       ↓
+ChatComponent.sendMessage()
+       ↓
+WebSocketService.publish → destination: /app/chat.send
+       ↓
+[Túnel WebSocket] → Gateway (ms-messages-ws route, lb:ws://) → ms-messages
+       ↓
+MessageController @MessageMapping("/chat.send")
+       ↓
+MessageServiceImpl.sendMessage()
+  ├── MongoDB.save(message)
+  └── SimpMessagingTemplate.convertAndSend("/topic/conversations/calis_gonzalo")
+             ↓
+      STOMP Broker (en memoria)
+      busca todos los suscriptores de ese topic
+             ↓
+    ┌────────┴────────┐
+Gonzalo             Calis
+(su callback        (su callback
+ se ejecuta)         se ejecuta)
+    ↓                    ↓
+messages.push(msg)   messages.push(msg)
+    ↓                    ↓
+Angular re-renderiza  Angular re-renderiza
+el *ngFor              el *ngFor
+
