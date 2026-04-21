@@ -13,4 +13,6 @@ public interface MessageService {
     List<MessageDTO> getConversation(String senderId, String receiverId);
 
     void markAsSeen(SeenDTO dto);
+
+    String buildConversationId(String user1, String user2);
 }
