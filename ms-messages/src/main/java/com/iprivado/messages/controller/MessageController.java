@@ -2,12 +2,12 @@ package com.iprivado.messages.controller;
 
 import com.iprivado.messages.dto.MessageDTO;
 import com.iprivado.messages.dto.SeenDTO;
+import com.iprivado.messages.services.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.*;
-import com.iprivado.messages.services.MessageService;
 
 import java.util.List;
 
@@ -35,4 +35,13 @@ public class MessageController {
     public void markAsSeen(@Payload SeenDTO dto) {
         messageService.markAsSeen(dto);
     }
+
+    @GetMapping("/conversation-id")
+    public String getConversationId(
+            @RequestParam String user1,
+            @RequestParam String user2
+    ) {
+        return messageService.buildConversationId(user1, user2);
+    }
+
 }
