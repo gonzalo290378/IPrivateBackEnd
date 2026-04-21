@@ -60,9 +60,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public List<MessageDTO> getConversation(String senderId, String receiverId) {
-
         String conversationId = buildConversationId(senderId, receiverId);
-
         return messageRepository
                 .findByConversationIdOrderByCreatedAtAsc(conversationId)
                 .stream()
