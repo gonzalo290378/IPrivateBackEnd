@@ -14,15 +14,14 @@ import java.util.Optional;
 
 @Component
 public class GlobalFilterGateway implements GlobalFilter, Ordered {
-
     private final Logger logger = LoggerFactory.getLogger(GlobalFilterGateway.class);
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         String path = exchange.getRequest().getURI().getPath();
 
-        if (isStaticResource(path)) {
-            logger.debug("Skipping filter for static resource: {}", path);
+        if (shouldSkipFilter(exchange)) {
+            logger.debug("Skipping filter for: {}", path);
             return chain.filter(exchange);
         }
 
@@ -41,11 +40,17 @@ public class GlobalFilterGateway implements GlobalFilter, Ordered {
 
             exchange.getResponse().getCookies()
                     .add("color", ResponseCookie.from("color", "red").build());
-
         }));
     }
 
-    private boolean isStaticResource(String path) {
+    private boolean shouldSkipFilter(ServerWebExchange exchange) {
+        String path = exchange.getRequest().getURI().getPath();
+        String upgrade = exchange.getRequest().getHeaders().getFirst("Upgrade");
+
+        if ("websocket".equalsIgnoreCase(upgrade)) {
+            return true;
+        }
+
         return path.startsWith("/ms-free-area/uploads/") ||
                 path.startsWith("/uploads/") ||
                 path.endsWith(".jpg") ||
@@ -63,5 +68,4 @@ public class GlobalFilterGateway implements GlobalFilter, Ordered {
     public int getOrder() {
         return 10;
     }
-
 }
