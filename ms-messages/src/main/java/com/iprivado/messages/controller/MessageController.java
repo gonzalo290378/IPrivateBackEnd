@@ -1,5 +1,6 @@
 package com.iprivado.messages.controller;
 
+import com.iprivado.messages.dto.ConversationSummaryDTO;
 import com.iprivado.messages.dto.MessageDTO;
 import com.iprivado.messages.dto.SeenDTO;
 import com.iprivado.messages.services.MessageService;
@@ -42,6 +43,12 @@ public class MessageController {
             @RequestParam String user2
     ) {
         return messageService.buildConversationId(user1, user2);
+    }
+
+    @GetMapping("/conversations/{username}")
+    public ResponseEntity<List<ConversationSummaryDTO>> getConversations(
+            @PathVariable String username) {
+        return ResponseEntity.ok(messageService.getConversations(username));
     }
 
 }
