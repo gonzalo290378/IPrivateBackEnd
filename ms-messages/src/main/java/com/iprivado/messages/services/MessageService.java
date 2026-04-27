@@ -1,5 +1,6 @@
 package com.iprivado.messages.services;
 
+import com.iprivado.messages.dto.ConversationSummaryDTO;
 import com.iprivado.messages.dto.MessageDTO;
 import com.iprivado.messages.dto.SeenDTO;
 import com.iprivado.messages.entity.Message;
@@ -15,4 +16,7 @@ public interface MessageService {
     void markAsSeen(SeenDTO dto);
 
     String buildConversationId(String user1, String user2);
+
+    List<ConversationSummaryDTO> getConversations(String username);
+
 }

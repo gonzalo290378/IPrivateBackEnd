@@ -1,22 +1,23 @@
 package com.iprivado.messages.services;
 
+import com.iprivado.messages.dto.ConversationSummaryDTO;
 import com.iprivado.messages.dto.MessageDTO;
 import com.iprivado.messages.dto.SeenDTO;
+import com.iprivado.messages.entity.Message;
 import com.iprivado.messages.enums.MessageStatus;
+import com.iprivado.messages.repositories.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import com.iprivado.messages.entity.Message;
-import org.springframework.data.mongodb.repository.*;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Service;
-import com.iprivado.messages.repositories.MessageRepository;
-
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -109,6 +110,38 @@ public class MessageServiceImpl implements MessageService {
                         "viewerId", dto.getViewerId()
                 )
         );
+    }
+
+    @Override
+    public List<ConversationSummaryDTO> getConversations(String username) {
+        List<Message> allMessages = messageRepository.findAllByUserId(username);
+
+        Map<String, Message> latestByConversation = new HashMap<>();
+
+        for (Message msg : allMessages) {
+            latestByConversation.merge(
+                    msg.getConversationId(),
+                    msg,
+                    (existing, incoming) -> incoming.getCreatedAt().isAfter(existing.getCreatedAt())
+                            ? incoming
+                            : existing
+            );
+        }
+
+        return latestByConversation.values().stream()
+                .sorted(Comparator.comparing(Message::getCreatedAt).reversed())
+                .map(msg -> {
+                    String otherUserId = msg.getSenderId().equals(username)
+                            ? msg.getReceiverId()
+                            : msg.getSenderId();
+                    return ConversationSummaryDTO.builder()
+                            .otherUsername(otherUserId)
+                            .lastMessage(msg.getBody())
+                            .lastMessageDate(msg.getCreatedAt())
+                            .conversationId(msg.getConversationId())
+                            .build();
+                })
+                .toList();
     }
 
 }
