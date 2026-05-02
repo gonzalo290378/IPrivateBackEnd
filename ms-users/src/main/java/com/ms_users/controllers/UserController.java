@@ -135,7 +135,7 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<?> save(@RequestBody @Valid UserFormDTO userFormDTO) {
+    public ResponseEntity<UserDTO> save(@RequestBody @Valid UserFormDTO userFormDTO) {
         log.info("ms-users Calling save with {userFormDTO}");
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.save(userFormDTO));
@@ -143,7 +143,8 @@ public class UserController {
 
     @PreAuthorize("isAuthenticated()")
     @PutMapping("/edit/{username}")
-    public ResponseEntity<?> edit(@PathVariable String username, @RequestBody UserDetailsFreeAreaDTO userDetailsFreeAreaDTO) {
+    public ResponseEntity<UserDTO> edit(@PathVariable String username,
+                                        @RequestBody UserDetailsFreeAreaDTO userDetailsFreeAreaDTO) {
         log.info("ms-free-area Calling edit for username {} ", username);
         return ResponseEntity.ok(userService.updateUserDetails(username, userDetailsFreeAreaDTO));
     }

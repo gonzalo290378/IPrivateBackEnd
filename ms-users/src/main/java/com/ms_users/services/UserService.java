@@ -18,9 +18,9 @@ public interface UserService {
 
     Page<FilterDTO> filter(FilterDTO filterDTO, Integer page, Integer size);
 
-    User save(UserFormDTO userFormDTO);
+    UserDTO save(UserFormDTO userFormDTO);
 
-    User updateUserDetails(String username, UserDetailsFreeAreaDTO userDetailsFreeAreaDTO);
+    UserDTO updateUserDetails(String username, UserDetailsFreeAreaDTO userDetailsFreeAreaDTO);
 
     void updatePreferences(PreferenceDTO preferenceDTO);
 

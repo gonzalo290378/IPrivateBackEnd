@@ -151,7 +151,7 @@ public class FreeAreaServiceImpl implements FreeAreaService {
 
             return principalPhotoRepository.save(principalPhoto);
         } catch (IOException e) {
-            throw new RuntimeException("Error al guardar PrincipalPhoto", e);
+            throw new RuntimeException("Error to save PrincipalPhoto", e);
         }
     }
 

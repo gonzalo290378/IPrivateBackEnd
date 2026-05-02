@@ -32,7 +32,7 @@ public class State {
     @ToString.Exclude
     private Country country;
 
-    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "state", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference("state-city")
     @ToString.Exclude
     private List<City> city;
