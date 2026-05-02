@@ -1,13 +1,14 @@
 package com.iprivado.messages.services;
 
-import com.iprivado.messages.dto.ConversationSummaryDTO;
-import com.iprivado.messages.dto.MessageDTO;
-import com.iprivado.messages.dto.SeenDTO;
+import com.iprivado.messages.clients.FreeAreaClientRest;
+import com.iprivado.messages.clients.UserClientRest;
+import com.iprivado.messages.dto.*;
 import com.iprivado.messages.entity.Message;
 import com.iprivado.messages.enums.MessageStatus;
 import com.iprivado.messages.repositories.MessageRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -16,8 +17,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +28,16 @@ public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
 
+    private final UserClientRest userClientRest;
+
+    private final FreeAreaClientRest freeAreaClientRest;
+
     private final SimpMessagingTemplate messagingTemplate;
 
     private final MongoTemplate mongoTemplate;
+
+    @Value("${freearea.internal-token}")
+    private String internalToken;
 
     @Override
     public Message sendMessage(MessageDTO messageDTO) {
@@ -116,32 +123,44 @@ public class MessageServiceImpl implements MessageService {
     public List<ConversationSummaryDTO> getConversations(String username) {
         List<Message> allMessages = messageRepository.findAllByUserId(username);
 
-        Map<String, Message> latestByConversation = new HashMap<>();
-
+        Map<String, Message> latestByConversation = new LinkedHashMap<>();
         for (Message msg : allMessages) {
-            latestByConversation.merge(
-                    msg.getConversationId(),
-                    msg,
-                    (existing, incoming) -> incoming.getCreatedAt().isAfter(existing.getCreatedAt())
-                            ? incoming
-                            : existing
-            );
+            latestByConversation.putIfAbsent(msg.getConversationId(), msg);
         }
 
         return latestByConversation.values().stream()
-                .sorted(Comparator.comparing(Message::getCreatedAt).reversed())
                 .map(msg -> {
-                    String otherUserId = msg.getSenderId().equals(username)
+                    String otherUsername = msg.getSenderId().equals(username)
                             ? msg.getReceiverId()
                             : msg.getSenderId();
+
+                    log.info("username actual: {}", username);
+                    log.info("senderId: {}", msg.getSenderId());
+                    log.info("receiverId: {}", msg.getReceiverId());
+                    log.info("otherUsername calculado: {}", otherUsername);
+
+                    String photoUrl = null;
+                    try {
+                        UserSummaryDTO user = userClientRest.findByUsername(otherUsername).getBody();                        if (user != null && user.getIdFreeArea() != null) {
+                            photoUrl = freeAreaClientRest
+                                    .getPrincipalPhoto(user.getIdFreeArea(), internalToken)
+                                    .map(PrincipalPhotoDTO::getUrl)
+                                    .orElse(null);
+                        }
+                    } catch (Exception e) {
+                        log.warn("Could not find photo for username {}: {}", otherUsername, e.getMessage());
+                    }
+
                     return ConversationSummaryDTO.builder()
-                            .otherUsername(otherUserId)
+                            .otherUsername(otherUsername)
                             .lastMessage(msg.getBody())
                             .lastMessageDate(msg.getCreatedAt())
                             .conversationId(msg.getConversationId())
+                            .profilePhotoUrl(photoUrl)
                             .build();
                 })
                 .toList();
     }
+
 
 }

@@ -31,6 +31,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -117,8 +118,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDTO> findByUsername(String username) {
-        User user = userRepository.findAll().stream().filter(e -> Objects.equals(e.getUsername(), username))
-                .findFirst()
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("username: " + username + " does not exist"));
         return getUserDTO(user);
     }
@@ -183,25 +183,27 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Transactional()
-    public User save(UserFormDTO userFormDTO) {
+    @Transactional
+    public UserDTO save(UserFormDTO userFormDTO) {
         boolean userEmailExists = findByEmailWithoutException(userFormDTO.getEmail());
         if (!userEmailExists) {
             validateUserForm(userFormDTO);
             User newUser = buildUser(userFormDTO);
-            return userRepository.save(newUser);
+            User saved = userRepository.save(newUser);
+
+            Preference preference = saved.getPreference();
+            City city = saved.getCity();
+            Country country = saved.getCountry();
+            State state = saved.getState();
+
+            return userMapper.toDTO(saved);
         }
-        throw new UsernameRegisteredException("User: " + userFormDTO.getUsername()
-                + " is registered");
+        throw new UsernameRegisteredException("User: " + userFormDTO.getUsername() + " is registered");
     }
 
     @Transactional(readOnly = true)
     public boolean findByEmailWithoutException(String email) {
-        Optional<User> user = userRepository.findAll()
-                .stream()
-                .filter(e -> Objects.equals(e.getEmail(), email))
-                .findFirst();
-        return user.isPresent();
+        return userRepository.existsByEmail(email);
     }
 
     private void validateUserForm(UserFormDTO userFormDTO) {
@@ -328,11 +330,14 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public User updateUserDetails(String username, UserDetailsFreeAreaDTO userDetailsFreeAreaDTO) {
+    @Transactional
+    public UserDTO updateUserDetails(String username, UserDetailsFreeAreaDTO userDetailsFreeAreaDTO) {
         Optional<User> userEdited = findEntityByUsername(username);
         if (userEdited.isPresent()) {
             userEdited.get().setBirthdate(userDetailsFreeAreaDTO.getBirthdate());
+            userEdited.get().setAge((long) Period.between(userDetailsFreeAreaDTO.getBirthdate(), LocalDate.now()).getYears());
             userEdited.get().setDescription(userDetailsFreeAreaDTO.getDescription());
+
             Country country = countryRepository.findByCountry(userDetailsFreeAreaDTO.getCountry())
                     .orElseGet(() -> {
                         Country newCountry = Country.builder()
@@ -362,13 +367,18 @@ public class UserServiceImpl implements UserService {
                     });
             userEdited.get().setState(state);
             userEdited.get().setSex(userDetailsFreeAreaDTO.getSex());
-
         }
 
-        return userEdited
+        User saved = userEdited
                 .map(userRepository::save)
                 .orElseThrow(() -> new UserNotFoundException("User with username: " + username + " not found"));
 
+        Preference preference = saved.getPreference();
+        City city = saved.getCity();
+        Country country = saved.getCountry();
+        State state = saved.getState();
+
+        return userMapper.toDTO(saved);
     }
 
     @Override
@@ -480,25 +490,6 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
-//    private void updateUserPreferences(User user, UserFormDTO userFormDTO) {
-//        user.getPreference().setAgeFrom(userFormDTO.getAgeFrom());
-//        user.getPreference().setAgeTo(userFormDTO.getAgeTo());
-//        user.getPreference().setSexPreference(userFormDTO.getSexPreference());
-//    }
-//
-//    private void updateUserLocation(User user, UserFormDTO userFormDTO) {
-//        user.getCountry().setCountry(userFormDTO.getCountry());
-//        user.getCity().setCity(userFormDTO.getCity());
-//        user.getState().setState(userFormDTO.getState());
-//    }
-//
-//    private void updateUserBasicInfo(User user, UserFormDTO userFormDTO) {
-//        user.setUsername(userFormDTO.getUsername());
-//        user.setAge(userFormDTO.getAge());
-//        user.setBirthdate(userFormDTO.getBirthdate());
-//        user.setDescription(userFormDTO.getDescription());
-//        user.setPassword(userFormDTO.getPassword());
-//    }
 
     @Transactional
     public void delete(Long id) {

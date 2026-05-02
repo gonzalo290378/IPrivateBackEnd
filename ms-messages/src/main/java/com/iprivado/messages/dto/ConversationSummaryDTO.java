@@ -21,4 +21,6 @@ public class ConversationSummaryDTO {
 
     private String conversationId;
 
+    private String profilePhotoUrl;
+
 }

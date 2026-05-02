@@ -23,7 +23,7 @@ public class Country {
     @Column(name = "country")
     private String country;
 
-    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "country", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference("country-state")
     @ToString.Exclude
     private List<State> states;
