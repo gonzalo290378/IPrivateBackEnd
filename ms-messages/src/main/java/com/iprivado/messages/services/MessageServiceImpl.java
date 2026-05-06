@@ -140,12 +140,17 @@ public class MessageServiceImpl implements MessageService {
                     log.info("otherUsername calculado: {}", otherUsername);
 
                     String photoUrl = null;
+                    Long otherUserId = null;  // agregar esto
                     try {
-                        UserSummaryDTO user = userClientRest.findByUsername(otherUsername).getBody();                        if (user != null && user.getIdFreeArea() != null) {
-                            photoUrl = freeAreaClientRest
-                                    .getPrincipalPhoto(user.getIdFreeArea(), internalToken)
-                                    .map(PrincipalPhotoDTO::getUrl)
-                                    .orElse(null);
+                        UserSummaryDTO user = userClientRest.findByUsername(otherUsername).getBody();
+                        if (user != null) {
+                            otherUserId = user.getId();  // agregar esto
+                            if (user.getIdFreeArea() != null) {
+                                photoUrl = freeAreaClientRest
+                                        .getPrincipalPhoto(user.getIdFreeArea(), internalToken)
+                                        .map(PrincipalPhotoDTO::getUrl)
+                                        .orElse(null);
+                            }
                         }
                     } catch (Exception e) {
                         log.warn("Could not find photo for username {}: {}", otherUsername, e.getMessage());
@@ -153,6 +158,7 @@ public class MessageServiceImpl implements MessageService {
 
                     return ConversationSummaryDTO.builder()
                             .otherUsername(otherUsername)
+                            .otherUserId(otherUserId)
                             .lastMessage(msg.getBody())
                             .lastMessageDate(msg.getCreatedAt())
                             .conversationId(msg.getConversationId())
