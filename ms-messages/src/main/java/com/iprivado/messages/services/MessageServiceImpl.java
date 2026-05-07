@@ -171,8 +171,13 @@ public class MessageServiceImpl implements MessageService {
                 .toList();
     }
 
+    @Override
     public long getTotalUnread(String username) {
-        return messageRepository.findUnreadByReceiverId(username).size();
+        return messageRepository
+                .countDistinctConversationIdByReceiverIdAndStatusNot(
+                        username,
+                        MessageStatus.SEEN
+                );
     }
 
 
