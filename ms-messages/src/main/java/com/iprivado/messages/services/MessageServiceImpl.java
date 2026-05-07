@@ -40,7 +40,7 @@ public class MessageServiceImpl implements MessageService {
     private String internalToken;
 
     @Override
-    public Message sendMessage(MessageDTO messageDTO) {
+    public void sendMessage(MessageDTO messageDTO) {
 
         String conversationId = buildConversationId(
                 messageDTO.getSenderId(),
@@ -62,8 +62,6 @@ public class MessageServiceImpl implements MessageService {
                 "/topic/conversations/" + conversationId,
                 toDTO(message)
         );
-
-        return message;
     }
 
     @Override
@@ -163,9 +161,18 @@ public class MessageServiceImpl implements MessageService {
                             .lastMessageDate(msg.getCreatedAt())
                             .conversationId(msg.getConversationId())
                             .profilePhotoUrl(photoUrl)
+                            .unreadCount(messageRepository
+                                    .countByConversationIdAndReceiverIdAndStatusNot(
+                                            msg.getConversationId(),
+                                            username,
+                                            MessageStatus.SEEN))
                             .build();
                 })
                 .toList();
+    }
+
+    public long getTotalUnread(String username) {
+        return messageRepository.findUnreadByReceiverId(username).size();
     }
 
 

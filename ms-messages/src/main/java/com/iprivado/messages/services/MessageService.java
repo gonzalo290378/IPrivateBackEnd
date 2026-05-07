@@ -3,13 +3,12 @@ package com.iprivado.messages.services;
 import com.iprivado.messages.dto.ConversationSummaryDTO;
 import com.iprivado.messages.dto.MessageDTO;
 import com.iprivado.messages.dto.SeenDTO;
-import com.iprivado.messages.entity.Message;
 
 import java.util.List;
 
 public interface MessageService {
 
-    Message sendMessage(MessageDTO messageDTO);
+    void sendMessage(MessageDTO messageDTO);
 
     List<MessageDTO> getConversation(String senderId, String receiverId);
 
@@ -18,5 +17,8 @@ public interface MessageService {
     String buildConversationId(String user1, String user2);
 
     List<ConversationSummaryDTO> getConversations(String username);
+
+    long getTotalUnread(String username);
+
 
 }
