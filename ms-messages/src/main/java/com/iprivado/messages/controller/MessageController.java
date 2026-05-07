@@ -51,4 +51,9 @@ public class MessageController {
         return ResponseEntity.ok(messageService.getConversations(username));
     }
 
+    @GetMapping("/unread/{username}")
+    public ResponseEntity<Long> getTotalUnread(@PathVariable String username) {
+        return ResponseEntity.ok(messageService.getTotalUnread(username));
+    }
+
 }

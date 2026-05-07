@@ -25,4 +25,6 @@ public class ConversationSummaryDTO {
 
     private String profilePhotoUrl;
 
+    private long unreadCount;
+
 }
