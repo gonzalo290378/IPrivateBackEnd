@@ -21,5 +21,10 @@ public interface MessageRepository extends MongoRepository<Message, String> {
     );
 
     long countByConversationIdAndReceiverIdAndStatusNot(String conversationId, String receiverId, MessageStatus status);
+
+    List<Message> findByReceiverIdAndStatusNot(
+            String receiverId,
+            MessageStatus status
+    );
 }
 

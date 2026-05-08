@@ -62,6 +62,13 @@ public class MessageServiceImpl implements MessageService {
                 "/topic/conversations/" + conversationId,
                 toDTO(message)
         );
+
+        long unread = calculateUnreadConversations(message.getReceiverId());
+
+        messagingTemplate.convertAndSend(
+                "/topic/unread/" + message.getReceiverId(),
+                unread
+        );
     }
 
     @Override
@@ -114,6 +121,13 @@ public class MessageServiceImpl implements MessageService {
                         "conversationId", dto.getConversationId(),
                         "viewerId", dto.getViewerId()
                 )
+        );
+
+        long unread = calculateUnreadConversations(dto.getViewerId());
+
+        messagingTemplate.convertAndSend(
+                "/topic/unread/" + dto.getViewerId(),
+                unread
         );
     }
 
@@ -178,6 +192,16 @@ public class MessageServiceImpl implements MessageService {
                         username,
                         MessageStatus.SEEN
                 );
+    }
+
+    private long calculateUnreadConversations(String userId) {
+
+        return messageRepository
+                .findByReceiverIdAndStatusNot(userId, MessageStatus.SEEN)
+                .stream()
+                .map(Message::getConversationId)
+                .distinct()
+                .count();
     }
 
 
