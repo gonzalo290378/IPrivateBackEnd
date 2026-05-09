@@ -16,7 +16,6 @@ public class ChatConsumerService {
     private final UserClientRest userClientRest;
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatConsumerService.class);
 
-
     @Autowired
     public ChatConsumerService(WebSocketService webSocketService, UserClientRest userClientRest) {
         this.webSocketService = webSocketService;
