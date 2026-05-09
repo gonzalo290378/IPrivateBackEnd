@@ -18,5 +18,3 @@ public class WebSocketService {
         simpMessagingTemplate.convertAndSend("/topic/user/" + receiver, message);
     }
 }
-
-
