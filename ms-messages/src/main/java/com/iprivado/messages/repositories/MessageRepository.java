@@ -15,11 +15,6 @@ public interface MessageRepository extends MongoRepository<Message, String> {
         return findBySenderIdOrReceiverIdOrderByCreatedAtDesc(userId, userId);
     }
 
-    long countDistinctConversationIdByReceiverIdAndStatusNot(
-            String receiverId,
-            MessageStatus status
-    );
-
     long countByConversationIdAndReceiverIdAndStatusNot(String conversationId, String receiverId, MessageStatus status);
 
     List<Message> findByReceiverIdAndStatusNot(
