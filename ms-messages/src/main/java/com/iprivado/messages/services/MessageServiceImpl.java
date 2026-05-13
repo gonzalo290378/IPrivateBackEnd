@@ -187,11 +187,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Override
     public long getTotalUnread(String username) {
-        return messageRepository
-                .countDistinctConversationIdByReceiverIdAndStatusNot(
-                        username,
-                        MessageStatus.SEEN
-                );
+        return calculateUnreadConversations(username);
     }
 
     private long calculateUnreadConversations(String userId) {
